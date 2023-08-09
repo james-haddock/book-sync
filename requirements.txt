@@ -28,3 +28,7 @@ virtualenv==20.19.0
 virtualenv-clone==0.5.7
 Werkzeug==2.3.6
 yarg==0.1.9
+pytest==7.4.0
+EbookLib==0.18
+beautifulsoup4==4.12.2
+epub2txt==0.1.6
