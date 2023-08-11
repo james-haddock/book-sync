@@ -1,9 +1,17 @@
+import xml.etree.ElementTree as ET
 
-def get_opf_location(title):
-    with open(f'data/extracted/{title}/META-INF/container.xml', 'r', encoding='utf-8') as container:
-        xml = container.read()
-        speech_comma = '"'
-        opf_attribute = "full-path="
-        index = xml.find(opf_attribute)
-        opf_location = f"{xml[index + len(opf_attribute):].split(speech_comma)[1]}"
-        return opf_location
+
+
+
+def retrieve_opf_location(title):
+    xml_path = f'data/extracted/{title}/META-INF/container.xml'
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    opf_location = root.find('{urn:oasis:names:tc:opendocument:xmlns:container}rootfiles/{urn:oasis:names:tc:opendocument:xmlns:container}rootfile').attrib['full-path']
+    print(opf_location) 
+ 
+    
+# def get_spine(title):
+#     opf_location = get_opf_location(title)
+#     spine = []
+#     with open(f'data/extracted/{title}/{opf_location}', 'r', encoding='utf-8') as opf_file:
