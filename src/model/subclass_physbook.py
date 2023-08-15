@@ -1,8 +1,8 @@
 import xml.etree.ElementTree as ET
-from class_book import Book
+# from class_book import Book
 
 
-class Physbook(Book):
+class Textbook:
     def __init__(self, filename, title='', author='', genre=''):
         # super().__init__(filename, title, author, genre)
         self.filename = filename
