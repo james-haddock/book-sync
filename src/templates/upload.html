@@ -1,13 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>File Upload Example</title>
-</head>
-<body>
-    <h2>Upload a File</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="file">
-        <input type="submit" value="Upload">
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="bg-white py-24 sm:py-32">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl sm:text-center">
+                <h2 class="text-base font-semibold leading-7 text-indigo-600">Upload Your Ebook</h2>
+                <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Share Your Knowledge with the World</p>
+            </div>
+            <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-center">Upload your own ebook and make it accessible from anywhere.</p>
+            <div class="mt-20">
+                <div class="mx-auto max-w-2xl">
+                    <form action="{{url_for('upload')}}" method="post" enctype="multipart/form-data" class="space-y-6">
+
+                        <div class="flex items-center justify-center w-full">
+                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 hover:bg-gray-100 dark:border-gray-600">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500">Supported formats: epub, pdf, mobi.</p>
+                                </div>
+                                <input id="dropzone-file" type="file" name="file" class="hidden" />
+                            </label>
+                        </div> 
+
+                        <div class="sm:text-center">
+                            <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-md shadow-lg hover:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">Upload Ebook</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

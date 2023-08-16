@@ -1,21 +1,25 @@
 import xml.etree.ElementTree as ET
-from class_book import Book
+# from class_book import Book
+import os
 
 
-class Physbook(Book):
-    def __init__(self, filename, title='', author='', genre=''):
+class Textbook:
+    def __init__(self, filename, author='', genre=''):
         # super().__init__(filename, title, author, genre)
+        self.title = self.get_title()
         self.filename = filename
         self.container_namespace = '{urn:oasis:names:tc:opendocument:xmlns:container}'
         self.opf_namespace = '{http://www.idpf.org/2007/opf}'
-        self.container_path = f'data/extracted/{self.filename}/META-INF/container.xml'
+        self.container_path = f'static/data/extracted/{self.filename}/META-INF/container.xml'
         self.opf = self.get_opf_location()
-        self.opf_path = f'data/extracted/{self.filename}/{self.opf}'
+        self.opf_path = f'static/data/extracted/{self.filename}/{self.opf}'
         self.container_root = self.parse_and_get_root_xml(self.container_path)
         self.spine = self.get_spine()
         self.opf_root = self.parse_and_get_root_xml(self.opf_path)
         self.href = self.get_href()
         self.opf = self.get_opf_location()
+        self.cover = self.get_cover()
+        self.isbn = ''
 
     def parse_and_get_root_xml(self, xml_path):
         tree = ET.parse(xml_path)
@@ -39,3 +43,22 @@ class Physbook(Book):
                     if element.attrib['id'] == idref:
                         href.append(element.attrib['href'])
         return href
+    
+    def get_cover(self):
+        if self.opf_root.attrib['version'] == '3.0':
+            for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                if element.attrib['id'] == 'cover-image':
+                    cover_loc = element.attrib['href']
+        elif self.opf_root.attrib['version'] == '2.0':
+            for element in self.opf_root.findall(f'{self.opf_namespace}metadata/{self.opf_namespace}meta'):
+                if element.attrib['name'] == 'cover':
+                    cover_id = element.attrib['content']
+                    for item in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                        if item.attrib['id'] == cover_id:
+                            cover_loc = item.attrib['href']
+        opf_folder_location = os.path.dirname(self.opf_path)
+        return f'{opf_folder_location}/{cover_loc}'
+    
+    def get_title(self):
+        DC_namespace = 'http://purl.org/dc/elements/1.1/'
+        return self.opf_root.self.opf_root.find(f'{self.opf_namespace}manifest/{self.DC_namespace}dc:title').text
