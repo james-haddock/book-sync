@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-        <div class="relative isolate px-6 pt-14 lg:px-8 pt-20">
+        <div class="relative isolate px-6 lg:px-8 pt-20">
             <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true"></div>
             <div class="mx-auto max-w-2xl py-10 sm:py-48 lg:py-10">
                 <div class="text-center">
                     <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Read and Listen to Your eBooks</h1>
                     <p class="mt-6 text-lg leading-8 text-gray-600">Experience the seamless integration of reading and listening with BookSync. Upload your own eBooks and audiobooks to enjoy them in one interface. Browse through your personal library and switch effortlessly between reading and listening.</p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign up now</a><a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more<span aria-hidden="true">→</span></a>
+                        <a href="{{ url_for('registration_form') }}" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign up now</a>
                     </div>
                 </div>
             </div>
