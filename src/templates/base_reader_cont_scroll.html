@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Merge TailwindCSS into Flask app</title>
+    <link href="{{url_for('static',filename='static/css/main.css')}}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="fixed bottom-0 left-0 w-full backdrop-filter backdrop-blur-md bg-opacity-30 bg-white shadow-md flex justify-between items-center p-4">
+    <button id="prevpage" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm"></button>
+    <a href='{{ url_for("library") }}'><button class="text-gray-700 font-bold px-4 py-2 rounded-md">Return to Library</button></a>
+    <button id="nextpage" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm"></button>
+  </div>
+<iframe id="myIframe" src="{{ iframe }}" class="w-screen h-screen" frameborder="0"></iframe>}}
+<script>
+    $(document).ready(function() {
+        var iframe = document.getElementById('myIframe');
+
+        iframe.onload = function() {
+            iframe.contentWindow.onscroll = function() {
+                if (iframe.contentWindow.scrollY >= iframe.contentDocument.body.scrollHeight - iframe.contentWindow.innerHeight - 100) {
+                    // Send AJAX request to Flask server
+                    $.ajax({
+                        url: '/load_more',
+                        method: 'GET',
+                        data: { last_item_id: 'next' },
+                        success: function(response) {
+                            // Append the new content to the iframe's body
+                            var newDiv = document.createElement('div');
+                            newDiv.innerHTML = response;
+                            iframe.contentDocument.body.appendChild(newDiv);
+                        }
+                    });
+                }
+            };
+        };
+    });
+</script>
+</body>
+</html>
