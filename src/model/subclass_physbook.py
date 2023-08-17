@@ -6,20 +6,22 @@ import os
 class Textbook:
     def __init__(self, filename, author='', genre=''):
         # super().__init__(filename, title, author, genre)
-        self.title = self.get_title()
         self.filename = filename
         self.container_namespace = '{urn:oasis:names:tc:opendocument:xmlns:container}'
         self.opf_namespace = '{http://www.idpf.org/2007/opf}'
-        self.container_path = f'static/data/extracted/{self.filename}/META-INF/container.xml'
+        self.container_path = f'data/extracted/{self.filename}/META-INF/container.xml'
         self.opf = self.get_opf_location()
-        self.opf_path = f'static/data/extracted/{self.filename}/{self.opf}'
+        self.opf_path = f'data/extracted/{self.filename}/{self.opf}'
         self.container_root = self.parse_and_get_root_xml(self.container_path)
         self.spine = self.get_spine()
         self.opf_root = self.parse_and_get_root_xml(self.opf_path)
         self.href = self.get_href()
         self.opf = self.get_opf_location()
+        self.title = self.get_title()
         self.cover = self.get_cover()
         self.isbn = ''
+        self.opf_folder_location = os.path.dirname(self.opf_path)
+        self.book_index_number = 0
 
     def parse_and_get_root_xml(self, xml_path):
         tree = ET.parse(xml_path)
@@ -60,5 +62,5 @@ class Textbook:
         return f'{opf_folder_location}/{cover_loc}'
     
     def get_title(self):
-        DC_namespace = 'http://purl.org/dc/elements/1.1/'
-        return self.opf_root.self.opf_root.find(f'{self.opf_namespace}manifest/{self.DC_namespace}dc:title').text
+        DC_namespace = '{http://purl.org/dc/elements/1.1/}'
+        return self.opf_root.find(f'{self.opf_namespace}metadata/{DC_namespace}title').text
