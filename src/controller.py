@@ -59,17 +59,17 @@ def read_book_cont_scroll(book_title):
         if books[index].title == book_title:
             session['active_book_index'] = index
     session['iframe'] = f"{books[session['active_book_index']].opf_folder_location}/{books[session['active_book_index']].href[books[session['active_book_index']].book_index_number]}"
-    return render_template('/templates/base_reader_cont_scroll.html', iframe=session['iframe'], active_book=session['active_book_index'])
+    return render_template('/templates/base_reader_cont_scroll.html', iframe=session['iframe'], active_book_index=session['active_book_index'])
 
 
-@app.route("/nav/<navigation>", methods=['GET', 'POST'])
-def read_book_nav(navigation):
-    if navigation == 'next':
-        books[session['active_book_index']].book_index_number += 1
-    elif navigation == 'prev':
-        if books[session['active_book_index']].book_index_number > 0:
-            books[session['active_book_index']].book_index_number -= 1
-    return redirect(url_for('read_book', book_title=books[session['active_book_index']].title))
+# @app.route("/nav/<navigation>", methods=['GET', 'POST'])
+# def read_book_nav(navigation):
+#     if navigation == 'next':
+#         books[session['active_book_index']].book_index_number += 1
+#     elif navigation == 'prev':
+#         if books[session['active_book_index']].book_index_number > 0:
+#             books[session['active_book_index']].book_index_number -= 1
+#     return redirect(url_for('read_book', book_title=books[session['active_book_index']].title))
     # return render_template('/templates/base_reader.html', iframe=session['iframe'], active_book_index=session['active_book_index'])
 
 
@@ -94,14 +94,27 @@ def upload():
 
 @app.route('/load_more', methods=['GET'])
 def load_more():
-    if request.args.get('last_item_id') == 'next':
-        if books[session['active_book_index']].book_index_number < len(books[session['active_book_index']].href) - 1:
-            books[session['active_book_index']].book_index_number += 1
-            return render_template(f"{books[session['active_book_index']].opf_folder_location}/{books[session['active_book_index']].href[books[session['active_book_index']].book_index_number]}")
-    elif request.args.get('last_item_id') == 'next':
-        if books[session['active_book_index']].book_index_number < len(books[session['active_book_index']].href) - 1:
-            books[session['active_book_index']].book_index_number += 1
-            return render_template(f"{books[session['active_book_index']].opf_folder_location}/{books[session['active_book_index']].href[books[session['active_book_index']].book_index_number]}")
+    # if request.args.get('last_item_id') == 'next':
+    if books[session['active_book_index']].book_index_number < len(books[session['active_book_index']].href) - 1:
+        books[session['active_book_index']].book_index_number += 1
+        return render_template(f"{books[session['active_book_index']].opf_folder_location}/{books[session['active_book_index']].href[books[session['active_book_index']].book_index_number]}")
+#     elif request.args.get('last_item_id') == 'previous':
+#         if books[session['active_book_index']].book_index_number > 0:
+#             books[session['active_book_index']].book_index_number -= 1
+#             return render_template(f"{books[session['active_book_index']].opf_folder_location}/{books[session['active_book_index']].href[books[session['active_book_index']].book_index_number]}")
+
+# @app.route('/get_iframe_scroll_position', methods=['GET'])
+# def get_iframe_scroll_position():
+#         return books[session['active_book_index']].scroll_position
+
+# @app.route('/store_iframe_scroll_position', methods=['POST'])
+# def store_iframe_scroll_position():
+#     books[session['active_book_index']].scroll_position = int(request.form.get('scroll_position'))
+#     return 'Scroll position stored successfully'
+
+# @app.route('/getActiveBook', methods=['GET'])
+# def getActiveBook():
+#     return session['active_book_index']
         
 
 @app.route("/books/<bookname>", methods=['GET'])

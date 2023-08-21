@@ -22,6 +22,7 @@ class Textbook:
         self.isbn = ''
         self.opf_folder_location = os.path.dirname(self.opf_path)
         self.book_index_number = 0
+        self.scroll_position = ''
 
     def parse_and_get_root_xml(self, xml_path):
         tree = ET.parse(xml_path)
