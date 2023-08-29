@@ -1,15 +1,26 @@
-{% extends '/templates/base_reader_cont_scroll.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Book Reader</title>
+    <script src="https://unpkg.com/htmx.org@1.9.4" integrity="sha384-zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV" crossorigin="anonymous"></script>
+</head>
+<body>
 
-<tr hx-get="{{ url_for( 'load_more' )}}"
-    hx-trigger="revealed"
-    hx-swap="afterend">
-  <td>Agent Smith</td>
-  <td>void29@null.org</td>
-  <td>55F49448C0</td>
-</tr>
+<div id="content-container">
+    <div hx-get="{% include '{{f'{book.opf_folder_location}/{book.href[book.book_index_number]}'}}' %}" hx-trigger="load" hx-swap="innerHTML">
+        Loading initial content...
+    </div>
 
+    <!-- Triggering element for infinite scroll -->
+    <!-- <div hx-get="{{ url_for('load_more', UUID=UUID, nav='next') }}" hx-trigger="revealed" hx-swap="beforeend" hx-indicator="#loadingIndicator">
+        Load more content...
+    </div>
+</div> -->
 
-
-{% endblock %}
+<!-- Loading indicator -->
+<div id="loadingIndicator" style="display:none">Loading...</div>
+</body>
+</html>
