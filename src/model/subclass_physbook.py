@@ -14,6 +14,7 @@ class Textbook:
         self.opf = self.get_opf_location()
         self.opf_path = f'data/extracted/{self.filename}/{self.opf}'
         self.opf_folder_location = os.path.dirname(self.opf_path)
+        self.book_path = "/".join(self.opf_folder_location.split('/')[1:])
         self.container_root = self.parse_and_get_root_xml(self.container_path)
         self.spine = self.get_spine()
         self.opf_root = self.parse_and_get_root_xml(self.opf_path)
@@ -45,7 +46,7 @@ class Textbook:
         for idref in self.spine:
             for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
                     if element.attrib['id'] == idref:
-                        href.append(element.attrib["href"])
+                        href.append(f'{self.book_path}/{element.attrib["href"]}')
         return href
     
     def get_cover(self):
