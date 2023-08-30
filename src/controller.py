@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
-app = Flask(__name__, template_folder=None, static_folder=None, static_url_path=None)
+app = Flask(__name__, template_folder='', static_folder='')
 
 class Config:
     SECRET_KEY = 'golf'
@@ -22,7 +22,7 @@ book_manager = BookManager()
 books = book_manager.books
 
 @app.route("/")
-def index(subpath=None):
+def index():
     return render_template('/templates/index.html')
 
 
@@ -39,10 +39,6 @@ def registration_form():
     return render_template('/templates/register.html')
 
 
-# @app.route("/static_content/<path:filename>", methods=['GET', 'POST'])
-# def static_content(filename):
-#     book = books[session["book_UUID"]]
-#     return send_from_directory(book.opf_folder_location, filename)
 
 
 # @app.route("/<book_title>", methods=['GET', 'POST'])
@@ -62,13 +58,13 @@ def registration_form():
 #     infinite_scroll = f'{book.opf_folder_location}/infinite_scroll.html'
 #     return render_template('/templates/base_reader_cont_scroll.html', UUID=UUID)
 
-@app.route("/books/<UUID>", methods=['GET', 'POST'])
+@app.route("/data/<UUID>", methods=['GET', 'POST'])
 def read_book_cont_scroll(UUID):
     session["book_UUID"] = UUID
     book = books[session["book_UUID"]]
     current_page = f'{book.href[book.book_index_number]}'
     infinite_scroll = f'{book.opf_folder_location}/infinite_scroll.html'
-    return render_template('/templates/base_reader_concatenated_pages.html', book=book)
+    return render_template('/templates/reader.html', book=book)
 
 
 @app.route('/infinite_scroll', methods=['GET','POST'])
