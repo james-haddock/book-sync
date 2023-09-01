@@ -3,11 +3,13 @@ from model.subclass_physbook import Textbook
 # from model.class_book import Book
 from model.extract_book import extract_book
 from model.epub_validator import validate_book
-from flask import Flask, render_template, request, flash, url_for, redirect, get_flashed_messages,  send_from_directory, session, abort, Blueprint
+from flask import Flask, render_template, request, flash, url_for, redirect, get_flashed_messages,  send_from_directory, session, abort, Blueprint, jsonify
 import os
 import io
 import shutil
 from pathlib import Path
+import logging
+import uuid
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, template_folder='', static_folder='')
@@ -21,6 +23,12 @@ app.config.from_object(Config)
 book_manager = BookManager()
 books = book_manager.books
 
+logger = app.logger
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
+
+logger.addHandler(console_handler)
 @app.route("/")
 def index():
     return render_template('/templates/index.html')
@@ -58,13 +66,33 @@ def registration_form():
 #     infinite_scroll = f'{book.opf_folder_location}/infinite_scroll.html'
 #     return render_template('/templates/base_reader_cont_scroll.html', UUID=UUID)
 
-@app.route("/data/<UUID>", methods=['GET', 'POST'])
-def read_book_cont_scroll(UUID):
-    session["book_UUID"] = UUID
-    book = books[session["book_UUID"]]
-    current_page = f'{book.href[book.book_index_number]}'
-    infinite_scroll = f'{book.opf_folder_location}/infinite_scroll.html'
-    return render_template('/templates/reader.html', book=book)
+# @app.route("/data/<UUID>", methods=['GET', 'POST'])
+# def read_book_cont_scroll(UUID):
+#     session["book_UUID"] = UUID
+#     book = books[session["book_UUID"]]
+#     current_page = f'{book.href[book.book_index_number]}'
+#     infinite_scroll = f'{book.opf_folder_location}/infinite_scroll.html'
+#     return render_template('/templates/reader.html', book=book)
+
+
+
+
+
+@app.route("/data/<UUID>/<nav>", methods=['GET', 'POST'])
+def read_book(UUID: str, nav=None):
+    book = books[UUID]
+    if nav == 'next' and book.book_index_number < len(book.href):
+        book.book_index_number += 1
+        return render_template(book.href[book.book_index_number])
+    elif nav == 'session':
+        return render_template(book.href[book.book_index_number])
+    elif nav == 'load':
+        return render_template('/templates/reader.html', UUID=UUID, book=book)
+    else:
+        return render_template(book.href[book.book_index_number])
+    
+
+
 
 
 @app.route('/infinite_scroll', methods=['GET','POST'])
@@ -90,6 +118,14 @@ def current_page(subpath = None):
     # return static_page
     # return send_from_directory(directory, page)
     # return render_template(f'/{book.opf_folder_location}/{book.href[book.book_index_number]}')
+
+
+# @app.route('/get_page', methods=['GET'])
+# def get_page():
+#     page_number = int(request.args.get('page'))
+#     session['current_page'] = page_number
+#     href_list = ["page1.html", "page2.html", "page3.html"]  # Replace this with your actual list
+#     return jsonify({'href': href_list[page_number]})
 
 
 @app.route('/load_more/<UUID>/<nav>', methods=['GET','POST'])
@@ -129,7 +165,8 @@ def upload():
     if request.method == 'POST':
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
-            extract_book(uploaded_file)
+            book_instance_id = str(uuid.uuid4())
+            extract_book(uploaded_file, book_instance_id)
             filename = os.path.splitext(uploaded_file.filename)[0]
             book = Textbook(filename)
             book_manager.add_book(book)

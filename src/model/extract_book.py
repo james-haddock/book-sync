@@ -2,8 +2,8 @@ import zipfile
 import os
 from flask import abort
 
-def extract_book(epub_book):
-    extract_directory = f'data/extracted/{os.path.splitext(epub_book.filename)[0]}'
+def extract_book(epub_book, id):
+    extract_directory = f'data/{id}'
     try:
         os.makedirs(extract_directory)
     except FileExistsError:
