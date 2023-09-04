@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xml:lang="en-us" lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis">
+<head>
+<title>Refactoring: Improving the Design of Existing Code</title>
+<link rel="stylesheet" type="text/css" href="9780134757704.css"/>
+</head>
+<body>
+<section epub:type="frontmatter">
+<h2 class="h2a"><span epub:type="pagebreak" id="page_vii"/>Contents</h2>
+<p class="tocfm"><a href="foreword.xhtml#foreword"><em><strong>Foreword to the First Edition</strong></em></a></p>
+<p class="tocfm"><a href="preface.xhtml#preface"><em><strong>Preface</strong></em></a></p>
+<p class="tocchap"><a href="ch01.xhtml#ch01"><span class="pd_maroon"><strong>Chapter 1: Refactoring: A First Example</strong></span></a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec1">The Starting Point</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec2">Comments on the Starting Program</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec3">The First Step in Refactoring</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec4">Decomposing the <code>statement</code> Function</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec5">Status: Lots of Nested Functions</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec6">Splitting the Phases of Calculation and Formatting</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec7">Status: Separated into Two Files (and Phases)</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec8">Reorganizing the Calculations by Type</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec9">Status: Creating the Data with the Polymorphic Calculator</a></p>
+<p class="tocsec"><a href="ch01.xhtml#ch01lev1sec10">Final Thoughts</a></p>
+<p class="tocchap"><a href="ch02.xhtml#ch02"><span class="pd_maroon"><strong>Chapter 2: Principles in Refactoring</strong></span></a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec1">Defining Refactoring</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec2">The Two Hats</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec3">Why Should We Refactor?</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec4">When Should We Refactor?</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec5">Problems with Refactoring</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec6">Refactoring, Architecture, and Yagni</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec7">Refactoring and the Wider Software Development Process</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec8">Refactoring and Performance</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec9">Where Did Refactoring Come From?</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec10">Automated Refactorings</a></p>
+<p class="tocsec"><a href="ch02.xhtml#ch02lev1sec11">Going Further</a></p>
+<p class="tocchap"><span epub:type="pagebreak" id="page_viii"/><a href="ch03.xhtml#ch03"><span class="pd_maroon"><strong>Chapter 3: Bad Smells in Code</strong></span></a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec1">Mysterious Name</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec2">Duplicated Code</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec3">Long Function</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec4">Long Parameter List</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec5">Global Data</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec6">Mutable Data</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec7">Divergent Change</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec8">Shotgun Surgery</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec9">Feature Envy</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec10">Data Clumps</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec11">Primitive Obsession</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec12">Repeated Switches</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec13">Loops</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec14">Lazy Element</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec15">Speculative Generality</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec16">Temporary Field</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec17">Message Chains</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec18">Middle Man</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec19">Insider Trading</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec20">Large Class</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec21">Alternative Classes with Different Interfaces</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec22">Data Class</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec23">Refused Bequest</a></p>
+<p class="tocsec"><a href="ch03.xhtml#ch03lev1sec24">Comments</a></p>
+<p class="tocchap"><a href="ch04.xhtml#ch04"><span class="pd_maroon"><strong>Chapter 4: Building Tests</strong></span></a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec1">The Value of Self-Testing Code</a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec2">Sample Code to Test</a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec3">A First Test</a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec4">Add Another Test</a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec5">Modifying the Fixture</a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec6">Probing the Boundaries</a></p>
+<p class="tocsec"><a href="ch04.xhtml#ch04lev1sec7">Much More Than This</a></p>
+<p class="tocchap"><a href="ch05.xhtml#ch05"><span class="pd_maroon"><strong>Chapter 5: Introducing the Catalog</strong></span></a></p>
+<p class="tocsec"><a href="ch05.xhtml#ch05lev1sec1">Format of the Refactorings</a></p>
+<p class="tocsec"><a href="ch05.xhtml#ch05lev1sec2">The Choice of Refactorings</a></p>
+<p class="tocchap"><span epub:type="pagebreak" id="page_ix"/><a href="ch06.xhtml#ch06"><span class="pd_maroon"><strong>Chapter 6: A First Set of Refactorings</strong></span></a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec1">Extract Function</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec2">Inline Function</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec3">Extract Variable</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec4">Inline Variable</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec7">Rename Variable</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec8">Introduce Parameter Object</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec9">Combine Functions into Class</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec10">Combine Functions into Transform</a></p>
+<p class="tocsec"><a href="ch06.xhtml#ch06lev1sec11">Split Phase</a></p>
+<p class="tocchap"><a href="ch07.xhtml#ch07"><span class="pd_maroon"><strong>Chapter 7: Encapsulation</strong></span></a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec2">Encapsulate Collection</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec3">Replace Primitive with Object</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec5">Extract Class</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec6">Inline Class</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec7">Hide Delegate</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec8">Remove Middle Man</a></p>
+<p class="tocsec"><a href="ch07.xhtml#ch07lev1sec9">Substitute Algorithm</a></p>
+<p class="tocchap"><a href="ch08.xhtml#ch08"><span class="pd_maroon"><strong>Chapter 8: Moving Features</strong></span></a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec1">Move Function</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec2">Move Field</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec3">Move Statements into Function</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec4">Move Statements to Callers</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec5">Replace Inline Code with Function Call</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec6">Slide Statements</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec7">Split Loop</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec8">Replace Loop with Pipeline</a></p>
+<p class="tocsec"><a href="ch08.xhtml#ch08lev1sec9">Remove Dead Code</a></p>
+<p class="tocchap"><a href="ch09.xhtml#ch09"><span class="pd_maroon"><strong>Chapter 9: Organizing Data</strong></span></a></p>
+<p class="tocsec"><a href="ch09.xhtml#ch09lev1sec1">Split Variable</a></p>
+<p class="tocsec"><a href="ch09.xhtml#ch09lev1sec2">Rename Field</a></p>
+<p class="tocsec"><a href="ch09.xhtml#ch09lev1sec3">Replace Derived Variable with Query</a></p>
+<p class="tocsec"><span epub:type="pagebreak" id="page_x"/><a href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a></p>
+<p class="tocsec"><a href="ch09.xhtml#ch09lev1sec5">Change Value to Reference</a></p>
+<p class="tocchap"><a href="ch10.xhtml#ch10"><span class="pd_maroon"><strong>Chapter 10: Simplifying Conditional Logic</strong></span></a></p>
+<p class="tocsec"><a href="ch10.xhtml#ch10lev1sec1">Decompose Conditional</a></p>
+<p class="tocsec"><a href="ch10.xhtml#ch10lev1sec2">Consolidate Conditional Expression</a></p>
+<p class="tocsec"><a href="ch10.xhtml#ch10lev1sec3">Replace Nested Conditional with Guard Clauses</a></p>
+<p class="tocsec"><a href="ch10.xhtml#ch10lev1sec4">Replace Conditional with Polymorphism</a></p>
+<p class="tocsec"><a href="ch10.xhtml#ch10lev1sec5">Introduce Special Case</a></p>
+<p class="tocsec"><a href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a></p>
+<p class="tocchap"><a href="ch11.xhtml#ch11"><span class="pd_maroon"><strong>Chapter 11: Refactoring APIs</strong></span></a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec1">Separate Query from Modifier</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec2">Parameterize Function</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec3">Remove Flag Argument</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec4">Preserve Whole Object</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec5">Replace Parameter with Query</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec6">Replace Query with Parameter</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec8">Replace Constructor with Factory Function</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec9">Replace Function with Command</a></p>
+<p class="tocsec"><a href="ch11.xhtml#ch11lev1sec10">Replace Command with Function</a></p>
+<p class="tocchap"><a href="ch12.xhtml#ch12"><span class="pd_maroon"><strong>Chapter 12: Dealing with Inheritance</strong></span></a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec1">Pull Up Method</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec2">Pull Up Field</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec3">Pull Up Constructor Body</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec4">Push Down Method</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec5">Push Down Field</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec6">Replace Type Code with Subclasses</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec7">Remove Subclass</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec8">Extract Superclass</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec9">Collapse Hierarchy</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec10">Replace Subclass with Delegate</a></p>
+<p class="tocsec"><a href="ch12.xhtml#ch12lev1sec11">Replace Superclass with Delegate</a></p>
+<p class="tocbmt"><a href="biblo.xhtml#biblo"><em><strong>Bibliography</strong></em></a></p>
+<p class="tocbm"><a href="index.xhtml#index"><em><strong>Index</strong></em></a></p>
+</section>
+</body>
+</html>

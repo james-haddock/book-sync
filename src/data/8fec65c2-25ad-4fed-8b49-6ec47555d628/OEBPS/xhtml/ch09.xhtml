@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xml:lang="en-us" lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis">
+<head>
+<title>Refactoring: Improving the Design of Existing Code</title>
+<link rel="stylesheet" type="text/css" href="9780134757704.css"/>
+</head>
+<body>
+<section epub:type="bodymatter">
+<h2 class="h2" id="ch09"><span epub:type="pagebreak" id="page_239"/>Chapter 9<br/>Organizing Data</h2>
+<p class="noindent">Data structures play an important role in our programs, so it&#8217;s no great shock that I have a clutch of refactorings that focus on them. A value that&#8217;s used for different purposes is a breeding ground for confusion and bugs&#8212;so, when I see one, I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec1">Split Variable</a> (<a class="pd_maroon" href="ch09.xhtml#page_240">240</a>)</span></em> to separate the usages. As with any program element, getting a variable&#8217;s name right is tricky and important, so <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec7">Rename Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_137">137</a>)</span></em> is often my friend. But sometimes the best thing I can do with a variable is to get rid of it completely&#8212;with <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec3">Replace Derived Variable with Query</a> (<a class="pd_maroon" href="ch09.xhtml#page_248">248</a>)</span></em>.</p>
+<p class="indent">I often find problems in a code base due to a confusion between references and values, so I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a> (<a class="pd_maroon" href="ch09.xhtml#page_252">252</a>)</span></em> and <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec5">Change Value to Reference</a> (<a class="pd_maroon" href="ch09.xhtml#page_256">256</a>)</span></em> to change between these styles.</p>
+<h3 class="h3" id="ch09lev1sec1"><span epub:type="pagebreak" id="page_240"/>Split Variable</h3>
+<p class="noindent">formerly: <em>Remove Assignments to Parameters</em></p>
+<p class="noindentz">formerly: <em>Split Temp</em></p>
+<figure class="fig-group">
+<img src="graphics/p0240_01.jpg" aria-describedby="alt_p0240_01" alt="A figure illustrates how the refactoring technique is used to split a variable."/>
+<aside class="hidden" id="alt_p0240_01">
+<p>The diagrammatic representation shows variables assigned for various uses. The actual code reads, let temp = 2 * (height + width); console.log(temp); temp = height * width; console.log(temp); The code after refactoring reads, const perimeter = 2 * (height + width); console.log(perimeter); const area = height * width; console.log(area);</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch09lev2sec1">Motivation</h4>
+<p class="noindent">Variables have various uses. Some of these uses naturally lead to the variable being assigned to several times. Loop variables change for each run of a loop (such as the <code>i</code> in <code>for (let i=0; i&lt;10; i++)</code>). Collecting variables store a value that is built up during the method.</p>
+<p class="indent">Many other variables are used to hold the result of a long-winded bit of code for easy reference later. These kinds of variables should be set only once. If they are set more than once, it is a sign that they have more than one responsibility within the method. Any variable with more than one responsibility should be replaced with multiple variables, one for each responsibility. Using a variable for two different things is very confusing for the reader.</p>
+<h4 class="h4" id="ch09lev2sec2">Mechanics</h4>
+<ul class="square">
+<li><p>Change the name of the variable at its declaration and first assignment.</p>
+<div class="blockquote">
+<p class="noindent">If the later assignments are of the form <code>i = i + something</code>, that is a collecting variable, so don&#8217;t split it. A collecting variable is often used for calculating sums, string concatenation, writing to a stream, or adding to a collection.</p>
+</div></li>
+<li><p><span epub:type="pagebreak" id="page_241"/>If possible, declare the new variable as immutable.</p></li>
+<li><p>Change all references of the variable up to its second assignment.</p></li>
+<li><p>Test.</p></li>
+<li><p>Repeat in stages, at each stage renaming the variable at the declaration and changing references until the next assignment, until you reach the final assignment.</p></li>
+</ul>
+<h4 class="h4" id="ch09lev2sec3">Example</h4>
+<p class="noindent">For this example, I compute the distance traveled by a haggis. From a standing start, a haggis experiences an initial force. After a delay, a secondary force kicks in to further accelerate the haggis. Using the common laws of motion, I can compute the distance traveled as follows:</p>
+<p class="codelink"><a id="p0241_01a" href="ch09_images.xhtml#p0241_01">Click here to view code image</a></p>
+<pre class="pre">function distanceTravelled (scenario, time) {
+  let result;
+  let acc = scenario.primaryForce / scenario.mass;
+  let primaryTime = Math.min(time, scenario.delay);
+  result = 0.5 * acc * primaryTime * primaryTime;
+  let secondaryTime = time - scenario.delay;
+  if (secondaryTime &gt; 0) {
+    let primaryVelocity = acc * scenario.delay;
+    acc = (scenario.primaryForce + scenario.secondaryForce) / scenario.mass;
+    result += primaryVelocity * secondaryTime + 0.5 * acc * secondaryTime * secondaryTime;
+  }
+  return result;
+}</pre>
+<p class="indent">A nice awkward little function. The interesting thing for our example is the way the variable <code>acc</code> is set twice. It has two responsibilities: one to hold the initial acceleration from the first force and another later to hold the acceleration from both forces. I want to split this variable.</p>
+<div class="blockquote">
+<p class="noindent">When trying to understand how a variable is used, it&#8217;s handy if my editor can highlight all occurrences of a symbol within a function or file. Most modern editors can do this pretty easily.</p>
+</div>
+<p class="indent">I start at the beginning by changing the name of the variable and declaring the new name as <code>const</code>. Then, I change all references to the variable from that point up to the next assignment. At the next assignment, I declare it:</p>
+<p class="codelink"><a id="p0242_01a" href="ch09_images.xhtml#p0242_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_242"/>function distanceTravelled (scenario, time) {
+  let result;
+  <span class="pd_maroon1">const primaryAcceleration</span> = scenario.primaryForce / scenario.mass;
+  let primaryTime = Math.min(time, scenario.delay);
+  result = 0.5 * <span class="pd_maroon1">primaryAcceleration</span> * primaryTime * primaryTime;
+  let secondaryTime = time - scenario.delay;
+  if (secondaryTime &gt; 0) {
+    let primaryVelocity = <span class="pd_maroon1">primaryAcceleration</span> * scenario.delay;
+    <span class="pd_maroon1">let acc</span> = (scenario.primaryForce + scenario.secondaryForce) / scenario.mass;
+    result += primaryVelocity * secondaryTime + 0.5 * acc * secondaryTime * secondaryTime;
+  }
+  return result;
+}</pre>
+<p class="indent">I choose the new name to represent only the first use of the variable. I make it <code>const</code> to ensure it is only assigned once. I can then declare the original variable at its second assignment. Now I can compile and test, and all should work.</p>
+<p class="indent">I continue on the second assignment of the variable. This removes the original variable name completely, replacing it with a new variable named for the second use.</p>
+<p class="codelink"><a id="p0242_02a" href="ch09_images.xhtml#p0242_02">Click here to view code image</a></p>
+<pre class="pre">function distanceTravelled (scenario, time) {
+  let result;
+  const primaryAcceleration = scenario.primaryForce / scenario.mass;
+  let primaryTime = Math.min(time, scenario.delay);
+  result = 0.5 * primaryAcceleration * primaryTime * primaryTime;
+  let secondaryTime = time - scenario.delay;
+  if (secondaryTime &gt; 0) {
+    let primaryVelocity = primaryAcceleration * scenario.delay;
+    <span class="pd_maroon1">const secondaryAcceleration</span> = (scenario.primaryForce + scenario.secondaryForce) / scenario.mass;
+    result += primaryVelocity * secondaryTime +
+      0.5 * <span class="pd_maroon1">secondaryAcceleration</span> * secondaryTime * secondaryTime;
+  }
+  return result;
+}</pre>
+<p class="indent">I&#8217;m sure you can think of a lot more refactoring to be done here. Enjoy it. (I&#8217;m sure it&#8217;s better than eating the haggis&#8212;do you know what they put in those things?)</p>
+<h4 class="h4" id="ch09lev2sec4">Example: Assigning to an Input Parameter</h4>
+<p class="noindent">Another case of splitting a variable is where the variable is declared as an input parameter. Consider something like</p>
+<p class="codelink"><a id="p0242_03a" href="ch09_images.xhtml#p0242_03">Click here to view code image</a></p>
+<pre class="pre">function discount (inputValue, quantity) {
+  if (inputValue &gt; 50) inputValue = inputValue - 2;
+  if (quantity &gt; 100) inputValue = inputValue - 1;
+  return inputValue;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_243"/>Here <code>inputValue</code> is used both to supply an input to the function and to hold the result for the caller. (Since JavaScript has call-by-value parameters, any modification of <code>inputValue</code> isn&#8217;t seen by the caller.)</p>
+<p class="indent">In this situation, I would split that variable.</p>
+<p class="codelink"><a id="p0243_01a" href="ch09_images.xhtml#p0243_01">Click here to view code image</a></p>
+<pre class="pre">function discount (<span class="pd_maroon1">originalInputValue</span>, quantity) {
+  let inputValue = <span class="pd_maroon1">originalInputValue</span>;
+  if (inputValue &gt; 50) inputValue = inputValue - 2;
+  if (quantity &gt; 100) inputValue = inputValue - 1;
+  return inputValue;
+}</pre>
+<p class="indent">I then perform <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec7">Rename Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_137">137</a>)</span></em> twice to get better names.</p>
+<p class="codelink"><a id="p0243_02a" href="ch09_images.xhtml#p0243_02">Click here to view code image</a></p>
+<pre class="pre">function discount (<span class="pd_maroon1">inputValue</span>, quantity) {
+  let <span class="pd_maroon1">result</span> = <span class="pd_maroon1">inputValue</span>;
+  if (<span class="pd_maroon1">inputValue</span> &gt; 50) <span class="pd_maroon1">result</span> = result - 2;
+  if (quantity &gt; 100) <span class="pd_maroon1">result</span> = result - 1;
+  return <span class="pd_maroon1">result</span>;
+}</pre>
+<p class="indent">You&#8217;ll notice that I changed the second line to use <code>inputValue</code> as its data source. Although the two are the same, I think that line is really about applying the modification to the result value based on the original input value, not the (coincidentally same) value of the result accumulator.</p>
+<h3 class="h3" id="ch09lev1sec2"><span epub:type="pagebreak" id="page_244"/>Rename Field</h3>
+<figure class="fig-group">
+<img src="graphics/p0244_01.jpg" aria-describedby="alt_p0244_01" alt="A figure illustrates how the refactoring technique is used to rename a field."/>
+<aside class="hidden" id="alt_p0244_01">
+<p>The diagrammatic representation shows a field &#145;nm,&#146; that is renamed to &#145;name.&#146; The actual code reads, class organization { get name() {...} } The code after refactoring reads, class organization { get title() {...} }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch09lev2sec5">Motivation</h4>
+<p class="noindent">Names are important, and field names in record structures can be especially important when those record structures are widely used across a program. Data structures play a particularly important role in understanding. Many years ago Fred Brooks said, &#8220;Show me your flowcharts and conceal your tables, and I shall continue to be mystified. Show me your tables, and I won&#8217;t usually need your flowcharts; they&#8217;ll be obvious.&#8221; While I don&#8217;t see many people drawing flowcharts these days, the adage remains valid. Data structures are the key to understanding what&#8217;s going on.</p>
+<p class="indent">Since these data structures are so important, it&#8217;s essential to keep them clear. Like anything else, my understanding of data improves the more I work on the software, so it&#8217;s vital that this improved understanding is embedded into the program.</p>
+<p class="indent">You may want to rename a field in a record structure, but the idea also applies to classes. Getter and setter methods form an effective field for users of the class. Renaming them is just as important as with bare record structures.</p>
+<h4 class="h4" id="ch09lev2sec6">Mechanics</h4>
+<ul class="square">
+<li><p>If the record has limited scope, rename all accesses to the field and test; no need to do the rest of the mechanics.</p></li>
+<li><p><span epub:type="pagebreak" id="page_245"/>If the record isn&#8217;t already encapsulated, apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em>.</p></li>
+<li><p>Rename the private field inside the object, adjust internal methods to fit.</p></li>
+<li><p>Test.</p></li>
+<li><p>If the constructor uses the name, apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to rename it.</p></li>
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Rename Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to the accessors.</p></li>
+</ul>
+<h4 class="h4" id="ch09lev2sec7">Example: Renaming a Field</h4>
+<p class="noindent">I&#8217;ll start with a constant.</p>
+<p class="codelink"><a id="p0245_01a" href="ch09_images.xhtml#p0245_01">Click here to view code image</a></p>
+<pre class="pre">const organization = {name: "Acme Gooseberries", country: "GB"};</pre>
+<p class="indent">I want to change &#8220;name&#8221; to &#8220;title&#8221;. The object is widely used in the code base, and there are updates to the title in the code. So my first move is to apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em>.</p>
+<p class="codelink"><a id="p0245_02a" href="ch09_images.xhtml#p0245_02">Click here to view code image</a></p>
+<pre class="pre">class Organization {
+  constructor(data) {
+    this._name = data.name;
+    this._country = data.country;
+  }
+  get name()    {return this._name;}
+  set name(aString) {this._name = aString;}
+  get country()    {return this._country;}
+  set country(aCountryCode) {this._country = aCountryCode;}
+}
+
+const organization = new Organization({name: "Acme Gooseberries", country: "GB"});</pre>
+<p class="indent">Now that I&#8217;ve encapsulated the record structure into the class, there are four places I need to look at for renaming: the getting function, the setting function, the constructor, and the internal data structure. While that may sound like I&#8217;ve increased my workload, it actually makes my work easier since I can now change these independently instead of all at once, taking smaller steps. Smaller steps mean fewer things to go wrong in each step&#8212;therefore, less work. It wouldn&#8217;t be less work if I never made mistakes&#8212;but not making mistakes is a fantasy I gave up on a long time ago.</p>
+<p class="indent">Since I&#8217;ve copied the input data structure into the internal data structure, I need to separate them so I can work on them independently. I can do this by defining a separate field and adjusting the constructor and accessors to use it.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_246"/><em>class Organization&#8230;</em></p>
+<p class="codelink"><a id="p0246_01a" href="ch09_images.xhtml#p0246_01">Click here to view code image</a></p>
+<pre class="pre">class Organization {
+  constructor(data) {
+    this.<span class="pd_maroon1">_title</span> = data.name;
+    this._country = data.country;
+  }
+  get name()    {return this.<span class="pd_maroon1">_title</span>;}
+  set name(aString) {this.<span class="pd_maroon1">_title</span> = aString;}
+  get country()    {return this._country;}
+  set country(aCountryCode) {this._country = aCountryCode;}
+}</pre>
+<p class="indent">Next, I add support for using &#8220;title&#8221; in the constructor.</p>
+<p class="pro-title"><em>class Organization&#8230;</em></p>
+<p class="codelink"><a id="p0246_02a" href="ch09_images.xhtml#p0246_02">Click here to view code image</a></p>
+<pre class="pre">class Organization {
+  constructor(data) {
+    this._title = <span class="pd_maroon1">(data.title !== undefined) ? data.title : data.name;</span>
+    this._country = data.country;
+  }
+  get name()    {return this._title;}
+  set name(aString) {this._title = aString;}
+  get country()    {return this._country;}
+  set country(aCountryCode) {this._country = aCountryCode;}
+}</pre>
+<p class="indent">Now, callers of my constructor can use either name or title (with title taking precedence). I can now go through all constructor callers and change them one-by-one to use the new name.</p>
+<p class="codelink"><a id="p0246_03a" href="ch09_images.xhtml#p0246_03">Click here to view code image</a></p>
+<pre class="pre">const organization = new Organization({<span class="pd_maroon1">title</span>: "Acme Gooseberries", country: "GB"});</pre>
+<p class="indent">Once I&#8217;ve done all of them, I can remove the support for the name.</p>
+<p class="pro-title"><em>class Organization&#8230;</em></p>
+<p class="codelink"><a id="p0246_04a" href="ch09_images.xhtml#p0246_04">Click here to view code image</a></p>
+<pre class="pre">class Organization {
+  constructor(data) {
+    this._title = <span class="pd_maroon1">data.title</span>;
+    this._country = data.country;
+  }
+  get name()    {return this._title;}
+  set name(aString) {this._title = aString;}
+  get country()    {return this._country;}
+  set country(aCountryCode) {this._country = aCountryCode;}
+}</pre>
+<p class="indent">Now that the constructor and data use the new name, I can change the accessors, which is as simple as applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Rename Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to each one.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_247"/><em>class Organization&#8230;</em></p>
+<p class="codelink"><a id="p0247_01a" href="ch09_images.xhtml#p0247_01">Click here to view code image</a></p>
+<pre class="pre">class Organization {
+  constructor(data) {
+    this._title = data.title;
+    this._country = data.country;
+  }
+  get <span class="pd_maroon1">title</span>()    {return this._title;}
+  set <span class="pd_maroon1">title</span>(aString) {this._title = aString;}
+  get country()    {return this._country;}
+  set country(aCountryCode) {this._country = aCountryCode;}
+}</pre>
+<p class="indent">I&#8217;ve shown this process in its most heavyweight form needed for a widely used data structure. If it&#8217;s being used only locally, as in a single function, I can probably just rename the various properties in one go without doing encapsulation. It&#8217;s a matter of judgment when to apply to the full mechanics here&#8212;but, as usual with refactoring, if my tests break, that&#8217;s a sign I need to use the more gradual procedure.</p>
+<p class="indent">Some languages allow me to make a data structure immutable. In this case, rather than encapsulating it, I can copy the value to the new name, gradually change the users, then remove the old name. Duplicating data is a recipe for disaster with mutable data structures; removing such disasters is why immutable data is so popular.</p>
+<h3 class="h3" id="ch09lev1sec3"><span epub:type="pagebreak" id="page_248"/>Replace Derived Variable with Query</h3>
+<figure class="fig-group">
+<img src="graphics/p0248_01.jpg" aria-describedby="alt_p0248_01" alt="A figure illustrates how the refactoring technique is used to replace a derived variable with a query."/>
+<aside class="hidden" id="alt_p0248_01">
+<p>The diagrammatic representation shows a few variables where a derived variable is being replaced with a set of queries. The actual code reads, get discountedTotal () {return this._discountedTotal;} set discount (aNumber) { const old = this._discount; this.discount = aNumber; this._discountedTotal += old - aNumber; } The code after refactoring reads, get discountedTotal () {return this._baseTotal - this._discount;} set discount (aNumber) {this._discount = aNumber;}</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch09lev2sec8">Motivation</h4>
+<p class="noindent">One of the biggest sources of problems in software is mutable data. Data changes can often couple together parts of code in awkward ways, with changes in one part leading to knock-on effects that are hard to spot. In many situations it&#8217;s not realistic to entirely remove mutable data&#8212;but I do advocate minimizing the scope of mutable data at much as possible.</p>
+<p class="indent">One way I can make a big impact is by removing any variables that I could just as easily calculate. A calculation often makes it clearer what the meaning of the data is, and it is protected from being corrupted when you fail to update the variable as the source data changes.</p>
+<p class="indent">A reasonable exception to this is when the source data for the calculation is immutable and we can force the result to being immutable too. Transformation operations that create new data structures are thus reasonable to keep even if they could be replaced with calculations. Indeed, there is a duality here between objects that wrap a data structure with a series of calculated properties and functions that transform one data structure into another. The object route is clearly better when the source data changes and you would have to manage the lifetime of the derived data structures. But if the source data is immutable, or the derived data is very transient, then both approaches are effective.</p>
+<h4 class="h4" id="ch09lev2sec9"><span epub:type="pagebreak" id="page_249"/>Mechanics</h4>
+<ul class="square">
+<li><p>Identify all points of update for the variable. If necessary, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec1">Split Variable</a> (<a class="pd_maroon" href="ch09.xhtml#page_240">240</a>)</span></em> to separate each point of update.</p></li>
+<li><p>Create a function that calculates the value of the variable.</p></li>
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a> (<a class="pd_maroon" href="ch10.xhtml#page_302">302</a>)</span></em> to assert that the variable and the calculation give the same result whenever the variable is used.</p>
+<div class="blockquote">
+<p class="noindent">If necessary, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> to provide a home for the assertion.</p>
+</div></li>
+<li><p>Test.</p></li>
+<li><p>Replace any reader of the variable with a call to the new function.</p></li>
+<li><p>Test.</p></li>
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec9">Remove Dead Code</a> (<a class="pd_maroon" href="ch08.xhtml#page_237">237</a>)</span></em> to the declaration and updates to the variable.</p></li>
+</ul>
+<h4 class="h4" id="ch09lev2sec10">Example</h4>
+<p class="noindent">Here&#8217;s a small but perfectly formed example of ugliness:</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0249_01a" href="ch09_images.xhtml#p0249_01">Click here to view code image</a></p>
+<pre class="pre">get production() {return this._production;}
+applyAdjustment(anAdjustment) {
+  this._adjustments.push(anAdjustment);
+  this._production += anAdjustment.amount;
+}</pre>
+<p class="indent">Ugliness is in the eye of beholder; here, I see ugliness in duplication&#8212;not the common duplication of code but duplication of data. When I apply an adjustment, I&#8217;m not just storing that adjustment but also using it to modify an accumulator. I can just calculate that value, without having to update it.</p>
+<p class="indent">But I&#8217;m a cautious fellow. It is my hypothesis is that I can just calculate it&#8212;I can test that hypothesis by using <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a> (<a class="pd_maroon" href="ch10.xhtml#page_302">302</a>)</span></em>:</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0249_02a" href="ch09_images.xhtml#p0249_02">Click here to view code image</a></p>
+<pre class="pre">get production() {
+  <span class="pd_maroon1">assert(this._production === this.calculatedProduction);</span>
+  return this._production;
+}
+
+  <span class="pd_maroon1">get calculatedProduction() {</span>
+    <span class="pd_maroon1">return this._adjustments</span>
+      <span class="pd_maroon1">.reduce((sum, a) =&gt; sum + a.amount, 0);</span>
+  <span class="pd_maroon1">}</span></pre>
+<p class="indent"><span epub:type="pagebreak" id="page_250"/>With the assertion in place, I run my tests. If the assertion doesn&#8217;t fail, I can replace returning the field with returning the calculation:</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0250_01a" href="ch09_images.xhtml#p0250_01">Click here to view code image</a></p>
+<pre class="pre">get production() {
+  <span class="strike"><span class="pd_maroon1">assert(this._production === this.calculatedProduction);</span></span>
+  return <span class="pd_maroon1">this.calculatedProduction;</span>
+}</pre>
+<p class="indent">Then <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em>:</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0250_02a" href="ch09_images.xhtml#p0250_02">Click here to view code image</a></p>
+<pre class="pre">get production() {
+  return <span class="pd_maroon1">this._adjustments</span>
+    <span class="pd_maroon1">.reduce((sum, a) =&gt; sum + a.amount, 0);</span>
+}</pre>
+<p class="indent">I clean up any references to the old variable with <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec9">Remove Dead Code</a> (<a class="pd_maroon" href="ch08.xhtml#page_237">237</a>)</span></em>:</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0250_03a" href="ch09_images.xhtml#p0250_03">Click here to view code image</a></p>
+<pre class="pre">applyAdjustment(anAdjustment) {
+  this._adjustments.push(anAdjustment);
+  <span class="strike"><span class="pd_maroon1">this._production += anAdjustment.amount;</span></span>
+}</pre>
+<h4 class="h4" id="ch09lev2sec11">Example: More Than One Source</h4>
+<p class="noindent">The above example is nice and easy because there&#8217;s clearly a single source for the value of <code>production</code>. But sometimes, more than one element can combine in the accumulator.</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0250_04a" href="ch09_images.xhtml#p0250_04">Click here to view code image</a></p>
+<pre class="pre">constructor (production) {
+  <span class="pd_maroon1">this._production</span> = production;
+  this._adjustments = [];
+}
+get production() {return <span class="pd_maroon1">this._production</span>;}
+applyAdjustment(anAdjustment) {
+  this._adjustments.push(anAdjustment);
+  <span class="pd_maroon1">this._production</span> += anAdjustment.amount;
+}</pre>
+<p class="indent">If I do the same <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a> (<a class="pd_maroon" href="ch10.xhtml#page_302">302</a>)</span></em> that I did above, it will now fail for any case where the initial value of the production isn&#8217;t zero.</p>
+<p class="indent">But I can still replace the derived data. The only difference is that I must first apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec1">Split Variable</a> (<a class="pd_maroon" href="ch09.xhtml#page_240">240</a>)</span></em>.</p>
+<p class="codelink"><a id="p0251_01a" href="ch09_images.xhtml#p0251_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_251"/>constructor (production) {
+  <span class="pd_maroon1">this._initialProduction = production;</span>
+  this._<span class="pd_maroon1">productionAccumulator</span> = 0;
+  this._adjustments = [];
+}
+get production() {
+  return <span class="pd_maroon1">this._initialProduction +</span> this._<span class="pd_maroon1">productionAccumulator</span>;
+}</pre>
+<p class="indent">Now I can <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a> (<a class="pd_maroon" href="ch10.xhtml#page_302">302</a>)</span></em>:</p>
+<p class="pro-title"><em>class ProductionPlan&#8230;</em></p>
+<p class="codelink"><a id="p0251_02a" href="ch09_images.xhtml#p0251_02">Click here to view code image</a></p>
+<pre class="pre">get production() {
+  <span class="pd_maroon1">assert(this._productionAccumulator === this.calculatedProductionAccumulator);</span>
+  return this._initialProduction + this._productionAccumulator;
+}
+
+  <span class="pd_maroon1">get calculatedProductionAccumulator() {</span>
+    <span class="pd_maroon1">return this._adjustments</span>
+      <span class="pd_maroon1">.reduce((sum, a) =&gt; sum + a.amount, 0);</span>
+  <span class="pd_maroon1">}</span></pre>
+<p class="noindent">and continue pretty much as before. I&#8217;d be inclined, however, to leave <code>totalProductionAjustments</code> as its own property, without inlining it.</p>
+<h3 class="h3" id="ch09lev1sec4"><span epub:type="pagebreak" id="page_252"/>Change Reference to Value</h3>
+<p class="noindent">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec5">Change Value to Reference</a> (<a class="pd_maroon" href="ch09.xhtml#page_256">256</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0252_01.jpg" aria-describedby="alt_p0252_01" alt="A figure illustrates how the refactoring technique is used to change a reference to a value."/>
+<aside class="hidden" id="alt_p0252_01">
+<p>The diagrammatic representation shows two objects, both of which have the same set of objects nested in them, where the inner object is referenced. Hence, the inner object points to the two outer objects. The actual code reads, class Product { applyDiscount (arg) {this._price.amount -= arg;} The code after refactoring reads, class Product { applyDiscount (arg) { thid._price = new Money(this._price.amount - arg, this._ price.currency); }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch09lev2sec12">Motivation</h4>
+<p class="noindent">When I nest an object, or data structure, within another I can treat the inner object as a reference or as a value. The difference is most obviously visible in how I handle updates of the inner object&#8217;s properties. If I treat it as a reference, I&#8217;ll update the inner object&#8217;s property keeping the same inner object. If I treat it as a value, I will replace the entire inner object with a new one that has the desired property.</p>
+<p class="indent">If I treat a field as a value, I can change the class of the inner object to make it a Value Object [<a href="biblo.xhtml#bib39">mf-vo</a>]. Value objects are generally easier to reason about, particularly because they are immutable. In general, immutable data structures are easier to deal with. I can pass an immutable data value out to other parts of the program and not worry that it might change without the enclosing object being aware of the change. I can replicate values around my program and not worry about maintaining memory links. Value objects are especially useful in distributed and concurrent systems.</p>
+<p class="indent">This also suggests when I shouldn&#8217;t do this refactoring. If I want to share an object between several objects so that any change to the shared object is visible to all its collaborators, then I need the shared object to be a reference.</p>
+<h4 class="h4" id="ch09lev2sec13"><span epub:type="pagebreak" id="page_253"/>Mechanics</h4>
+<ul class="square">
+<li><p>Check that the candidate class is immutable or can become immutable.</p></li>
+<li><p>For each setter, apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a> (<a class="pd_maroon" href="ch11.xhtml#page_331">331</a>)</span></em>.</p></li>
+<li><p>Provide a value-based equality method that uses the fields of the value object.</p>
+<div class="blockquote">
+<p class="noindent">Most language environments provide an overridable equality function for this purpose. Usually you must override a hashcode generator method as well.</p>
+</div></li>
+</ul>
+<h4 class="h4" id="ch09lev2sec14">Example</h4>
+<p class="noindent">Imagine we have a person object that holds onto a crude telephone number.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0253_01a" href="ch09_images.xhtml#p0253_01">Click here to view code image</a></p>
+<pre class="pre">constructor() {
+  this._telephoneNumber = new TelephoneNumber();
+}
+
+get officeAreaCode()    {return this._telephoneNumber.areaCode;}
+set officeAreaCode(arg) {this._telephoneNumber.areaCode = arg;}
+get officeNumber()    {return this._telephoneNumber.number;}
+set officeNumber(arg) {this._telephoneNumber.number = arg;}</pre>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0253_02a" href="ch09_images.xhtml#p0253_02">Click here to view code image</a></p>
+<pre class="pre">get areaCode()    {return this._areaCode;}
+set areaCode(arg) {this._areaCode = arg;}
+
+get number()    {return this._number;}
+set number(arg) {this._number = arg;}</pre>
+<p class="indent">This situation is the result of an <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec5">Extract Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_182">182</a>)</span></em> where the old parent still holds update methods for the new object. This is a good time to apply Change Reference to Value since there is only one reference to the new class.</p>
+<p class="indent">The first thing I need to do is to make the telephone number immutable. I do this by applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a> (<a class="pd_maroon" href="ch11.xhtml#page_331">331</a>)</span></em> to the fields. The first step of <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a> (<a class="pd_maroon" href="ch11.xhtml#page_331">331</a>)</span></em> is to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to add the two fields to the constructor and enhance the constructor to call the setters.</p>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0253_03a" href="ch09_images.xhtml#p0253_03">Click here to view code image</a></p>
+<pre class="pre">constructor(<span class="pd_maroon1">areaCode, number</span>) {
+  this._areaCode = areaCode;
+  this._number = number;
+}</pre>
+<p class="indent">Now I look at the callers of the setters. For each one, I need to change it to a reassignment. I start with the area code.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_254"/><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0254_01a" href="ch09_images.xhtml#p0254_01">Click here to view code image</a></p>
+<pre class="pre">get officeAreaCode()    {return this._telephoneNumber.areaCode;}
+set officeAreaCode(arg) {
+  <span class="pd_maroon1">this._telephoneNumber = new TelephoneNumber(arg, this.officeNumber);</span>
+}
+get officeNumber()    {return this._telephoneNumber.number;}
+set officeNumber(arg) {this._telephoneNumber.number = arg;}</pre>
+<p class="indent">I then repeat that step with the remaining field.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0254_02a" href="ch09_images.xhtml#p0254_02">Click here to view code image</a></p>
+<pre class="pre">get officeAreaCode()    {return this._telephoneNumber.areaCode;}
+set officeAreaCode(arg) {
+  this._telephoneNumber = new TelephoneNumber(arg, this.officeNumber);
+}
+get officeNumber()    {return this._telephoneNumber.number;}
+set officeNumber(arg) {
+  <span class="pd_maroon1">this._telephoneNumber = new TelephoneNumber(this.officeAreaCode, arg);</span>
+}</pre>
+<p class="indent">Now the telephone number is immutable, it is ready to become a true value. The citizenship test for a value object is that it uses value-based equality. This is an area where JavaScript falls down, as there is nothing in the language and core libraries that understands replacing a reference-based equality with a value-based one. The best I can do is to create my own <code>equals</code> method.</p>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0254_03a" href="ch09_images.xhtml#p0254_03">Click here to view code image</a></p>
+<pre class="pre">equals(other) {
+  if (!(other instanceof TelephoneNumber)) return false;
+  return this.areaCode === other.areaCode &amp;&amp;
+    this.number === other.number;
+}</pre>
+<p class="indent">It&#8217;s also important to test it with something like</p>
+<p class="codelink"><a id="p0254_04a" href="ch09_images.xhtml#p0254_04">Click here to view code image</a></p>
+<pre class="pre">it('telephone equals', function() {
+  assert(        new TelephoneNumber("312", "555-0142")
+         .equals(new TelephoneNumber("312", "555-0142")));
+});</pre>
+<div class="blockquote">
+<p class="noindent"><span class="pd_brown"><em>The unusual formatting I use here should make it obvious that they are the same constructor call.</em></span></p>
+</div>
+<p class="indent">The vital thing I do in the test is create two independent objects and test that they match as equal.</p>
+<div class="blockquote">
+<p class="noindent"><span epub:type="pagebreak" id="page_255"/>In most object-oriented languages, there is a built-in equality test that is supposed to be overridden for value-based equality. In Ruby, I can override the <code>==</code> operator; in Java, I override the <code>Object.equals()</code> method. And whenever I override an equality method, I usually need to override a hashcode generating method too (e.g., <code>Object.hashCode()</code> in Java) to ensure collections that use hashing work properly with my new value.</p>
+</div>
+<p class="indent">If the telephone number is used by more than one client, the procedure is still the same. As I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a> (<a class="pd_maroon" href="ch11.xhtml#page_331">331</a>)</span></em>, I&#8217;ll be modifying several clients instead of just one. Tests for non-equal telephone numbers, as well as comparisons to non-telephone-numbers and null values, are also worthwhile.</p>
+<h3 class="h3" id="ch09lev1sec5"><span epub:type="pagebreak" id="page_256"/>Change Value to Reference</h3>
+<p class="noindent">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a> (<a class="pd_maroon" href="ch09.xhtml#page_252">252</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0256_01.jpg" aria-describedby="alt_p0256_01" alt="A figure illustrated how the refactoring technique is used to change a value to a reference."/>
+<aside class="hidden" id="alt_p0256_01">
+<p>The diagrammatic representation shows two objects, both of which have the same set of objects nested in them, where the inner object is called by value. Hence, the outer object point to the inner object. The actual code reads, let customer = new Customer (customerData); The code after refactoring reads, let customer = customerRepository.get(customerData.id);</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch09lev2sec15">Motivation</h4>
+<p class="noindent">A data structure may have several records linked to the same logical data structure. I might read in a list of orders, some of which are for the same customer. When I have sharing like this, I can represent it by treating the customer either as a value or as a reference. With a value, the customer data is copied into each order; with a reference, there is only one data structure that multiple orders link to.</p>
+<p class="indent">If the customer never needs to be updated, then both approaches are reasonable. It is, perhaps, a bit confusing to have multiple copies of the same data, but it&#8217;s common enough to not be a problem. In some cases, there may be issues with memory due to multiple copies&#8212;but, like any performance issue, that&#8217;s relatively rare.</p>
+<p class="indent">The biggest difficulty in having physical copies of the same logical data occurs when I need to update the shared data. I then have to find all the copies and update them all. If I miss one, I&#8217;ll get a troubling inconsistency in my data. In this case, it&#8217;s often worthwhile to change the copied data into a single reference. That way, any change is visible to all the customer&#8217;s orders.</p>
+<p class="indent">Changing a value to a reference results in only one object being present for an entity, and it usually means I need some kind of repository where I can access these objects. I then only create the object for an entity once, and everywhere else I retrieve it from the repository.</p>
+<h4 class="h4" id="ch09lev2sec16"><span epub:type="pagebreak" id="page_257"/>Mechanics</h4>
+<ul class="square">
+<li><p>Create a repository for instances of the related object (if one isn&#8217;t already present).</p></li>
+<li><p>Ensure the constructor has a way of looking up the correct instance of the related object.</p></li>
+<li><p>Change the constructors for the host object to use the repository to obtain the related object. Test after each change.</p></li>
+</ul>
+<h4 class="h4" id="ch09lev2sec17">Example</h4>
+<p class="noindent">I&#8217;ll begin with a class that represents orders, which I might create from an incoming JSON document. Part of the order data is a customer ID from which I&#8217;m creating a customer object.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0257_01a" href="ch09_images.xhtml#p0257_01">Click here to view code image</a></p>
+<pre class="pre">constructor(data) {
+  this._number = data.number;
+  this._customer = new Customer(data.customer);
+  // load other data
+}
+get customer() {return this._customer;}</pre>
+<p class="pro-title"><em>class Customer&#8230;</em></p>
+<pre class="pre">constructor(id) {
+  this._id = id;
+}
+get id() {return this._id;}</pre>
+<p class="indent">The customer object I create this way is a value. If I have five orders that refer to the customer ID of 123, I&#8217;ll have five separate customer objects. Any change I make to one of them will not be reflected in the others. Should I want to enrich the customer objects, perhaps by gathering data from a customer service, I&#8217;d have to update all five customers with the same data. Having duplicate objects like this always makes me nervous&#8212;it&#8217;s confusing to have multiple objects representing the same entity, such as a customer. This problem is particularly awkward if the customer object is mutable, which can lead to inconsistencies between the customer objects.</p>
+<p class="indent">If I want to use the same customer object each time, I&#8217;ll need a place to store it. Exactly where to store entities like this will vary from application to application, but for a simple case I like to use a repository object <span class="pd_maroon">[<a href="biblo.xhtml#bib33">mf-repos</a>]</span>.</p>
+<p class="codelink"><a id="p0258_01a" href="ch09_images.xhtml#p0258_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_258"/>let _repositoryData;
+
+export function initialize() {
+  _repositoryData = {};
+  _repositoryData.customers = new Map();
+}
+
+export function registerCustomer(id) {
+  if (! _repositoryData.customers.has(id))
+    _repositoryData.customers.set(id, new Customer(id));
+  return findCustomer(id);
+}
+
+export function findCustomer(id) {
+  return _repositoryData.customers.get(id);
+}</pre>
+<p class="indent">The repository allows me to register customer objects with an ID and ensures I only create one customer object with the same ID. With this in place, I can change the order&#8217;s constructor to use it.</p>
+<p class="indent">Often, when doing this refactoring, the repository already exists, so I can just use it.</p>
+<p class="indent">The next step is to figure out how the constructor for the order can obtain the correct customer object. In this case it&#8217;s easy, since the customer&#8217;s ID is present in the input data stream.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0258_02a" href="ch09_images.xhtml#p0258_02">Click here to view code image</a></p>
+<pre class="pre">constructor(data) {
+  this._number = data.number;
+  this._customer = registerCustomer(data.customer);
+  // load other data
+}
+get customer() {return this._customer;}</pre>
+<p class="indent">Now, any changes I make to the customer of one order will be synchronized across all the orders sharing the same customer.</p>
+<p class="indent">For this example, I created a new customer object with the first order that referenced it. Another common approach is to get a list of customers, populate the repository with them, and then link to them as I read the orders. In that case, an order that contains a customer ID not in the repository would indicate an error.</p>
+<p class="indent">One problem with this code is that the constructor body is coupled to the global repository. Globals should be treated with care&#8212;like a powerful drug, they can be beneficial in small doses but a poison if used too much. If I&#8217;m concerned about it, I can pass the repository as a parameter to the constructor.</p>
+</section>
+</body>
+</html>

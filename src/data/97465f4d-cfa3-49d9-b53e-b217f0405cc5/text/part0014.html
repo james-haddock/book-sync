@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis" xml:lang="en-us" lang="en-us">
+  <head>
+    <title>Clean Architecture</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+<h2 class="h2f" id="ch3"><a id="page_21" class="calibre3"></a><span class="gray">3</span><br class="calibre12"/>P<small class="calibre7">ARADIGM</small> O<small class="calibre7">VERVIEW</small></h2>
+<div class="image1"><img src="../images/00013.jpeg" alt="Image" class="calibre2"/></div>
+<p class="noindent1">The three paradigms included in this overview chapter are structured programming, object-orient programming, and functional programming.</p>
+<h3 class="h1" id="toclev_9"><a id="page_22" class="calibre3"></a>S<small class="calibre13">TRUCTURED</small> P<small class="calibre13">ROGRAMMING</small></h3>
+<p class="noindent1">The first paradigm to be adopted (but not the first to be invented) was structured programming, which was discovered by Edsger Wybe Dijkstra in 1968. Dijkstra showed that the use of unrestrained jumps (<code class="calibre11">goto</code> statements) is harmful to program structure. As we’ll see in the chapters that follow, he replaced those jumps with the more familiar <code class="calibre11">if/then/else</code> and <code class="calibre11">do/while/until</code> constructs.</p>
+<p class="noindent1">We can summarize the structured programming paradigm as follows:</p>
+<p class="blockquote"><em class="calibre9">Structured programming imposes discipline on direct transfer of control.</em></p>
+<h3 class="h1" id="toclev_10">O<small class="calibre13">BJECT</small>-O<small class="calibre13">RIENTED</small> P<small class="calibre13">ROGRAMMING</small></h3>
+<p class="noindent1">The second paradigm to be adopted was actually discovered two years earlier, in 1966, by Ole Johan Dahl and Kristen Nygaard. These two programmers noticed that the function call stack frame in the <code class="calibre11">ALGOL</code> language could be moved to a heap, thereby allowing local variables declared by a function to exist long after the function returned. The function became a constructor for a class, the local variables became instance variables, and the nested functions became methods. This led inevitably to the discovery of polymorphism through the disciplined use of function pointers.</p>
+<p class="noindent1">We can summarize the object-oriented programming paradigm as follows:</p>
+<p class="blockquote"><em class="calibre9">Object-oriented programming imposes discipline on indirect transfer of control.</em></p>
+<h3 class="h1" id="toclev_11">F<small class="calibre13">UNCTIONAL</small> P<small class="calibre13">ROGRAMMING</small></h3>
+<p class="noindent1">The third paradigm, which has only recently begun to be adopted, was the first to be invented. Indeed, its invention predates computer programming <a id="page_23"></a>itself. Functional programming is the direct result of the work of Alonzo Church, who in 1936 invented l-calculus while pursuing the same mathematical problem that was motivating Alan Turing at the same time. His l-calculus is the foundation of the LISP language, invented in 1958 by John McCarthy. A foundational notion of l-calculus is immutability—that is, the notion that the values of symbols do not change. This effectively means that a functional language has no assignment statement. Most functional languages do, in fact, have some means to alter the value of a variable, but only under very strict discipline.</p>
+<p class="noindent1">We can summarize the functional programming paradigm as follows:</p>
+<p class="blockquote"><em class="calibre9">Functional programming imposes discipline upon assignment.</em></p>
+<h3 class="h1" id="toclev_12">F<small class="calibre13">OOD FOR</small> T<small class="calibre13">HOUGHT</small></h3>
+<p class="noindent1">Notice the pattern that I’ve quite deliberately set up in introducing these three programming paradigms: Each of the paradigms <em class="calibre9">removes</em> capabilities from the programmer. None of them adds new capabilities. Each imposes some kind of extra discipline that is <em class="calibre9">negative</em> in its intent. The paradigms tell us what <em class="calibre9">not</em> to do, more than they tell us what <em class="calibre9">to</em> do.</p>
+<p class="noindent1">Another way to look at this issue is to recognize that each paradigm takes something away from us. The three paradigms together remove <code class="calibre11">goto</code> statements, function pointers, and assignment. Is there anything left to take away?</p>
+<p class="noindent1">Probably not. Thus these three paradigms are likely to be the only three we will see—at least the only three that are negative. Further evidence that there are no more such paradigms is that they were all discovered within the ten years between 1958 and 1968. In the many decades that have followed, no new paradigms have been added.</p>
+<h3 class="h1" id="toclev_13"><a id="page_24" class="calibre3"></a>C<small class="calibre13">ONCLUSION</small></h3>
+<p class="noindent1">What does this history lesson on paradigms have to do with architecture? Everything. We use polymorphism as the mechanism to cross architectural boundaries; we use functional programming to impose discipline on the location of and access to data; and we use structured programming as the algorithmic foundation of our modules.</p>
+<p class="noindent1">Notice how well those three align with the three big concerns of architecture: function, separation of components, and data management.</p>
+</body></html>

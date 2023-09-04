@@ -1,0 +1,1401 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis" xml:lang="en-us" lang="en-us">
+  <head>
+    <title>Clean Architecture</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+<h2 class="h2f" id="index"><a id="page_375" class="calibre3"></a>I<small class="calibre7">NDEX</small></h2>
+<p class="noindent1"><strong class="calibre8">Numbers</strong></p>
+<p class="indexmain" id="idx1">3DBB shared memory system, Craft Dispatch System archaeology project, <a href="part0051.html#page_363">363</a></p>
+<p class="indexmain" id="idx2">4-TEL, archaeology projects</p>
+<p class="indexsub">BOSS, <a href="part0051.html#page_351">351</a>–<a href="part0051.html#page_352">352</a></p>
+<p class="indexsub">C language, <a href="part0051.html#page_349">349</a>–<a href="part0051.html#page_351">351</a></p>
+<p class="indexsub">DLU/DRU, <a href="part0051.html#page_354">354</a>–<a href="part0051.html#page_356">356</a></p>
+<p class="indexsub">overview of, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">pCCU, <a href="part0051.html#page_352">352</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexsub">SAC (service area computer), <a href="part0051.html#page_344">344</a>–<a href="part0051.html#page_349">349</a></p>
+<p class="indexsub">VRS, <a href="part0051.html#page_357">357</a>–<a href="part0051.html#page_359">359</a></p>
+<p class="indexmain" id="idx3">8085 computer, archaeological projects</p>
+<p class="indexsub">4-TEL, <a href="part0051.html#page_341">341</a></p>
+<p class="indexsub">BOSS, <a href="part0051.html#page_351">351</a></p>
+<p class="indexsub">C language and, <a href="part0051.html#page_349">349</a>–<a href="part0051.html#page_351">351</a></p>
+<p class="indexsub">DLU/DRU, <a href="part0051.html#page_356">356</a></p>
+<p class="indexmain" id="idx4">8086 Intel microcomputer, SAC archaeology project, <a href="part0051.html#page_347">347</a>–<a href="part0051.html#page_348">348</a></p>
+<p class="indexmain1"><strong class="calibre8">A</strong></p>
+<p class="indexmain" id="idx5">Abstract classes</p>
+<p class="indexsub">conclusion, <a href="part0027.html#page_132">132</a></p>
+<p class="indexsub">Dependency Inversion Principle and, <a href="part0023.html#page_87">87</a></p>
+<p class="indexsub">leftover in Zone of Uselessness, <a href="part0027.html#page_129">129</a>–<a href="part0027.html#page_130">130</a></p>
+<p class="indexsub">placing high-level policy, <a href="part0027.html#page_126">126</a>–<a href="part0027.html#page_128">128</a></p>
+<p class="indexsub">services in Java as set of, <a href="part0041.html#page_246">246</a></p>
+<p class="indexmain" id="idx6">Abstract components, <a href="part0027.html#page_125">125</a>–<a href="part0027.html#page_126">126</a></p>
+<p class="indexmain" id="idx7">Abstract Factories, <a href="part0023.html#page_89">89</a>–<a href="part0023.html#page_90">90</a></p>
+<p class="indexmain" id="idx8">Abstractions</p>
+<p class="indexsub">principle of stable. <em class="calibre9">See</em> <a href="part0052.html#idx352">SAP (Stable Abstractions Principle)</a></p>
+<p class="indexsub">source code dependencies and, <a href="part0023.html#page_87">87</a></p>
+<p class="indexsub">stable, <a href="part0023.html#page_88">88</a>–<a href="part0023.html#page_89">89</a></p>
+<p class="indexmain" id="idx9">Access modifiers, architectural packages, <a href="part0049.html#page_316">316</a>–<a href="part0049.html#page_319">319</a></p>
+<p class="indexmain" id="idx10">Accidental duplication, <a href="part0030.html#page_154">154</a>–<a href="part0030.html#page_155">155</a></p>
+<p class="indexmain" id="idx11">Actors, <a href="part0019.html#page_62">62</a>–<a href="part0019.html#page_65">65</a></p>
+<p class="indexmain" id="idx12">Address segments, relocatable binaries, <a href="part0025.html#page_99">99</a>–<a href="part0025.html#page_100">100</a></p>
+<p class="indexmain" id="idx13"><a id="page_376"></a>ADP (Acyclic Dependencies Principle)</p>
+<p class="indexsub">breaking cycle, <a href="part0027.html#page_117">117</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">component dependency graph effected by, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">effect of cycle in component dependency graph, <a href="part0027.html#page_115">115</a>–<a href="part0027.html#page_117">117</a></p>
+<p class="indexsub">eliminating dependency cycles, <a href="part0027.html#page_113">113</a>–<a href="part0027.html#page_115">115</a></p>
+<p class="indexsub">jitters, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">overview of, <a href="part0027.html#page_112">112</a></p>
+<p class="indexsub">weekly build, <a href="part0027.html#page_112">112</a>–<a href="part0027.html#page_113">113</a></p>
+<p class="indexmain" id="idx14">Aluminum die-cast monitoring, archaeology project, <a href="part0051.html#page_338">338</a>–<a href="part0051.html#page_339">339</a></p>
+<p class="indexmain" id="idx15">APIs, testing, <a href="part0042.html#page_252">252</a>–<a href="part0042.html#page_253">253</a></p>
+<p class="indexmain" id="idx16">App-titude test, <a href="part0043.html#page_258">258</a>–<a href="part0043.html#page_261">261</a></p>
+<p class="indexmain" id="idx17">Application-specific business rules, use cases, <a href="part0034.html#page_192">192</a>–<a href="part0034.html#page_193">193</a>, <a href="part0036.html#page_204">204</a></p>
+<p class="indexmain" id="idx18">Architects</p>
+<p class="indexsub">goal to minimize human resources, <a href="part0031.html#page_160">160</a></p>
+<p class="indexsub">registry exam archaeology project, <a href="part0051.html#page_370">370</a>–<a href="part0051.html#page_373">373</a></p>
+<p class="indexsub">separate details from policy, <a href="part0029.html#page_142">142</a></p>
+<p class="indexmain" id="idx19">Architecture</p>
+<p class="indexsub">clean. <em class="calibre9">See</em> <a href="part0052.html#idx62">Clean architecture</a></p>
+<p class="indexsub">clean embedded. <em class="calibre9">See</em> <a href="part0052.html#idx63">Clean embedded architecture</a></p>
+<p class="indexsub">design vs., <a href="part0011.html#page_4">4</a></p>
+<p class="indexsub">in DLU/DRU archaeology project, <a href="part0051.html#page_356">356</a></p>
+<p class="indexsub">Eisenhower’s matrix of importance vs. urgency, <a href="part0012.html#page_16">16</a>–<a href="part0012.html#page_17">17</a></p>
+<p class="indexsub">getting software right, <a href="part0010.html#page_2">2</a></p>
+<p class="indexsub">immutability and, <a href="part0017.html#page_52">52</a></p>
+<p class="indexsub">independence. <em class="calibre9">See</em> <a href="part0052.html#idx205">Independence</a></p>
+<p class="indexsub">ISP and, <a href="part0022.html#page_86">86</a></p>
+<p class="indexsub">LSP and, <a href="part0021.html#page_80">80</a></p>
+<p class="indexsub">plugin, <a href="part0031.html#page_170">170</a>–<a href="part0031.html#page_171">171</a></p>
+<p class="indexsub">in ROSE archaeology product, <a href="part0051.html#page_368">368</a>–<a href="part0051.html#page_370">370</a></p>
+<p class="indexsub">in SAC archaeology project, <a href="part0051.html#page_345">345</a>–<a href="part0051.html#page_347">347</a></p>
+<p class="indexsub">as senior to function, <a href="part0012.html#page_18">18</a></p>
+<p class="indexsub">as software value, <a href="part0012.html#page_14">14</a>–<a href="part0012.html#page_15">15</a></p>
+<p class="indexsub">stability, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">testing, <a href="part0037.html#page_213">213</a></p>
+<p class="indexsub">three big concerns in, <a href="part0014.html#page_24">24</a></p>
+<p class="indexsub">value of function vs., <a href="part0012.html#page_15">15</a>–<a href="part0012.html#page_16">16</a></p>
+<p class="indexsub">in VRS archaeology project, <a href="part0051.html#page_358">358</a>–<a href="part0051.html#page_359">359</a></p>
+<p class="indexmain" id="idx20">Architecture archaeology projects</p>
+<p class="indexsub">4-TEL, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">aluminum die-cast monitoring, <a href="part0051.html#page_338">338</a>–<a href="part0051.html#page_339">339</a></p>
+<p class="indexsub">architects registry exam, <a href="part0051.html#page_370">370</a>–<a href="part0051.html#page_373">373</a></p>
+<p class="indexsub">by author since 1970, <a href="part0051.html#page_325">325</a>–<a href="part0051.html#page_326">326</a></p>
+<p class="indexsub">Basic Operating System and Scheduler, <a href="part0051.html#page_351">351</a>–<a href="part0051.html#page_352">352</a></p>
+<p class="indexsub">C language, <a href="part0051.html#page_349">349</a>–<a href="part0051.html#page_351">351</a></p>
+<p class="indexsub">conclusion, <a href="part0051.html#page_373">373</a></p>
+<p class="indexsub">Craft Dispatch System, <a href="part0051.html#page_361">361</a>–<a href="part0051.html#page_367">367</a></p>
+<p class="indexsub">DLU/DRU, <a href="part0051.html#page_354">354</a>–<a href="part0051.html#page_356">356</a></p>
+<p class="indexsub">Electronic Receptionist, <a href="part0051.html#page_359">359</a>–<a href="part0051.html#page_361">361</a></p>
+<p class="indexsub">Laser Trim, <a href="part0051.html#page_334">334</a>–<a href="part0051.html#page_338">338</a></p>
+<p class="indexsub">pCCU, <a href="part0051.html#page_352">352</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexsub">ROSE product, <a href="part0051.html#page_368">368</a>–<a href="part0051.html#page_370">370</a></p>
+<p class="indexsub">service area computer, <a href="part0051.html#page_344">344</a>–<a href="part0051.html#page_349">349</a></p>
+<p class="indexsub">Union Accounting system, <a href="part0051.html#page_326">326</a>–<a href="part0051.html#page_334">334</a></p>
+<p class="indexsub">VRS, <a href="part0051.html#page_357">357</a>–<a href="part0051.html#page_359">359</a></p>
+<p class="indexmain" id="idx21">Architecture, defining</p>
+<p class="indexsub">conclusion, <a href="part0029.html#page_146">146</a></p>
+<p class="indexsub">deployment, <a href="part0029.html#page_138">138</a></p>
+<p class="indexsub">development, <a href="part0029.html#page_137">137</a>–<a href="part0029.html#page_138">138</a></p>
+<p class="indexsub">device independence, <a href="part0029.html#page_142">142</a>–<a href="part0029.html#page_143">143</a></p>
+<p class="indexsub">junk mail example, <a href="part0029.html#page_144">144</a>–<a href="part0029.html#page_145">145</a></p>
+<p class="indexsub">keeping options open, <a href="part0029.html#page_140">140</a>–<a href="part0029.html#page_142">142</a></p>
+<p class="indexsub"><a id="page_377"></a>maintenance, <a href="part0029.html#page_139">139</a>–<a href="part0029.html#page_140">140</a></p>
+<p class="indexsub">operation, <a href="part0029.html#page_138">138</a>–<a href="part0029.html#page_139">139</a></p>
+<p class="indexsub">physical addressing example, <a href="part0029.html#page_145">145</a>–<a href="part0029.html#page_146">146</a></p>
+<p class="indexsub">understanding, <a href="part0029.html#page_135">135</a>–<a href="part0029.html#page_137">137</a></p>
+<p class="indexmain" id="idx22">Architecture, screaming</p>
+<p class="indexsub">about the web, <a href="part0035.html#page_197">197</a>–<a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">conclusion, <a href="part0035.html#page_199">199</a></p>
+<p class="indexsub">frameworks as tools, not ways of life, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">overview of, <a href="part0035.html#page_195">195</a>–<a href="part0035.html#page_196">196</a></p>
+<p class="indexsub">purpose of, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">testable architectures, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">theme, <a href="part0035.html#page_196">196</a>–<a href="part0035.html#page_197">197</a></p>
+<p class="indexmain" id="idx23">Archives, as aggregation of components, <a href="part0025.html#page_96">96</a></p>
+<p class="indexmain" id="idx24">Artifacts, OCP, <a href="part0020.html#page_70">70</a></p>
+<p class="indexmain" id="idx25">ASC Tabulating, Union Accounting archaeology project, <a href="part0051.html#page_326">326</a>–<a href="part0051.html#page_334">334</a></p>
+<p class="indexmain" id="idx26">Assignment, and functional programming, <a href="part0014.html#page_23">23</a></p>
+<p class="indexmain" id="idx27">Asymmetric marriage, to framework authors, <a href="part0047.html#page_292">292</a>–<a href="part0047.html#page_293">293</a></p>
+<p class="indexmain" id="idx28">Authors, framework, <a href="part0047.html#page_292">292</a>–<a href="part0047.html#page_293">293</a></p>
+<p class="indexmain" id="idx29">Automated systems, business rules, <a href="part0034.html#page_191">191</a>–<a href="part0034.html#page_192">192</a></p>
+<p class="indexmain1"><strong class="calibre8">B</strong></p>
+<p class="indexmain" id="idx30">Base classes, frameworks, <a href="part0047.html#page_293">293</a></p>
+<p class="indexmain" id="idx31">BCE system architecture, <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx32">Beck, Kent, <a href="part0043.html#page_258">258</a>–<a href="part0043.html#page_261">261</a></p>
+<p class="indexmain" id="idx33">Behavior (function)</p>
+<p class="indexsub">architecture supports system, <a href="part0029.html#page_137">137</a>, <a href="part0030.html#page_148">148</a></p>
+<p class="indexsub">Eisenhower’s matrix of importance vs. urgency, <a href="part0012.html#page_16">16</a>–<a href="part0012.html#page_17">17</a></p>
+<p class="indexsub">fighting for seniority of architecture over function, <a href="part0012.html#page_18">18</a></p>
+<p class="indexsub">keeping options open, <a href="part0029.html#page_140">140</a>–<a href="part0029.html#page_142">142</a></p>
+<p class="indexsub">as software value, <a href="part0012.html#page_14">14</a></p>
+<p class="indexsub">value of function vs. architecture, <a href="part0012.html#page_15">15</a>–<a href="part0012.html#page_16">16</a></p>
+<p class="indexmain" id="idx34">Binaries, relocatability, <a href="part0025.html#page_99">99</a>–<a href="part0025.html#page_100">100</a></p>
+<p class="indexmain" id="idx35">Booch, Grady</p>
+<p class="indexsub">introduction to, <a href="part0051.html#page_366">366</a></p>
+<p class="indexsub">working for, <a href="part0051.html#page_367">367</a></p>
+<p class="indexsub">working on ROSE product, <a href="part0051.html#page_368">368</a>–<a href="part0051.html#page_369">369</a></p>
+<p class="indexmain" id="idx36">BOSS (Basic Operating System and Scheduler)</p>
+<p class="indexsub">archaeology project, <a href="part0051.html#page_351">351</a>–<a href="part0051.html#page_352">352</a></p>
+<p class="indexsub">in DLU/DRU archaeology project, <a href="part0051.html#page_356">356</a></p>
+<p class="indexmain" id="idx37">Boundaries</p>
+<p class="indexsub">in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_340">340</a>–<a href="part0051.html#page_341">341</a></p>
+<p class="indexsub">conclusion, <a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">dividing services into components, <a href="part0041.html#page_246">246</a></p>
+<p class="indexsub">in Electronic Receptionist archaeology project, <a href="part0051.html#page_361">361</a></p>
+<p class="indexsub">FitNesse program, <a href="part0031.html#page_163">163</a>–<a href="part0031.html#page_165">165</a></p>
+<p class="indexsub">input and output, <a href="part0031.html#page_169">169</a>–<a href="part0031.html#page_170">170</a></p>
+<p class="indexsub">in Laser Trim archaeology project, <a href="part0051.html#page_338">338</a></p>
+<p class="indexsub">layers and. <em class="calibre9">See</em> <a href="part0052.html#idx231">Layers and boundaries</a></p>
+<p class="indexsub">overview of, <a href="part0031.html#page_159">159</a>–<a href="part0031.html#page_160">160</a></p>
+<p class="indexsub">partial, <a href="part0038.html#page_218">218</a>–<a href="part0038.html#page_220">220</a></p>
+<p class="indexsub">plugin architecture, <a href="part0031.html#page_170">170</a>–<a href="part0031.html#page_171">171</a></p>
+<p class="indexsub">plugin argument, <a href="part0031.html#page_172">172</a>–<a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">sad stories of architectural failures, <a href="part0031.html#page_160">160</a>–<a href="part0031.html#page_163">163</a></p>
+<p class="indexsub">services as function calls across, <a href="part0041.html#page_240">240</a></p>
+<p class="indexsub">test, <a href="part0042.html#page_249">249</a>–<a href="part0042.html#page_253">253</a></p>
+<p class="indexsub">Union Accounting system archaeology project, <a href="part0051.html#page_333">333</a>–<a href="part0051.html#page_334">334</a></p>
+<p class="indexsub">which lines to draw, and when, <a href="part0031.html#page_165">165</a>–<a href="part0031.html#page_169">169</a></p>
+<p class="indexmain" id="idx38"><a id="page_378"></a>Boundary anatomy</p>
+<p class="indexsub">boundary crossing, <a href="part0032.html#page_176">176</a></p>
+<p class="indexsub">conclusion, <a href="part0032.html#page_181">181</a></p>
+<p class="indexsub">deployment components, <a href="part0032.html#page_178">178</a>–<a href="part0032.html#page_179">179</a></p>
+<p class="indexsub">dreaded monolith, <a href="part0032.html#page_176">176</a>–<a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">local processes, <a href="part0032.html#page_179">179</a>–<a href="part0032.html#page_180">180</a></p>
+<p class="indexsub">services, <a href="part0032.html#page_180">180</a>–<a href="part0032.html#page_181">181</a></p>
+<p class="indexsub">threads, <a href="part0032.html#page_179">179</a></p>
+<p class="indexmain" id="idx39">Boundary crossing</p>
+<p class="indexsub">in clean architecture, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">creating appropriate, <a href="part0032.html#page_176">176</a></p>
+<p class="indexsub">Dependency Rule for data in, <a href="part0036.html#page_207">207</a></p>
+<p class="indexmain" id="idx40">Breaking cycle, Acyclic Dependencies Principle, <a href="part0027.html#page_117">117</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexmain" id="idx41">Business managers</p>
+<p class="indexsub">Eisenhower’s matrix of importance vs. urgency, <a href="part0012.html#page_17">17</a></p>
+<p class="indexsub">preference for function vs. architecture, <a href="part0012.html#page_15">15</a>–<a href="part0012.html#page_16">16</a></p>
+<p class="indexmain" id="idx42">Business rules</p>
+<p class="indexsub">boundaries between GUI and, <a href="part0031.html#page_169">169</a>–<a href="part0031.html#page_170">170</a></p>
+<p class="indexsub">clean architecture for, <a href="part0036.html#page_202">202</a>–<a href="part0036.html#page_203">203</a></p>
+<p class="indexsub">conclusion, <a href="part0034.html#page_194">194</a></p>
+<p class="indexsub">creating Entities, <a href="part0034.html#page_190">190</a>–<a href="part0034.html#page_191">191</a></p>
+<p class="indexsub">decoupling from UI, <a href="part0046.html#page_287">287</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexsub">decoupling layers, <a href="part0030.html#page_152">152</a>–<a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">decoupling use cases, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">designing for testability, <a href="part0042.html#page_251">251</a></p>
+<p class="indexsub">in Hunt the Wumpus adventure game, <a href="part0039.html#page_222">222</a>–<a href="part0039.html#page_223">223</a></p>
+<p class="indexsub">independent developability, <a href="part0016.html#page_47">47</a></p>
+<p class="indexsub">keeping close to data, <a href="part0019.html#page_67">67</a></p>
+<p class="indexsub">plugging into, <a href="part0031.html#page_170">170</a>–<a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">policy statements calculating, <a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">request/response models and, <a href="part0034.html#page_193">193</a>–<a href="part0034.html#page_194">194</a></p>
+<p class="indexsub">in SAC archaeology project, <a href="part0051.html#page_346">346</a>–<a href="part0051.html#page_347">347</a></p>
+<p class="indexsub">separating components with boundary lines, <a href="part0031.html#page_165">165</a>–<a href="part0031.html#page_169">169</a></p>
+<p class="indexsub">understanding, <a href="part0034.html#page_189">189</a>–<a href="part0034.html#page_190">190</a></p>
+<p class="indexsub">use cases for, <a href="part0034.html#page_191">191</a>–<a href="part0034.html#page_193">193</a>, <a href="part0036.html#page_204">204</a></p>
+<p class="indexmain1"><strong class="calibre8">C</strong></p>
+<p class="indexmain" id="idx43">C++ language</p>
+<p class="indexsub">inheritance in, <a href="part0016.html#page_40">40</a></p>
+<p class="indexsub">learning, <a href="part0051.html#page_366">366</a></p>
+<p class="indexsub">marrying STL framework in, <a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">polymorphism in, <a href="part0016.html#page_42">42</a></p>
+<p class="indexsub">ROSE application, <a href="part0051.html#page_369">369</a>–<a href="part0051.html#page_370">370</a></p>
+<p class="indexsub">weakening encapsulation, <a href="part0016.html#page_36">36</a>–<a href="part0016.html#page_37">37</a></p>
+<p class="indexmain" id="idx44">C language</p>
+<p class="indexsub">BOSS archaeology project using, <a href="part0051.html#page_351">351</a>–<a href="part0051.html#page_352">352</a></p>
+<p class="indexsub">DLU/DRU archaeology project using, <a href="part0051.html#page_356">356</a></p>
+<p class="indexsub">encapsulation in, <a href="part0016.html#page_34">34</a>–<a href="part0016.html#page_36">36</a></p>
+<p class="indexsub">inheritance in, <a href="part0016.html#page_38">38</a>–<a href="part0016.html#page_40">40</a></p>
+<p class="indexsub">polymorphism in, <a href="part0016.html#page_40">40</a>–<a href="part0016.html#page_42">42</a></p>
+<p class="indexsub">redesigning SAC in, <a href="part0051.html#page_347">347</a>–<a href="part0051.html#page_348">348</a></p>
+<p class="indexmain" id="idx45">C language, archaeology project, <a href="part0051.html#page_349">349</a>–<a href="part0051.html#page_351">351</a></p>
+<p class="indexmain" id="idx46">C# programming language</p>
+<p class="indexsub">abstract components in, <a href="part0027.html#page_125">125</a></p>
+<p class="indexsub">dependency inversion, <a href="part0016.html#page_45">45</a></p>
+<p class="indexsub">using statements for dependencies, <a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">weakening encapsulation, <a href="part0016.html#page_36">36</a>–<a href="part0016.html#page_37">37</a></p>
+<p class="indexmain" id="idx47"><em class="calibre9">C Programming Language</em> (Kernighan &amp; Ritchie), <a href="part0051.html#page_351">351</a></p>
+<p class="indexmain" id="idx48">C4 software architecture model, <a href="part0049.html#page_314">314</a>–<a href="part0049.html#page_315">315</a></p>
+<p class="indexmain" id="idx49">Carew, Mike, <a href="part0051.html#page_356">356</a></p>
+<p class="indexmain" id="idx50">CASE (Computer Aided Software Engineering) tool, <a href="part0051.html#page_368">368</a></p>
+<p class="indexmain" id="idx51"><a id="page_379"></a>Case study. <em class="calibre9">See</em> <a href="part0052.html#idx434">Video sales case study</a></p>
+<p class="indexmain" id="idx52">Cathode ray tube (CRT) terminals, Union Accounting archaeology project, <a href="part0051.html#page_328">328</a>–<a href="part0051.html#page_329">329</a></p>
+<p class="indexmain" id="idx53">CCP (Common Closure Principle)</p>
+<p class="indexsub">decoupling layers, <a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">grouping policies into components, <a href="part0033.html#page_186">186</a>–<a href="part0033.html#page_187">187</a></p>
+<p class="indexsub">keeping changes localized, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">overview of, <a href="part0026.html#page_105">105</a>–<a href="part0026.html#page_107">107</a></p>
+<p class="indexsub">Stable Dependencies Principle and, <a href="part0027.html#page_120">120</a></p>
+<p class="indexsub">tension diagram, <a href="part0026.html#page_108">108</a>–<a href="part0026.html#page_110">110</a></p>
+<p class="indexmain" id="idx54">CCU/CMU (COLT control unit/COLT measurement unit), pCCU archaeology project, <a href="part0051.html#page_353">353</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexmain" id="idx55">CDS (Craft Dispatch System), archaeology project</p>
+<p class="indexsub">overview of, <a href="part0051.html#page_361">361</a>–<a href="part0051.html#page_363">363</a></p>
+<p class="indexmain" id="idx56">Central office line testers. <em class="calibre9">See</em> <a href="part0052.html#idx71">COLTs (central office line testers)</a></p>
+<p class="indexmain" id="idx57">Central offices (COs), <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_340">340</a></p>
+<p class="indexmain" id="idx58">Change, ease of software, <a href="part0012.html#page_14">14</a>–<a href="part0012.html#page_15">15</a></p>
+<p class="indexmain" id="idx59">Church, Alonzo, <a href="part0014.html#page_22">22</a>–<a href="part0014.html#page_23">23</a>, <a href="part0017.html#page_50">50</a></p>
+<p class="indexmain" id="idx60">CICS-COBOL program, aluminum die-cast archaeology project, <a href="part0051.html#page_339">339</a></p>
+<p class="indexmain" id="idx61">Classes</p>
+<p class="indexsub">abstract. <em class="calibre9">See</em> <a href="part0052.html#idx5">Abstract classes</a></p>
+<p class="indexsub">Common Reuse Principle, <a href="part0026.html#page_107">107</a>–<a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">DIP and, <a href="part0023.html#page_89">89</a></p>
+<p class="indexsub">LSP use in guiding inheritance, <a href="part0021.html#page_78">78</a></p>
+<p class="indexsub">partitioning processes into, <a href="part0020.html#page_71">71</a>–<a href="part0020.html#page_72">72</a></p>
+<p class="indexsub">Reuse/Release Equivalence Principle, <a href="part0026.html#page_105">105</a></p>
+<p class="indexsub">SRP examples, <a href="part0019.html#page_67">67</a></p>
+<p class="indexmain" id="idx62">Clean architecture</p>
+<p class="indexsub">characteristics of, <a href="part0036.html#page_201">201</a>–<a href="part0036.html#page_203">203</a></p>
+<p class="indexsub">conclusion, <a href="part0036.html#page_209">209</a></p>
+<p class="indexsub">Dependency Rule, <a href="part0036.html#page_203">203</a>–<a href="part0036.html#page_207">207</a></p>
+<p class="indexsub">frameworks tend to violate, <a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">typical scenario, <a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">using layers and boundaries, <a href="part0039.html#page_223">223</a>–<a href="part0039.html#page_226">226</a></p>
+<p class="indexmain" id="idx63">Clean embedded architecture</p>
+<p class="indexsub">app-titude test, <a href="part0043.html#page_258">258</a>–<a href="part0043.html#page_261">261</a></p>
+<p class="indexsub">conclusion, <a href="part0043.html#page_273">273</a></p>
+<p class="indexsub">don’t reveal hardware details to user of HAL, <a href="part0043.html#page_265">265</a>–<a href="part0043.html#page_269">269</a></p>
+<p class="indexsub">DRY conditional compilation directives, <a href="part0043.html#page_272">272</a></p>
+<p class="indexsub">hardware is detail, <a href="part0043.html#page_263">263</a>–<a href="part0043.html#page_264">264</a></p>
+<p class="indexsub">is testable embedded architecture, <a href="part0043.html#page_262">262</a></p>
+<p class="indexsub">layers, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_263">263</a></p>
+<p class="indexsub">operating system is detail, <a href="part0043.html#page_269">269</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexsub">overview of, <a href="part0043.html#page_255">255</a>–<a href="part0043.html#page_258">258</a></p>
+<p class="indexsub">programming to interfaces and substitutability, <a href="part0043.html#page_271">271</a>–<a href="part0043.html#page_272">272</a></p>
+<p class="indexsub">target-hardware bottleneck, <a href="part0043.html#page_261">261</a></p>
+<p class="indexmain" id="idx64"><a href="http://Cleancoders.com">Cleancoders.com</a>, <a href="part0048.html#page_297">297</a></p>
+<p class="indexmain" id="idx65">Clear Communications, <a href="part0051.html#page_364">364</a>–<a href="part0051.html#page_367">367</a></p>
+<p class="indexsub">phone call, <a href="part0051.html#page_367">367</a></p>
+<p class="indexsub">setup, <a href="part0051.html#page_366">366</a></p>
+<p class="indexsub">Uncle Bob, <a href="part0051.html#page_367">367</a></p>
+<p class="indexmain" id="idx66">Clojure, <a href="part0017.html#page_50">50</a>–<a href="part0017.html#page_51">51</a>, <a href="part0017.html#page_53">53</a>–<a href="part0017.html#page_54">54</a></p>
+<p class="indexmain" id="idx67">Codd, Edgar, <a href="part0045.html#page_278">278</a></p>
+<p class="indexmain" id="idx68">Code</p>
+<p class="indexsub">in aluminum die-cast archaeology project, <a href="part0051.html#page_338">338</a>–<a href="part0051.html#page_339">339</a></p>
+<p class="indexsub">decreasing productivity/increased cost of, <a href="part0011.html#page_5">5</a>–<a href="part0011.html#page_7">7</a></p>
+<p class="indexsub">foolishness of overconfidence, <a href="part0011.html#page_9">9</a>–<a href="part0011.html#page_12">12</a></p>
+<p class="indexsub">rising costs of development payroll, <a href="part0011.html#page_8">8</a>–<a href="part0011.html#page_9">9</a></p>
+<p class="indexsub">in SAC archaeology project, <a href="part0051.html#page_345">345</a></p>
+<p class="indexsub"><a id="page_380"></a>signature of messy, <a href="part0011.html#page_7">7</a>–<a href="part0011.html#page_8">8</a></p>
+<p class="indexsub">source code dependencies. <em class="calibre9">See</em> <a href="part0052.html#idx379">Source code dependencies</a></p>
+<p class="indexmain" id="idx69">Code organization</p>
+<p class="indexsub">conclusion, <a href="part0049.html#page_321">321</a></p>
+<p class="indexsub">devil is in the details, <a href="part0049.html#page_315">315</a>–<a href="part0049.html#page_316">316</a></p>
+<p class="indexsub">other decoupling modes, <a href="part0049.html#page_319">319</a>–<a href="part0049.html#page_320">320</a></p>
+<p class="indexsub">overview of, <a href="part0049.html#page_303">303</a>–<a href="part0049.html#page_304">304</a></p>
+<p class="indexsub">package by component, <a href="part0049.html#page_310">310</a>–<a href="part0049.html#page_315">315</a></p>
+<p class="indexsub">package by feature, <a href="part0049.html#page_306">306</a>–<a href="part0049.html#page_307">307</a></p>
+<p class="indexsub">package by layer, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexsub">ports and adapters, <a href="part0049.html#page_308">308</a>–<a href="part0049.html#page_310">310</a></p>
+<p class="indexsub">vs. encapsulation, <a href="part0049.html#page_316">316</a>–<a href="part0049.html#page_319">319</a></p>
+<p class="indexmain" id="idx70">Cohesion, Single Responsibility Principle, <a href="part0019.html#page_63">63</a></p>
+<p class="indexmain" id="idx71">COLTs (central office line testers)</p>
+<p class="indexsub">in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_340">340</a>–<a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">pCCU archaeology project, <a href="part0051.html#page_352">352</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexsub">in service area computer archaeology project, <a href="part0051.html#page_344">344</a>–<a href="part0051.html#page_349">349</a></p>
+<p class="indexmain" id="idx72">Common Closure Principle. <em class="calibre9">See</em> <a href="part0052.html#idx53">CCP (Common Closure Principle)</a></p>
+<p class="indexmain" id="idx73">Common Reuse Principle. <em class="calibre9">See</em> <a href="part0052.html#idx104">CRP (Common Reuse Principle)</a></p>
+<p class="indexmain" id="idx74">Communications</p>
+<p class="indexsub">across deployment component boundaries, <a href="part0032.html#page_179">179</a></p>
+<p class="indexsub">across local process boundaries, <a href="part0032.html#page_180">180</a></p>
+<p class="indexsub">across service boundaries, <a href="part0032.html#page_180">180</a>–<a href="part0032.html#page_181">181</a></p>
+<p class="indexsub">across source-level decoupled boundaries, <a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">Conway’s law, <a href="part0030.html#page_149">149</a></p>
+<p class="indexsub">as function calls between components in monoliths, <a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">in types of decoupling modes, <a href="part0030.html#page_155">155</a>–<a href="part0030.html#page_157">157</a></p>
+<p class="indexmain" id="idx75">Compare and swap algorithm, <a href="part0017.html#page_54">54</a></p>
+<p class="indexmain" id="idx76">Compiled languages, <a href="part0025.html#page_96">96</a></p>
+<p class="indexmain" id="idx77">Compilers</p>
+<p class="indexsub">enforce architectural principles with, <a href="part0049.html#page_319">319</a></p>
+<p class="indexsub">location of source code, <a href="part0025.html#page_97">97</a>–<a href="part0025.html#page_98">98</a></p>
+<p class="indexsub">relocatable binaries, <a href="part0025.html#page_99">99</a>–<a href="part0025.html#page_100">100</a></p>
+<p class="indexmain" id="idx78">Component architecture, video sales case study, <a href="part0048.html#page_300">300</a>–<a href="part0048.html#page_302">302</a></p>
+<p class="indexmain" id="idx79">Component-based systems</p>
+<p class="indexsub">building scalable, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">designing services using SOLID, <a href="part0041.html#page_245">245</a>–<a href="part0041.html#page_246">246</a></p>
+<p class="indexsub">function calls, <a href="part0041.html#page_240">240</a></p>
+<p class="indexsub">OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexmain" id="idx80">Component cohesion</p>
+<p class="indexsub">Common Closure Principle, <a href="part0026.html#page_105">105</a>–<a href="part0026.html#page_107">107</a></p>
+<p class="indexsub">Common Reuse Principle, <a href="part0026.html#page_107">107</a>–<a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">conclusion, <a href="part0026.html#page_110">110</a></p>
+<p class="indexsub">overview of, <a href="part0026.html#page_104">104</a></p>
+<p class="indexsub">Reuse/Release Equivalence Principle, <a href="part0026.html#page_104">104</a>–<a href="part0026.html#page_105">105</a></p>
+<p class="indexsub">tension diagram, <a href="part0026.html#page_108">108</a>–<a href="part0026.html#page_110">110</a></p>
+<p class="indexmain" id="idx81">Component coupling</p>
+<p class="indexsub">ADP. <em class="calibre9">See</em> <a href="part0052.html#idx13">ADP (Acyclic Dependencies Principle)</a></p>
+<p class="indexsub">conclusion, <a href="part0027.html#page_132">132</a></p>
+<p class="indexsub">Fragile Tests Problem, <a href="part0042.html#page_251">251</a></p>
+<p class="indexsub">overview of, <a href="part0027.html#page_111">111</a></p>
+<p class="indexsub">Stable Abstractions Principle. <em class="calibre9">See</em> <a href="part0052.html#idx352">SAP (Stable Abstractions Principle)</a></p>
+<p class="indexsub">Stable Dependencies Principle, <a href="part0027.html#page_120">120</a>–<a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">top-down design, <a href="part0027.html#page_118">118</a>–<a href="part0027.html#page_119">119</a></p>
+<p class="indexmain" id="idx82"><a id="page_381"></a>Component dependency graph</p>
+<p class="indexsub">break cycle of components/reinstate as DAG, <a href="part0027.html#page_117">117</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">effect of cycle in, <a href="part0027.html#page_115">115</a>–<a href="part0027.html#page_117">117</a></p>
+<p class="indexmain" id="idx83">Component-per-team architecture, <a href="part0029.html#page_137">137</a>–<a href="part0029.html#page_138">138</a></p>
+<p class="indexmain" id="idx84">Components</p>
+<p class="indexsub">concrete, <a href="part0023.html#page_91">91</a></p>
+<p class="indexsub">deployment of, <a href="part0032.html#page_178">178</a>–<a href="part0032.html#page_179">179</a></p>
+<p class="indexsub">history of, <a href="part0025.html#page_96">96</a>–<a href="part0025.html#page_99">99</a></p>
+<p class="indexsub">linkers, <a href="part0025.html#page_100">100</a>–<a href="part0025.html#page_102">102</a></p>
+<p class="indexsub">overview of, <a href="part0025.html#page_96">96</a></p>
+<p class="indexsub">package by, <a href="part0049.html#page_313">313</a>–<a href="part0049.html#page_315">315</a></p>
+<p class="indexsub">partitioning processes into classes/separating classes into, <a href="part0020.html#page_71">71</a>–<a href="part0020.html#page_72">72</a></p>
+<p class="indexsub">principles, <a href="part0024.html#page_93">93</a></p>
+<p class="indexsub">relocatability, <a href="part0025.html#page_99">99</a>–<a href="part0025.html#page_100">100</a></p>
+<p class="indexsub">tests as system, <a href="part0042.html#page_250">250</a></p>
+<p class="indexmain" id="idx85">Computer Aided Software Engineering (CASE) tool, <a href="part0051.html#page_368">368</a></p>
+<p class="indexmain" id="idx86">Concrete components, Dependency Inversion Principle, <a href="part0023.html#page_91">91</a></p>
+<p class="indexmain" id="idx87">Concurrent tasks, BOSS archaeology project, <a href="part0051.html#page_351">351</a>–<a href="part0051.html#page_352">352</a></p>
+<p class="indexmain" id="idx88">Concurrent updates, <a href="part0017.html#page_52">52</a>–<a href="part0017.html#page_53">53</a></p>
+<p class="indexmain" id="idx89">Constantine, Larry, <a href="part0015.html#page_29">29</a></p>
+<p class="indexmain" id="idx90">Control, flow of. <em class="calibre9">See</em> <a href="part0052.html#idx176">Flow of control</a></p>
+<p class="indexmain" id="idx91">Control structures, program, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexmain" id="idx92">Control, transfer of, <a href="part0014.html#page_22">22</a></p>
+<p class="indexmain" id="idx93">Controllers</p>
+<p class="indexsub">in clean architecture, <a href="part0036.html#page_203">203</a>, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexmain" id="idx94">Conway’s law, <a href="part0030.html#page_149">149</a></p>
+<p class="indexmain" id="idx95">Copper wires, pCCU archaeology project, <a href="part0051.html#page_352">352</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexmain" id="idx96">Core code, avoid frameworks in, <a href="part0047.html#page_293">293</a></p>
+<p class="indexmain" id="idx97">COs (central offices), <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_340">340</a></p>
+<p class="indexmain" id="idx98">Coupling. <em class="calibre9">See also</em> <a href="part0052.html#idx81">Component coupling</a></p>
+<p class="indexsub">avoid allowing framework, <a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">to premature decisions, <a href="part0031.html#page_160">160</a></p>
+<p class="indexmain" id="idx99">Craft Dispatch System. <em class="calibre9">See</em> <a href="part0052.html#idx55">CDS (Craft Dispatch System), archaeology project</a></p>
+<p class="indexmain" id="idx100">Critical Business Data, <a href="part0034.html#page_190">190</a>–<a href="part0034.html#page_191">191</a></p>
+<p class="indexmain" id="idx101">Critical Business Rules, <a href="part0034.html#page_190">190</a>–<a href="part0034.html#page_193">193</a></p>
+<p class="indexmain" id="idx102">Cross-cutting concerns</p>
+<p class="indexsub">designing services to deal with, <a href="part0041.html#page_247">247</a></p>
+<p class="indexsub">object-oriented approach to, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexmain" id="idx103">Crossing data streams, <a href="part0039.html#page_226">226</a></p>
+<p class="indexmain" id="idx104">CRP (Common Reuse Principle)</p>
+<p class="indexsub">influencing composition of components, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">overview of, <a href="part0026.html#page_107">107</a>–<a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">tension diagram, <a href="part0026.html#page_108">108</a>–<a href="part0026.html#page_110">110</a></p>
+<p class="indexmain" id="idx105">CRT (cathode ray tube) terminals, Union Accounting archaeology project, <a href="part0051.html#page_328">328</a>–<a href="part0051.html#page_329">329</a></p>
+<p class="indexmain" id="idx106">Cycles</p>
+<p class="indexsub">breaking, <a href="part0027.html#page_117">117</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">effect of in dependency graph, <a href="part0027.html#page_115">115</a>–<a href="part0027.html#page_117">117</a></p>
+<p class="indexsub">eliminating dependency, <a href="part0027.html#page_113">113</a>–<a href="part0027.html#page_115">115</a></p>
+<p class="indexsub">weekly build issues, <a href="part0027.html#page_112">112</a>–<a href="part0027.html#page_113">113</a></p>
+<p class="indexmain1"><strong class="calibre8">D</strong></p>
+<p class="indexmain" id="idx107"><em class="calibre9">D</em> metric, distance from Main Sequence, <a href="part0027.html#page_130">130</a>–<a href="part0027.html#page_132">132</a></p>
+<p class="indexmain" id="idx108">DAGs (directed acyclic graphs)</p>
+<p class="indexsub">architectural framework for policy, <a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">breaking cycle of components, <a href="part0027.html#page_117">117</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">defined, <a href="part0027.html#page_114">114</a></p>
+<p class="indexmain" id="idx109">Dahl, Ole Johan, <a href="part0014.html#page_22">22</a></p>
+<p class="indexmain" id="idx110"><a id="page_382"></a>Data</p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">Dependency Rule for crossing boundaries, <a href="part0036.html#page_207">207</a></p>
+<p class="indexsub">management concerns in architecture, <a href="part0014.html#page_24">24</a></p>
+<p class="indexsub">mappers, <a href="part0037.html#page_214">214</a>–<a href="part0037.html#page_215">215</a></p>
+<p class="indexsub">separating from functions, <a href="part0019.html#page_66">66</a></p>
+<p class="indexmain" id="idx111">Data model, database vs., <a href="part0045.html#page_278">278</a></p>
+<p class="indexmain" id="idx112">Data storage</p>
+<p class="indexsub">in Laser Trim archaeology project, <a href="part0051.html#page_335">335</a></p>
+<p class="indexsub">prevalence of database systems due to disks, <a href="part0045.html#page_279">279</a>–<a href="part0045.html#page_280">280</a></p>
+<p class="indexsub">in Union Accounting archaeology project, <a href="part0051.html#page_327">327</a>–<a href="part0051.html#page_328">328</a></p>
+<p class="indexmain" id="idx113">Database</p>
+<p class="indexsub">clean architecture independent from, <a href="part0036.html#page_202">202</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">creating testable architecture without, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">decoupling layers, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">decoupling use cases, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">Dependency Rule, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">drawing boundary line between business rules and, <a href="part0031.html#page_165">165</a></p>
+<p class="indexsub">gateways, <a href="part0037.html#page_214">214</a></p>
+<p class="indexsub">in Hunt the Wumpus adventure game, <a href="part0039.html#page_222">222</a>–<a href="part0039.html#page_223">223</a></p>
+<p class="indexsub">independent developability, <a href="part0016.html#page_47">47</a></p>
+<p class="indexsub">leaving options open in development, <a href="part0029.html#page_141">141</a>, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">plugin architecture, <a href="part0031.html#page_171">171</a></p>
+<p class="indexsub">relational, <a href="part0045.html#page_278">278</a></p>
+<p class="indexsub">schema in Zone of Pain, <a href="part0027.html#page_129">129</a></p>
+<p class="indexsub">separating components with boundary lines, <a href="part0031.html#page_165">165</a>–<a href="part0031.html#page_169">169</a></p>
+<p class="indexmain" id="idx114">Database is detail</p>
+<p class="indexsub">anecdote, <a href="part0045.html#page_281">281</a>–<a href="part0045.html#page_283">283</a></p>
+<p class="indexsub">conclusion, <a href="part0045.html#page_283">283</a></p>
+<p class="indexsub">details, <a href="part0045.html#page_281">281</a></p>
+<p class="indexsub">if there were no disks, <a href="part0045.html#page_280">280</a>–<a href="part0045.html#page_281">281</a></p>
+<p class="indexsub">overview of, <a href="part0045.html#page_277">277</a>–<a href="part0045.html#page_278">278</a></p>
+<p class="indexsub">performance, <a href="part0045.html#page_281">281</a></p>
+<p class="indexsub">relational databases, <a href="part0045.html#page_278">278</a></p>
+<p class="indexsub">why database systems are so prevalent, <a href="part0045.html#page_279">279</a>–<a href="part0045.html#page_280">280</a></p>
+<p class="indexmain" id="idx115">DCI system architecture, <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx116">Deadlocks, from mutable variables, <a href="part0017.html#page_52">52</a></p>
+<p class="indexmain" id="idx117">Decoupling</p>
+<p class="indexsub">as fallacy of services, <a href="part0041.html#page_240">240</a>–<a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">independent deployment, <a href="part0030.html#page_154">154</a>, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">independent development, <a href="part0030.html#page_153">153</a>–<a href="part0030.html#page_154">154</a>, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">kitty problem example, <a href="part0041.html#page_242">242</a>–<a href="part0041.html#page_243">243</a></p>
+<p class="indexsub">layers, <a href="part0030.html#page_151">151</a>–<a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">modes, <a href="part0030.html#page_153">153</a>, <a href="part0030.html#page_155">155</a>–<a href="part0030.html#page_158">158</a></p>
+<p class="indexsub">OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">purpose of testing API, <a href="part0042.html#page_252">252</a>–<a href="part0042.html#page_253">253</a></p>
+<p class="indexsub">source code dependencies, <a href="part0049.html#page_319">319</a></p>
+<p class="indexsub">use cases, <a href="part0030.html#page_152">152</a></p>
+<p class="indexmain" id="idx118">DeMarco, Tom, <a href="part0015.html#page_29">29</a></p>
+<p class="indexmain" id="idx119">Dependencies</p>
+<p class="indexsub">ADP. <em class="calibre9">See</em> <a href="part0052.html#idx13">ADP (Acyclic Dependencies Principle)</a></p>
+<p class="indexsub">architectural framework for policy, <a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">calculating stability metrics, <a href="part0027.html#page_123">123</a></p>
+<p class="indexsub">case study. <em class="calibre9">See</em> <a href="part0052.html#idx434">Video sales case study</a></p>
+<p class="indexsub">Common Reuse Principle and, <a href="part0026.html#page_107">107</a>–<a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">DIP. <em class="calibre9">See</em> <a href="part0052.html#idx135">DIP (Dependency Inversion Principle)</a></p>
+<p class="indexsub"><a id="page_383"></a>in Laser Trim archaeology project, <a href="part0051.html#page_338">338</a></p>
+<p class="indexsub">managing undesirable, <a href="part0023.html#page_89">89</a>–<a href="part0023.html#page_90">90</a></p>
+<p class="indexsub">OCP example, <a href="part0020.html#page_72">72</a></p>
+<p class="indexsub">in package by layer, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_306">306</a>, <a href="part0049.html#page_310">310</a>–<a href="part0049.html#page_311">311</a></p>
+<p class="indexsub">software destroyed by unmanaged, <a href="part0043.html#page_256">256</a></p>
+<p class="indexsub">stable. <em class="calibre9">See</em> <a href="part0052.html#idx359">SDP (Stable Dependencies Principle)</a></p>
+<p class="indexsub">transitive, <a href="part0020.html#page_75">75</a></p>
+<p class="indexsub">understanding component, <a href="part0027.html#page_121">121</a></p>
+<p class="indexsub">in Union Accounting archaeology project, <a href="part0051.html#page_333">333</a>–<a href="part0051.html#page_334">334</a></p>
+<p class="indexmain" id="idx120">Dependency graph, <a href="part0027.html#page_115">115</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexmain" id="idx121">Dependency Injection framework, Main component, <a href="part0040.html#page_232">232</a></p>
+<p class="indexmain" id="idx122">Dependency inversion, <a href="part0016.html#page_44">44</a>–<a href="part0016.html#page_47">47</a></p>
+<p class="indexmain" id="idx123">Dependency management</p>
+<p class="indexsub">metrics. <em class="calibre9">See</em> <a href="part0052.html#idx13">ADP (Acyclic Dependencies Principle)</a></p>
+<p class="indexsub">via full-fledged architectural boundaries, <a href="part0038.html#page_218">218</a></p>
+<p class="indexsub">via polymorphism in monolithic systems, <a href="part0032.html#page_177">177</a></p>
+<p class="indexsub">video sales case study, <a href="part0048.html#page_302">302</a></p>
+<p class="indexmain" id="idx124">Dependency Rule</p>
+<p class="indexsub">clean architecture and, <a href="part0036.html#page_203">203</a>–<a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">crossing boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">defined, <a href="part0023.html#page_91">91</a></p>
+<p class="indexsub">dependency management, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">designing services to follow, <a href="part0041.html#page_247">247</a></p>
+<p class="indexsub">Entities, <a href="part0036.html#page_204">204</a></p>
+<p class="indexsub">frameworks and drivers, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">frameworks tending to violate, <a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">in Hunt the Wumpus adventure game, <a href="part0039.html#page_223">223</a></p>
+<p class="indexsub">interface adapters, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">services may follow, <a href="part0041.html#page_240">240</a></p>
+<p class="indexsub">tests following, <a href="part0042.html#page_250">250</a></p>
+<p class="indexsub">use cases, <a href="part0036.html#page_204">204</a></p>
+<p class="indexsub">which data crosses boundaries, <a href="part0036.html#page_207">207</a></p>
+<p class="indexmain" id="idx125">Deployment</p>
+<p class="indexsub">architecture determines ease of, <a href="part0030.html#page_150">150</a></p>
+<p class="indexsub">components, <a href="part0032.html#page_178">178</a>–<a href="part0032.html#page_180">180</a></p>
+<p class="indexsub">components as units of, <a href="part0025.html#page_96">96</a></p>
+<p class="indexsub">impact of architecture on, <a href="part0029.html#page_138">138</a></p>
+<p class="indexsub">tests use independent, <a href="part0042.html#page_250">250</a></p>
+<p class="indexmain" id="idx126">Deployment-level decoupling mode, <a href="part0030.html#page_156">156</a>–<a href="part0030.html#page_157">157</a>, <a href="part0032.html#page_178">178</a>–<a href="part0032.html#page_179">179</a></p>
+<p class="indexmain" id="idx127">Design</p>
+<p class="indexsub">approaches to. <em class="calibre9">See</em> <a href="part0052.html#idx69">Code organization</a></p>
+<p class="indexsub">architecture vs., <a href="part0011.html#page_4">4</a></p>
+<p class="indexsub">decreasing productivity/increases cost of code, <a href="part0011.html#page_5">5</a>–<a href="part0011.html#page_7">7</a></p>
+<p class="indexsub">getting it right, <a href="part0010.html#page_2">2</a></p>
+<p class="indexsub">goal of good, <a href="part0011.html#page_4">4</a>–<a href="part0011.html#page_5">5</a></p>
+<p class="indexsub">reducing volatility of interfaces, <a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">signature of a mess, <a href="part0011.html#page_7">7</a>–<a href="part0011.html#page_8">8</a></p>
+<p class="indexsub">SOLID principles of, <a href="part0018.html#page_57">57</a>–<a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">for testability, <a href="part0042.html#page_251">251</a></p>
+<p class="indexmain" id="idx128"><em class="calibre9">Designing Object-Oriented C++ Applications Using the Booch Method</em>, <a href="part0051.html#page_369">369</a></p>
+<p class="indexmain" id="idx129">Detail</p>
+<p class="indexsub">database is. <em class="calibre9">See</em> <a href="part0052.html#idx114">Database is detail</a></p>
+<p class="indexsub">don’t reveal hardware, to user of HAL, <a href="part0043.html#page_265">265</a>–<a href="part0043.html#page_269">269</a></p>
+<p class="indexsub">framework is, <a href="part0047.html#page_291">291</a>–<a href="part0047.html#page_295">295</a></p>
+<p class="indexsub">hardware is, <a href="part0043.html#page_263">263</a>–<a href="part0043.html#page_264">264</a></p>
+<p class="indexsub"><a id="page_384"></a>separating from policy, <a href="part0029.html#page_140">140</a>–<a href="part0029.html#page_142">142</a></p>
+<p class="indexsub">story of architectural success, <a href="part0031.html#page_163">163</a>–<a href="part0031.html#page_165">165</a></p>
+<p class="indexsub">web is, <a href="part0046.html#page_285">285</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexmain" id="idx130">Developers</p>
+<p class="indexsub">decreasing productivity/increasing cost of code, <a href="part0011.html#page_5">5</a>–<a href="part0011.html#page_7">7</a></p>
+<p class="indexsub">Eisenhower’s matrix of importance vs. urgency, <a href="part0012.html#page_17">17</a></p>
+<p class="indexsub">foolishness of overconfidence, <a href="part0011.html#page_9">9</a>–<a href="part0011.html#page_12">12</a></p>
+<p class="indexsub">preference for function vs. architecture, <a href="part0012.html#page_15">15</a>–<a href="part0012.html#page_16">16</a></p>
+<p class="indexsub">scope vs. shape in determining cost of change, <a href="part0012.html#page_15">15</a></p>
+<p class="indexsub">signature of a mess, <a href="part0011.html#page_8">8</a>–<a href="part0011.html#page_9">9</a></p>
+<p class="indexsub">as stakeholders, <a href="part0012.html#page_18">18</a></p>
+<p class="indexmain" id="idx131">Development</p>
+<p class="indexsub">impact of architecture on, <a href="part0029.html#page_137">137</a>–<a href="part0029.html#page_138">138</a></p>
+<p class="indexsub">independent. <em class="calibre9">See</em> <a href="part0052.html#idx208">Independent developability</a></p>
+<p class="indexsub">role of architecture in supporting, <a href="part0030.html#page_149">149</a>–<a href="part0030.html#page_150">150</a></p>
+<p class="indexsub">role of test to support, <a href="part0042.html#page_250">250</a></p>
+<p class="indexmain" id="idx132">Device independence</p>
+<p class="indexsub">defined, <a href="part0029.html#page_142">142</a>–<a href="part0029.html#page_143">143</a></p>
+<p class="indexsub">IO device of UI as, <a href="part0046.html#page_288">288</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexsub">junk mail example, <a href="part0029.html#page_144">144</a>–<a href="part0029.html#page_145">145</a></p>
+<p class="indexsub">physical addressing example, <a href="part0029.html#page_145">145</a>–<a href="part0029.html#page_146">146</a></p>
+<p class="indexsub">in programming, <a href="part0016.html#page_44">44</a></p>
+<p class="indexmain" id="idx133">Digital revolution, and telephone companies, <a href="part0051.html#page_352">352</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexmain" id="idx134">Dijkstra, Edsger Wybe</p>
+<p class="indexsub">applying discipline of proof to programming, <a href="part0015.html#page_27">27</a></p>
+<p class="indexsub">discovery of structured programming, <a href="part0014.html#page_22">22</a></p>
+<p class="indexsub">history of, <a href="part0015.html#page_26">26</a></p>
+<p class="indexsub">proclamation on goto statements, <a href="part0015.html#page_28">28</a>–<a href="part0015.html#page_29">29</a></p>
+<p class="indexsub">on testing, <a href="part0015.html#page_31">31</a></p>
+<p class="indexmain" id="idx135">DIP (Dependency Inversion Principle)</p>
+<p class="indexsub">breaking cycle of components, <a href="part0027.html#page_117">117</a>–<a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">conclusion, <a href="part0023.html#page_91">91</a></p>
+<p class="indexsub">concrete components, <a href="part0023.html#page_91">91</a></p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">defined, <a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">drawing boundary lines, <a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">Entities without knowledge of use cases as, <a href="part0034.html#page_193">193</a></p>
+<p class="indexsub">factories, <a href="part0023.html#page_89">89</a>–<a href="part0023.html#page_90">90</a></p>
+<p class="indexsub">in good software architecture, <a href="part0020.html#page_71">71</a></p>
+<p class="indexsub">not all components should be stable, <a href="part0027.html#page_125">125</a></p>
+<p class="indexsub">overview of, <a href="part0023.html#page_87">87</a>–<a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">stable abstractions, <a href="part0023.html#page_88">88</a>–<a href="part0023.html#page_89">89</a></p>
+<p class="indexsub">Stable Abstractions Principle, <a href="part0027.html#page_127">127</a></p>
+<p class="indexmain" id="idx136">Directed acyclic graph. <em class="calibre9">See</em> <a href="part0052.html#idx108">DAGs (directed acyclic graphs)</a></p>
+<p class="indexmain" id="idx137">Directional control, Open-Closed Principle, <a href="part0020.html#page_74">74</a></p>
+<p class="indexmain" id="idx138">Disks</p>
+<p class="indexsub">if there were no, <a href="part0045.html#page_280">280</a>–<a href="part0045.html#page_281">281</a></p>
+<p class="indexsub">prevalence of database systems due to, <a href="part0045.html#page_279">279</a>–<a href="part0045.html#page_280">280</a></p>
+<p class="indexsub">in Union Accounting archaeology project, <a href="part0051.html#page_326">326</a>–<a href="part0051.html#page_330">330</a></p>
+<p class="indexmain" id="idx139">Dispatch code, service area computer project, <a href="part0051.html#page_345">345</a></p>
+<p class="indexmain" id="idx140">Display local unit/display remote unit (DLU/DRU) archaeology project, <a href="part0051.html#page_354">354</a>–<a href="part0051.html#page_356">356</a></p>
+<p class="indexmain" id="idx141">DLU/DRU (display local unit/display remote unit), archaeology project, <a href="part0051.html#page_354">354</a>–<a href="part0051.html#page_356">356</a></p>
+<p class="indexmain" id="idx142"><a id="page_385"></a>Do/while/until statements, <a href="part0014.html#page_22">22</a>, <a href="part0015.html#page_27">27</a></p>
+<p class="indexmain" id="idx143">Don’t Repeat Yourself (DRY) principle, conditional compilation directives, <a href="part0043.html#page_272">272</a></p>
+<p class="indexmain" id="idx144">Drawing lines. <em class="calibre9">See</em> <a href="part0052.html#idx37">Boundaries</a></p>
+<p class="indexmain" id="idx145">Drivers, Dependency Rule, <a href="part0036.html#page_205">205</a></p>
+<p class="indexmain" id="idx146">DRY (Don’t Repeat Yourself) principle, conditional compilation directives, <a href="part0043.html#page_272">272</a></p>
+<p class="indexmain" id="idx147">DSL (domain-specific data-driven language), Laser Trim archaeology project, <a href="part0051.html#page_337">337</a></p>
+<p class="indexmain" id="idx148">Duplication</p>
+<p class="indexsub">accidental, <a href="part0019.html#page_63">63</a>–<a href="part0019.html#page_65">65</a></p>
+<p class="indexsub">true vs. accidental, <a href="part0030.html#page_154">154</a>–<a href="part0030.html#page_155">155</a></p>
+<p class="indexmain" id="idx149">Dynamic polymorphism, <a href="part0032.html#page_177">177</a>–<a href="part0032.html#page_178">178</a>, <a href="part0036.html#page_206">206</a></p>
+<p class="indexmain" id="idx150">Dynamically linked libraries, as architectural boundaries, <a href="part0032.html#page_178">178</a>–<a href="part0032.html#page_179">179</a></p>
+<p class="indexmain" id="idx151">Dynamically typed languages</p>
+<p class="indexsub">DIP and, <a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">ISP and, <a href="part0022.html#page_85">85</a></p>
+<p class="indexmain1"><strong class="calibre8">E</strong></p>
+<p class="indexmain" id="idx152">Editing, Laser Trim archaeology project, <a href="part0051.html#page_336">336</a></p>
+<p class="indexmain" id="idx153">Educational Testing Service (ETS), <a href="part0051.html#page_370">370</a>–<a href="part0051.html#page_372">372</a></p>
+<p class="indexmain" id="idx154">Eisenhower, matrix of importance vs. urgency, <a href="part0012.html#page_16">16</a>–<a href="part0012.html#page_17">17</a></p>
+<p class="indexmain" id="idx155">Embedded architecture. <em class="calibre9">See</em> <a href="part0052.html#idx63">Clean embedded architecture</a></p>
+<p class="indexmain" id="idx156">Encapsulation</p>
+<p class="indexsub">in defining OOP, <a href="part0016.html#page_35">35</a>–<a href="part0016.html#page_37">37</a></p>
+<p class="indexsub">organization vs., <a href="part0049.html#page_316">316</a>–<a href="part0049.html#page_319">319</a></p>
+<p class="indexsub">overuse of public and, <a href="part0049.html#page_316">316</a></p>
+<p class="indexmain" id="idx157">Entities</p>
+<p class="indexsub">business rules and, <a href="part0034.html#page_190">190</a>–<a href="part0034.html#page_191">191</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">creating testable architecture, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">Dependency Rule for, <a href="part0036.html#page_204">204</a></p>
+<p class="indexsub">risks of frameworks, <a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">use cases vs., <a href="part0034.html#page_191">191</a>–<a href="part0034.html#page_193">193</a></p>
+<p class="indexmain" id="idx158">Enumeration, Dijkstra’s proof for sequence/selection, <a href="part0015.html#page_28">28</a></p>
+<p class="indexmain" id="idx159">EPROM (Erasable Programmable Read-Only Memory) chips, <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_341">341</a>–<a href="part0051.html#page_343">343</a></p>
+<p class="indexmain" id="idx160">ER (Electronic Receptionist)</p>
+<p class="indexsub">archaeology project, <a href="part0051.html#page_359">359</a>–<a href="part0051.html#page_361">361</a></p>
+<p class="indexsub">Craft Dispatch System was, <a href="part0051.html#page_362">362</a>–<a href="part0051.html#page_364">364</a></p>
+<p class="indexmain" id="idx161">ETS (Educational Testing Service), <a href="part0051.html#page_370">370</a>–<a href="part0051.html#page_372">372</a></p>
+<p class="indexmain" id="idx162">Europe, redesigning SAC for US and, <a href="part0051.html#page_347">347</a>–<a href="part0051.html#page_348">348</a></p>
+<p class="indexmain" id="idx163">Event sourcing, storing transactions, <a href="part0017.html#page_54">54</a>–<a href="part0017.html#page_55">55</a></p>
+<p class="indexmain" id="idx164">Executables</p>
+<p class="indexsub">deployment of monoliths, <a href="part0032.html#page_176">176</a>–<a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">linking components as, <a href="part0025.html#page_96">96</a></p>
+<p class="indexmain" id="idx165">External agency, clean architecture independence from, <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx166">External definition, compilers, <a href="part0025.html#page_100">100</a></p>
+<p class="indexmain" id="idx167">External reference, compilers, <a href="part0025.html#page_100">100</a></p>
+<p class="indexmain1"><strong class="calibre8">F</strong></p>
+<p class="indexmain" id="idx168">Facade pattern, partial boundaries, <a href="part0038.html#page_220">220</a></p>
+<p class="indexmain" id="idx169">Fan-in/fan-out metrics, component stability, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_123">123</a></p>
+<p class="indexmain" id="idx170">Feathers, Michael, <a href="part0018.html#page_58">58</a></p>
+<p class="indexmain" id="idx171">File systems, mitigating time delay, <a href="part0045.html#page_279">279</a>–<a href="part0045.html#page_280">280</a></p>
+<p class="indexmain" id="idx172">Firewalls, boundary crossings via, <a href="part0032.html#page_176">176</a></p>
+<p class="indexmain" id="idx173">Firmware</p>
+<p class="indexsub">in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_343">343</a>–<a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">definitions of, <a href="part0043.html#page_256">256</a>–<a href="part0043.html#page_257">257</a></p>
+<p class="indexsub"><a id="page_386"></a>eliminating target-hardware bottleneck, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_263">263</a></p>
+<p class="indexsub">fuzzy line between software and, <a href="part0043.html#page_263">263</a>–<a href="part0043.html#page_264">264</a></p>
+<p class="indexsub">obsolete as hardware evolves, <a href="part0043.html#page_256">256</a></p>
+<p class="indexsub">stop writing so much, <a href="part0043.html#page_257">257</a>–<a href="part0043.html#page_258">258</a></p>
+<p class="indexmain" id="idx174">FitNesse program</p>
+<p class="indexsub">overview of, <a href="part0031.html#page_163">163</a>–<a href="part0031.html#page_165">165</a></p>
+<p class="indexsub">partial boundary, <a href="part0038.html#page_218">218</a>–<a href="part0038.html#page_219">219</a></p>
+<p class="indexmain" id="idx175">FLD (Field Labeled Data), Craft Dispatch System archaeology project, <a href="part0051.html#page_363">363</a></p>
+<p class="indexmain" id="idx176">Flow of control</p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">dependency management, case study, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">dynamic polymorphism, <a href="part0032.html#page_177">177</a>–<a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">in Union Accounting archaeology project, <a href="part0051.html#page_334">334</a></p>
+<p class="indexmain" id="idx177">Fowler, Martin, <a href="part0049.html#page_305">305</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexmain" id="idx178">Fragile Tests Problem, <a href="part0042.html#page_251">251</a></p>
+<p class="indexmain" id="idx179">Frameworks</p>
+<p class="indexsub">avoid basing architecture on, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">clean architecture independent from, <a href="part0036.html#page_202">202</a></p>
+<p class="indexsub">creating testable architecture without, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">Dependency Rule for, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">as option to be left open, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">as tools, not a way of life, <a href="part0035.html#page_198">198</a></p>
+<p class="indexmain" id="idx180">Frameworks are details</p>
+<p class="indexsub">asymmetric marriage and, <a href="part0047.html#page_292">292</a>–<a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">conclusion, <a href="part0047.html#page_295">295</a></p>
+<p class="indexsub">framework authors, <a href="part0047.html#page_292">292</a></p>
+<p class="indexsub">frameworks you must simply marry, <a href="part0047.html#page_295">295</a></p>
+<p class="indexsub">popularity of, <a href="part0047.html#page_292">292</a></p>
+<p class="indexsub">risks, <a href="part0047.html#page_293">293</a>–<a href="part0047.html#page_294">294</a></p>
+<p class="indexsub">solution, <a href="part0047.html#page_294">294</a></p>
+<p class="indexmain" id="idx181">Function calls, services as, <a href="part0041.html#page_240">240</a></p>
+<p class="indexmain" id="idx182">Functional decomposition</p>
+<p class="indexsub">programming best practice, <a href="part0015.html#page_32">32</a></p>
+<p class="indexsub">in structured programming, <a href="part0015.html#page_29">29</a></p>
+<p class="indexmain" id="idx183">Functional pointers, OOP, <a href="part0014.html#page_22">22</a>, <a href="part0014.html#page_23">23</a></p>
+<p class="indexmain" id="idx184">Functional programming</p>
+<p class="indexsub">conclusion, <a href="part0017.html#page_56">56</a></p>
+<p class="indexsub">event sourcing, <a href="part0017.html#page_54">54</a>–<a href="part0017.html#page_55">55</a></p>
+<p class="indexsub">history of, <a href="part0014.html#page_22">22</a>–<a href="part0014.html#page_23">23</a></p>
+<p class="indexsub">immutability, <a href="part0017.html#page_52">52</a></p>
+<p class="indexsub">overview of, <a href="part0017.html#page_50">50</a></p>
+<p class="indexsub">segregation of mutability, <a href="part0017.html#page_52">52</a>–<a href="part0017.html#page_54">54</a></p>
+<p class="indexsub">squares of integers example, <a href="part0017.html#page_50">50</a>–<a href="part0017.html#page_51">51</a></p>
+<p class="indexmain" id="idx185">Functions</p>
+<p class="indexsub">avoid overriding concrete, <a href="part0023.html#page_89">89</a></p>
+<p class="indexsub">breaking down into parts (functional decomposition), <a href="part0015.html#page_29">29</a></p>
+<p class="indexsub">one of three big concerns in architecture, <a href="part0014.html#page_24">24</a></p>
+<p class="indexsub">principle of doing one thing, <a href="part0019.html#page_62">62</a></p>
+<p class="indexsub">separating from data, <a href="part0019.html#page_66">66</a></p>
+<p class="indexsub">SRP examples, <a href="part0019.html#page_67">67</a></p>
+<p class="indexmain1"><strong class="calibre8">G</strong></p>
+<p class="indexmain" id="idx186">Gateways, database, <a href="part0037.html#page_214">214</a></p>
+<p class="indexmain" id="idx187">GE Datanet <a href="part0015.html#page_30">30</a> computer, Union Accounting archaeology project, <a href="part0051.html#page_326">326</a>–<a href="part0051.html#page_330">330</a></p>
+<p class="indexmain" id="idx188">Goto statements</p>
+<p class="indexsub">Dijkstra replaces with iteration control structures, <a href="part0015.html#page_27">27</a></p>
+<p class="indexsub">Dijkstra’s proclamation on harmfulness of, <a href="part0015.html#page_28">28</a>–<a href="part0015.html#page_29">29</a></p>
+<p class="indexsub">history of structured programming, <a href="part0014.html#page_22">22</a></p>
+<p class="indexsub">removed in structured programming, <a href="part0014.html#page_23">23</a></p>
+<p class="indexmain" id="idx189"><em class="calibre9">Growing Object Oriented Software with Tests</em> (Freeman &amp; Pryce), <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx190"><a id="page_387"></a>GUI (graphical user interface). <em class="calibre9">See also</em> <a href="part0052.html#idx418">UI (user interface)</a></p>
+<p class="indexsub">decoupling business rules from, <a href="part0046.html#page_287">287</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexsub">designing for testability, <a href="part0042.html#page_251">251</a></p>
+<p class="indexsub">developing architects registry exam, <a href="part0051.html#page_371">371</a>–<a href="part0051.html#page_372">372</a></p>
+<p class="indexsub">input/output and boundary lines, <a href="part0031.html#page_169">169</a>–<a href="part0031.html#page_170">170</a></p>
+<p class="indexsub">plugin architecture, <a href="part0031.html#page_170">170</a>–<a href="part0031.html#page_171">171</a></p>
+<p class="indexsub">plugin argument, <a href="part0031.html#page_172">172</a>–<a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">separating from business rules with boundaries, <a href="part0031.html#page_165">165</a>–<a href="part0031.html#page_169">169</a></p>
+<p class="indexsub">unit testing, <a href="part0037.html#page_212">212</a></p>
+<p class="indexsub">web is, <a href="part0046.html#page_288">288</a></p>
+<p class="indexmain1"><strong class="calibre8">H</strong></p>
+<p class="indexmain" id="idx191">HAL (hardware abstraction layer)</p>
+<p class="indexsub">avoid revealing hardware details to user of, <a href="part0043.html#page_265">265</a>–<a href="part0043.html#page_269">269</a></p>
+<p class="indexsub">as boundary line between software/firmware, <a href="part0043.html#page_264">264</a></p>
+<p class="indexsub">DRY conditional compilation directives, <a href="part0043.html#page_272">272</a></p>
+<p class="indexsub">operating system is detail and, <a href="part0043.html#page_269">269</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx192">Hardware</p>
+<p class="indexsub">eliminating target-hardware bottleneck with layers, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_263">263</a></p>
+<p class="indexsub">firmware becomes obsolete through evolution of, <a href="part0043.html#page_256">256</a></p>
+<p class="indexsub">in SAC archaeology project, <a href="part0051.html#page_346">346</a>–<a href="part0051.html#page_347">347</a></p>
+<p class="indexmain" id="idx193">Header files, programming to interfaces with, <a href="part0043.html#page_272">272</a></p>
+<p class="indexmain" id="idx194">Hexagonal Architecture (Ports and Adapters), <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx195">High-level policy</p>
+<p class="indexsub">decoupling from lower level input/output policies, <a href="part0033.html#page_185">185</a>–<a href="part0033.html#page_186">186</a></p>
+<p class="indexsub">separating details from, <a href="part0029.html#page_140">140</a>–<a href="part0029.html#page_142">142</a></p>
+<p class="indexsub">splitting data streams, <a href="part0039.html#page_227">227</a>–<a href="part0039.html#page_228">228</a></p>
+<p class="indexsub">where to place, <a href="part0027.html#page_126">126</a></p>
+<p class="indexmain" id="idx196">Human resources, goal of architect to minimize, <a href="part0031.html#page_160">160</a></p>
+<p class="indexmain" id="idx197">Humble Object pattern</p>
+<p class="indexsub">data mappers, <a href="part0037.html#page_214">214</a>–<a href="part0037.html#page_215">215</a></p>
+<p class="indexsub">database getaways, <a href="part0037.html#page_214">214</a></p>
+<p class="indexsub">Presenters and Views, <a href="part0037.html#page_212">212</a>–<a href="part0037.html#page_213">213</a></p>
+<p class="indexsub">Presenters as form of, <a href="part0037.html#page_212">212</a></p>
+<p class="indexsub">testing and architecture, <a href="part0037.html#page_213">213</a></p>
+<p class="indexsub">understanding, <a href="part0037.html#page_212">212</a></p>
+<p class="indexmain" id="idx198">Hunt the Wumpus game</p>
+<p class="indexsub">layers and boundaries. <em class="calibre9">See</em> <a href="part0052.html#idx231">Layers and boundaries</a></p>
+<p class="indexsub">Main component from, <a href="part0040.html#page_232">232</a>–<a href="part0040.html#page_237">237</a></p>
+<p class="indexmain1"><strong class="calibre8">I</strong></p>
+<p class="indexmain" id="idx199">IBM System/7, aluminum die-cast archaeology project, <a href="part0051.html#page_338">338</a>–<a href="part0051.html#page_339">339</a></p>
+<p class="indexmain" id="idx200">If/then/else statements, <a href="part0014.html#page_22">22</a>, <a href="part0015.html#page_27">27</a></p>
+<p class="indexmain" id="idx201">Immutability, <a href="part0017.html#page_52">52</a>–<a href="part0017.html#page_54">54</a></p>
+<p class="indexmain" id="idx202">Implementation strategy. <em class="calibre9">See</em> <a href="part0052.html#idx69">Code organization</a></p>
+<p class="indexmain" id="idx203">Importance, urgency vs. Eisenhower’s matrix of, <a href="part0012.html#page_16">16</a>–<a href="part0012.html#page_17">17</a></p>
+<p class="indexmain" id="idx204">Incoming dependencies, stability metrics, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_123">123</a></p>
+<p class="indexmain" id="idx205">Independence</p>
+<p class="indexsub">conclusion, <a href="part0030.html#page_158">158</a></p>
+<p class="indexsub">decoupling layers, <a href="part0030.html#page_151">151</a>–<a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">decoupling mode, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">decoupling use cases, <a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">deployment, <a href="part0030.html#page_150">150</a></p>
+<p class="indexsub">development, <a href="part0030.html#page_149">149</a>–<a href="part0030.html#page_150">150</a></p>
+<p class="indexsub">duplication, <a href="part0030.html#page_154">154</a>–<a href="part0030.html#page_155">155</a></p>
+<p class="indexsub">independent deployability, <a href="part0030.html#page_154">154</a></p>
+<p class="indexsub">independent developability, <a href="part0030.html#page_153">153</a>–<a href="part0030.html#page_154">154</a></p>
+<p class="indexsub"><a id="page_388"></a>leaving options open, <a href="part0030.html#page_150">150</a>–<a href="part0030.html#page_151">151</a></p>
+<p class="indexsub">operation, <a href="part0030.html#page_149">149</a></p>
+<p class="indexsub">overview of, <a href="part0030.html#page_147">147</a>–<a href="part0030.html#page_148">148</a></p>
+<p class="indexsub">types of decoupling modes, <a href="part0030.html#page_155">155</a>–<a href="part0030.html#page_158">158</a></p>
+<p class="indexsub">use cases, <a href="part0030.html#page_148">148</a></p>
+<p class="indexmain" id="idx206">Independent components</p>
+<p class="indexsub">calculating stability metrics, <a href="part0027.html#page_123">123</a></p>
+<p class="indexsub">understanding, <a href="part0027.html#page_121">121</a></p>
+<p class="indexmain" id="idx207">Independent deployability</p>
+<p class="indexsub">in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">as fallacy of services, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">kitty problem example, <a href="part0041.html#page_242">242</a>–<a href="part0041.html#page_243">243</a></p>
+<p class="indexsub">in OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">overview of, <a href="part0030.html#page_154">154</a></p>
+<p class="indexmain" id="idx208">Independent developability</p>
+<p class="indexsub">as fallacy of services, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">kitty problem example, <a href="part0041.html#page_242">242</a>–<a href="part0041.html#page_243">243</a></p>
+<p class="indexsub">in OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">overview of, <a href="part0030.html#page_153">153</a>–<a href="part0030.html#page_154">154</a></p>
+<p class="indexsub">of UI and database, <a href="part0016.html#page_47">47</a></p>
+<p class="indexmain" id="idx209">Induction, Dijkstra’s proof related to iteration, <a href="part0015.html#page_28">28</a></p>
+<p class="indexmain" id="idx210">Information hiding, Open-Closed Principle, <a href="part0020.html#page_74">74</a>–<a href="part0020.html#page_75">75</a></p>
+<p class="indexmain" id="idx211">Inheritance relationships</p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">defining OOP, <a href="part0016.html#page_37">37</a>–<a href="part0016.html#page_40">40</a></p>
+<p class="indexsub">dependency inversion, <a href="part0016.html#page_46">46</a></p>
+<p class="indexsub">dependency management, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">guiding use of, <a href="part0021.html#page_78">78</a></p>
+<p class="indexmain" id="idx212">Input/output</p>
+<p class="indexsub">business rules for use cases, <a href="part0034.html#page_193">193</a>–<a href="part0034.html#page_194">194</a></p>
+<p class="indexsub">decoupling higher-level policy from lower level, <a href="part0033.html#page_185">185</a>–<a href="part0033.html#page_187">187</a></p>
+<p class="indexsub">policy level defined as distance from, <a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">separating components with boundary lines, <a href="part0031.html#page_169">169</a>–<a href="part0031.html#page_170">170</a></p>
+<p class="indexmain" id="idx213">Integers, functional programming example, <a href="part0017.html#page_50">50</a>–<a href="part0017.html#page_51">51</a></p>
+<p class="indexmain" id="idx214">Integration, weekly build issues, <a href="part0027.html#page_112">112</a>–<a href="part0027.html#page_113">113</a></p>
+<p class="indexmain" id="idx215">Interface adapters, Dependency Rule for, <a href="part0036.html#page_205">205</a></p>
+<p class="indexmain" id="idx216">Interface Segregation Principle. <em class="calibre9">See</em> <a href="part0052.html#idx219">ISP (Interface Segregation Principle)</a></p>
+<p class="indexmain" id="idx217">IO device</p>
+<p class="indexsub">UNIX functions, <a href="part0016.html#page_41">41</a>–<a href="part0016.html#page_44">44</a></p>
+<p class="indexsub">web is, <a href="part0046.html#page_288">288</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexmain" id="idx218">Isolation, test, <a href="part0042.html#page_250">250</a>–<a href="part0042.html#page_251">251</a></p>
+<p class="indexmain" id="idx219">ISP (Interface Segregation Principle)</p>
+<p class="indexsub">architecture and, <a href="part0022.html#page_86">86</a></p>
+<p class="indexsub">Common Reuse Principle compared with, <a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">conclusion, <a href="part0022.html#page_86">86</a></p>
+<p class="indexsub">defined, <a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">language type and, <a href="part0022.html#page_85">85</a></p>
+<p class="indexsub">overview of, <a href="part0022.html#page_84">84</a>–<a href="part0022.html#page_85">85</a></p>
+<p class="indexmain" id="idx220">Iteration, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexmain1"><strong class="calibre8">J</strong></p>
+<p class="indexmain" id="idx221">Jacobson, Ivar, <a href="part0035.html#page_196">196</a>, <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx222">Jar files</p>
+<p class="indexsub">component architecture, <a href="part0048.html#page_301">301</a></p>
+<p class="indexsub">components as, <a href="part0025.html#page_96">96</a></p>
+<p class="indexsub">creating partial boundary, <a href="part0038.html#page_219">219</a></p>
+<p class="indexsub">defining function of components, <a href="part0049.html#page_313">313</a></p>
+<p class="indexsub">designing component-based services, <a href="part0041.html#page_245">245</a>–<a href="part0041.html#page_246">246</a></p>
+<p class="indexsub">Download and Go rule for, <a href="part0031.html#page_163">163</a></p>
+<p class="indexsub">in source-level decoupling mode, <a href="part0032.html#page_176">176</a></p>
+<p class="indexmain" id="idx223">Java</p>
+<p class="indexsub">abstract components in, <a href="part0027.html#page_125">125</a></p>
+<p class="indexsub"><a id="page_389"></a>code organization approaches in. <em class="calibre9">See</em> <a href="part0052.html#idx69">Code organization</a></p>
+<p class="indexsub">components as jar files in, <a href="part0025.html#page_96">96</a></p>
+<p class="indexsub">DIP and, <a href="part0023.html#page_87">87</a></p>
+<p class="indexsub">import statements for dependencies, <a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">ISP example, <a href="part0022.html#page_84">84</a>–<a href="part0022.html#page_85">85</a></p>
+<p class="indexsub">marrying standard library framework in, <a href="part0047.html#page_293">293</a></p>
+<p class="indexsub">module frameworks in, <a href="part0049.html#page_319">319</a></p>
+<p class="indexsub">package by layer in, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexsub">squares of integers example in, <a href="part0017.html#page_50">50</a>–<a href="part0017.html#page_51">51</a></p>
+<p class="indexsub">weakening encapsulation, <a href="part0016.html#page_36">36</a>–<a href="part0016.html#page_37">37</a></p>
+<p class="indexmain" id="idx224">Jitters, breaking cycle of components, <a href="part0027.html#page_118">118</a></p>
+<p class="indexmain" id="idx225">Junk mail example, <a href="part0029.html#page_144">144</a>–<a href="part0029.html#page_145">145</a></p>
+<p class="indexmain1"><strong class="calibre8">K</strong></p>
+<p class="indexmain" id="idx226">Kitty problem example, <a href="part0041.html#page_242">242</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexmain1"><strong class="calibre8">L</strong></p>
+<p class="indexmain" id="idx227">Languages</p>
+<p class="indexsub">clean architecture and, <a href="part0039.html#page_223">223</a>–<a href="part0039.html#page_226">226</a></p>
+<p class="indexsub">Hunt the Wumpus adventure game, <a href="part0039.html#page_222">222</a>–<a href="part0039.html#page_223">223</a></p>
+<p class="indexmain" id="idx228">Laser Trim, archaeology project</p>
+<p class="indexsub">4-TEL project, <a href="part0051.html#page_339">339</a></p>
+<p class="indexsub">overview of, <a href="part0051.html#page_334">334</a>–<a href="part0051.html#page_338">338</a></p>
+<p class="indexmain" id="idx229">Layered architecture</p>
+<p class="indexsub">package by layer code organization, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexsub">relaxed, <a href="part0049.html#page_311">311</a>–<a href="part0049.html#page_312">312</a></p>
+<p class="indexsub">why it is considered bad, <a href="part0049.html#page_310">310</a>–<a href="part0049.html#page_311">311</a></p>
+<p class="indexmain" id="idx230">Layers</p>
+<p class="indexsub">approach to code organization, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexsub">clean architecture using, <a href="part0036.html#page_202">202</a>–<a href="part0036.html#page_203">203</a></p>
+<p class="indexsub">decoupling, <a href="part0030.html#page_151">151</a>–<a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">duplication of, <a href="part0030.html#page_155">155</a></p>
+<p class="indexsub">eliminating target-hardware bottleneck, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_263">263</a></p>
+<p class="indexsub">independent developability, <a href="part0030.html#page_154">154</a></p>
+<p class="indexmain" id="idx231">Layers and boundaries</p>
+<p class="indexsub">clean architecture, <a href="part0039.html#page_223">223</a>–<a href="part0039.html#page_226">226</a></p>
+<p class="indexsub">conclusion, <a href="part0039.html#page_228">228</a></p>
+<p class="indexsub">crossing streams, <a href="part0039.html#page_226">226</a></p>
+<p class="indexsub">Hunt the Wumpus adventure game, <a href="part0039.html#page_222">222</a>–<a href="part0039.html#page_223">223</a></p>
+<p class="indexsub">overview of, <a href="part0039.html#page_221">221</a>–<a href="part0039.html#page_222">222</a></p>
+<p class="indexsub">splitting streams, <a href="part0039.html#page_227">227</a>–<a href="part0039.html#page_228">228</a></p>
+<p class="indexmain" id="idx232">Leiningen tool, module management, <a href="part0026.html#page_104">104</a></p>
+<p class="indexmain" id="idx233">Level</p>
+<p class="indexsub">hierarchy of protection and, <a href="part0020.html#page_74">74</a></p>
+<p class="indexsub">policy and, <a href="part0033.html#page_184">184</a>–<a href="part0033.html#page_187">187</a></p>
+<p class="indexmain" id="idx234">Libraries</p>
+<p class="indexsub">location of source code, <a href="part0025.html#page_97">97</a>–<a href="part0025.html#page_98">98</a></p>
+<p class="indexsub">relocatable binaries, <a href="part0025.html#page_99">99</a>–<a href="part0025.html#page_100">100</a></p>
+<p class="indexmain" id="idx235">Life cycle, architecture supports system, <a href="part0029.html#page_137">137</a></p>
+<p class="indexmain" id="idx236">Linkers, separating from loaders, <a href="part0025.html#page_100">100</a>–<a href="part0025.html#page_102">102</a></p>
+<p class="indexmain" id="idx237">Liskov, Barbara, <a href="part0021.html#page_78">78</a></p>
+<p class="indexmain" id="idx238">Liskov Substitution Principle (LSP). <em class="calibre9">See</em> <a href="part0052.html#idx243">LSP (Liskov Substitution Principle)</a></p>
+<p class="indexmain" id="idx239">LISP langauge, functional programming, <a href="part0014.html#page_23">23</a></p>
+<p class="indexmain" id="idx240">Lisp language, squares of integers example, <a href="part0017.html#page_50">50</a>–<a href="part0017.html#page_51">51</a></p>
+<p class="indexmain" id="idx241">Loaders</p>
+<p class="indexsub">linking, <a href="part0025.html#page_100">100</a>–<a href="part0025.html#page_102">102</a></p>
+<p class="indexsub">relocatable binaries, <a href="part0025.html#page_99">99</a>–<a href="part0025.html#page_100">100</a></p>
+<p class="indexmain" id="idx242">Local process boundaries, <a href="part0032.html#page_179">179</a>–<a href="part0032.html#page_180">180</a></p>
+<p class="indexmain" id="idx243">LSP (Liskov Substitution Principle)</p>
+<p class="indexsub">architecture and, <a href="part0021.html#page_80">80</a></p>
+<p class="indexsub">conclusion, <a href="part0021.html#page_82">82</a></p>
+<p class="indexsub">defined, <a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">guiding use of inheritance, <a href="part0021.html#page_78">78</a></p>
+<p class="indexsub"><a id="page_390"></a>overview of, <a href="part0021.html#page_78">78</a></p>
+<p class="indexsub">square/rectangle example problem, <a href="part0021.html#page_79">79</a></p>
+<p class="indexsub">violation of, <a href="part0021.html#page_80">80</a>–<a href="part0021.html#page_82">82</a></p>
+<p class="indexmain1"><strong class="calibre8">M</strong></p>
+<p class="indexmain" id="idx244">M365 computer</p>
+<p class="indexsub">4-TEL archaeology project, <a href="part0051.html#page_340">340</a>–<a href="part0051.html#page_341">341</a></p>
+<p class="indexsub">Laser Trim archaeology project, <a href="part0051.html#page_335">335</a>–<a href="part0051.html#page_338">338</a></p>
+<p class="indexsub">SAC archaeology project, <a href="part0051.html#page_345">345</a>–<a href="part0051.html#page_347">347</a></p>
+<p class="indexmain" id="idx245">Mailboxes, local processes communicate via, <a href="part0032.html#page_180">180</a></p>
+<p class="indexmain" id="idx246">Main component</p>
+<p class="indexsub">conclusion, <a href="part0040.html#page_237">237</a></p>
+<p class="indexsub">as concrete component, <a href="part0023.html#page_91">91</a></p>
+<p class="indexsub">defined, <a href="part0040.html#page_232">232</a></p>
+<p class="indexsub">object-oriented programming, <a href="part0016.html#page_40">40</a></p>
+<p class="indexsub">polymorphism, <a href="part0016.html#page_45">45</a></p>
+<p class="indexsub">small impact of releasing, <a href="part0027.html#page_115">115</a></p>
+<p class="indexsub">as ultimate detail, <a href="part0040.html#page_232">232</a>–<a href="part0040.html#page_237">237</a></p>
+<p class="indexmain" id="idx247">Main Sequence</p>
+<p class="indexsub">avoiding Zones of Exclusion via, <a href="part0027.html#page_130">130</a></p>
+<p class="indexsub">defining relationship between abstraction/stability, <a href="part0027.html#page_127">127</a>–<a href="part0027.html#page_128">128</a></p>
+<p class="indexsub">measuring distance from, <a href="part0027.html#page_130">130</a>–<a href="part0027.html#page_132">132</a></p>
+<p class="indexsub">Zone of Pain, <a href="part0027.html#page_129">129</a></p>
+<p class="indexsub">Zone of Uselessness, <a href="part0027.html#page_129">129</a>–<a href="part0027.html#page_130">130</a></p>
+<p class="indexmain" id="idx248">Maintenance, impact of architecture on, <a href="part0029.html#page_139">139</a>–<a href="part0029.html#page_140">140</a></p>
+<p class="indexmain" id="idx249">Marketing campaigns, database vendor, <a href="part0045.html#page_283">283</a></p>
+<p class="indexmain" id="idx250">Master Operating Program (MOP), Laser Trim archaeology project, <a href="part0051.html#page_336">336</a></p>
+<p class="indexmain" id="idx251">Mathematics</p>
+<p class="indexsub">contrasting science with, <a href="part0015.html#page_30">30</a></p>
+<p class="indexsub">discipline of proof, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexmain" id="idx252">Maven tool, module management, <a href="part0026.html#page_104">104</a></p>
+<p class="indexmain" id="idx253">McCarthy, John, <a href="part0014.html#page_23">23</a></p>
+<p class="indexmain" id="idx254">Memory</p>
+<p class="indexsub">early layout of, <a href="part0025.html#page_98">98</a>–<a href="part0025.html#page_99">99</a></p>
+<p class="indexsub">local processes and, <a href="part0032.html#page_179">179</a></p>
+<p class="indexsub">RAM. <em class="calibre9">See</em> <a href="part0052.html#idx329">RAM</a></p>
+<p class="indexmain" id="idx255">Merges, SRP examples, <a href="part0019.html#page_65">65</a></p>
+<p class="indexmain" id="idx256">Message queues, local processes communicate via, <a href="part0032.html#page_180">180</a></p>
+<p class="indexmain" id="idx257">Metrics</p>
+<p class="indexsub">abstraction, <a href="part0027.html#page_127">127</a></p>
+<p class="indexsub">distance from Main Sequence, <a href="part0027.html#page_130">130</a>–<a href="part0027.html#page_132">132</a></p>
+<p class="indexmain" id="idx258">Meyer, Bertrand, <a href="part0020.html#page_70">70</a></p>
+<p class="indexmain" id="idx259">Micro-service architecture</p>
+<p class="indexsub">in Craft Dispatch System archaeology project, <a href="part0051.html#page_362">362</a>–<a href="part0051.html#page_363">363</a></p>
+<p class="indexsub">decoupling mode, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">deployment strategy, <a href="part0029.html#page_138">138</a></p>
+<p class="indexsub">popularity of, <a href="part0041.html#page_239">239</a></p>
+<p class="indexmain" id="idx260">Modems, SAC archaeology project, <a href="part0051.html#page_346">346</a>–<a href="part0051.html#page_347">347</a></p>
+<p class="indexmain" id="idx261">Modules</p>
+<p class="indexsub">Common Reuse Principle, <a href="part0026.html#page_107">107</a>–<a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">defined, <a href="part0019.html#page_62">62</a></p>
+<p class="indexsub">management tools, <a href="part0026.html#page_104">104</a></p>
+<p class="indexsub">public types vs. published types, <a href="part0049.html#page_319">319</a></p>
+<p class="indexsub">Reuse/Release Equivalence Principle, <a href="part0026.html#page_105">105</a></p>
+<p class="indexmain" id="idx262">Monoliths</p>
+<p class="indexsub">building scalable systems, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">deployment-level components vs., <a href="part0032.html#page_179">179</a></p>
+<p class="indexsub">deployment of, <a href="part0032.html#page_176">176</a>–<a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">function calls, <a href="part0041.html#page_240">240</a></p>
+<p class="indexsub">local processes as statically linked, <a href="part0032.html#page_180">180</a></p>
+<p class="indexsub">threads, <a href="part0032.html#page_179">179</a></p>
+<p class="indexmain" id="idx263"><a id="page_391"></a>Moore’s Law, <a href="part0025.html#page_101">101</a></p>
+<p class="indexmain" id="idx264">MOP (Master Operating Program), Laser Trim archaeology project, <a href="part0051.html#page_336">336</a></p>
+<p class="indexmain" id="idx265">Morning after syndrome</p>
+<p class="indexsub">eliminating dependency cycles to solve, <a href="part0027.html#page_113">113</a>–<a href="part0027.html#page_115">115</a></p>
+<p class="indexsub">managing dependencies to prevent, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">overview of, <a href="part0027.html#page_112">112</a></p>
+<p class="indexsub">weekly build issues, <a href="part0027.html#page_112">112</a>–<a href="part0027.html#page_113">113</a></p>
+<p class="indexmain" id="idx266">MPS (multiprocessing system), SAC archaeology project, <a href="part0051.html#page_345">345</a>–<a href="part0051.html#page_346">346</a></p>
+<p class="indexmain" id="idx267">Mutability, <a href="part0017.html#page_52">52</a>–<a href="part0017.html#page_54">54</a></p>
+<p class="indexmain" id="idx268">Mutable variables, <a href="part0017.html#page_51">51</a>, <a href="part0017.html#page_54">54</a>–<a href="part0017.html#page_55">55</a></p>
+<p class="indexmain1"><strong class="calibre8">N</strong></p>
+<p class="indexmain" id="idx269">National Council of Architects Registry Board (NCARB), <a href="part0051.html#page_370">370</a>–<a href="part0051.html#page_372">372</a></p>
+<p class="indexmain" id="idx270">.NET, components as DLLs, <a href="part0025.html#page_96">96</a></p>
+<p class="indexmain" id="idx271">NetNews, presence of author on, <a href="part0051.html#page_367">367</a>–<a href="part0051.html#page_369">369</a></p>
+<p class="indexmain" id="idx272">Newkirk, Jim, <a href="part0051.html#page_371">371</a>–<a href="part0051.html#page_372">372</a></p>
+<p class="indexmain" id="idx273">Nygaard, Kristen, <a href="part0014.html#page_22">22</a></p>
+<p class="indexmain1"><strong class="calibre8">O</strong></p>
+<p class="indexmain" id="idx274">Object-oriented databases, ROSE product, <a href="part0051.html#page_368">368</a>–<a href="part0051.html#page_370">370</a></p>
+<p class="indexmain" id="idx275"><em class="calibre9">Object Oriented Design with Applications</em> (Booch), <a href="part0051.html#page_366">366</a>, <a href="part0051.html#page_368">368</a></p>
+<p class="indexmain" id="idx276">Object-oriented programming</p>
+<p class="indexsub">conclusion, <a href="part0016.html#page_47">47</a></p>
+<p class="indexsub">for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">dependency inversion, <a href="part0016.html#page_44">44</a>–<a href="part0016.html#page_47">47</a></p>
+<p class="indexsub">deployment of monoliths, <a href="part0032.html#page_177">177</a></p>
+<p class="indexsub">encapsulation, <a href="part0016.html#page_35">35</a>–<a href="part0016.html#page_37">37</a></p>
+<p class="indexsub">history of, <a href="part0014.html#page_22">22</a></p>
+<p class="indexsub">inheritance, <a href="part0016.html#page_37">37</a>–<a href="part0016.html#page_40">40</a></p>
+<p class="indexsub">overview of, <a href="part0016.html#page_34">34</a>–<a href="part0016.html#page_35">35</a></p>
+<p class="indexsub">polymorphism, <a href="part0016.html#page_40">40</a>–<a href="part0016.html#page_43">43</a></p>
+<p class="indexsub">power of polymorphism, <a href="part0016.html#page_43">43</a>–<a href="part0016.html#page_44">44</a></p>
+<p class="indexmain" id="idx277"><em class="calibre9">Object Oriented Software Engineering</em> (Jacobson), <a href="part0035.html#page_196">196</a>, <a href="part0036.html#page_202">202</a></p>
+<p class="indexmain" id="idx278">Object relational mappers (ORMs), <a href="part0037.html#page_214">214</a>–<a href="part0037.html#page_215">215</a></p>
+<p class="indexmain" id="idx279">Objects, invented in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_344">344</a></p>
+<p class="indexmain" id="idx280">OCP (Open-Closed Principle)</p>
+<p class="indexsub">birth of, <a href="part0029.html#page_142">142</a></p>
+<p class="indexsub">Common Closure Principle compared with, <a href="part0026.html#page_106">106</a></p>
+<p class="indexsub">conclusion, <a href="part0020.html#page_75">75</a></p>
+<p class="indexsub">in Craft Dispatch System archaeology project, <a href="part0051.html#page_363">363</a></p>
+<p class="indexsub">defined, <a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">dependency management, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">designing component-based services, <a href="part0041.html#page_246">246</a></p>
+<p class="indexsub">directional control, <a href="part0020.html#page_74">74</a></p>
+<p class="indexsub">information hiding, <a href="part0020.html#page_74">74</a>–<a href="part0020.html#page_75">75</a></p>
+<p class="indexsub">overview of, <a href="part0020.html#page_70">70</a></p>
+<p class="indexsub">thought experiment, <a href="part0020.html#page_71">71</a>–<a href="part0020.html#page_74">74</a></p>
+<p class="indexmain" id="idx281">OMC (Outboard Marine Corporation), aluminum die-cast archaeology project, <a href="part0051.html#page_338">338</a>–<a href="part0051.html#page_339">339</a></p>
+<p class="indexmain" id="idx282">One-dimensional boundaries, <a href="part0038.html#page_219">219</a></p>
+<p class="indexmain" id="idx283">Open-Closed Principle. <em class="calibre9">See</em> <a href="part0052.html#idx280">OCP (Open-Closed Principle)</a></p>
+<p class="indexmain" id="idx284">Operating system abstraction layer (OSAL), clean embedded architecture, <a href="part0043.html#page_270">270</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx285">Operating system (OS), is detail, <a href="part0043.html#page_269">269</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx286">Operations</p>
+<p class="indexsub">architecture supports system, <a href="part0029.html#page_138">138</a>–<a href="part0029.html#page_139">139</a>, <a href="part0030.html#page_149">149</a></p>
+<p class="indexsub">decoupling use cases for, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub"><a id="page_392"></a>use cases affected by changes in, <a href="part0036.html#page_204">204</a></p>
+<p class="indexmain" id="idx287">Options, keeping open</p>
+<p class="indexsub">good architecture makes system easy to change, <a href="part0030.html#page_150">150</a>–<a href="part0030.html#page_151">151</a></p>
+<p class="indexsub">operational architecture, <a href="part0030.html#page_149">149</a></p>
+<p class="indexsub">purpose of architecture, <a href="part0029.html#page_140">140</a>–<a href="part0029.html#page_142">142</a>, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">via decoupling mode, <a href="part0030.html#page_153">153</a></p>
+<p class="indexmain" id="idx288">Organization vs. encapsulation, <a href="part0049.html#page_316">316</a>–<a href="part0049.html#page_319">319</a></p>
+<p class="indexmain" id="idx289">ORMs (object relational mappers), <a href="part0037.html#page_214">214</a>–<a href="part0037.html#page_215">215</a></p>
+<p class="indexmain" id="idx290">OS (operating system), is detail, <a href="part0043.html#page_269">269</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx291">OSAL (operating system abstraction layer), clean embedded architecture, <a href="part0043.html#page_270">270</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx292">Oscillations, web as one of many, <a href="part0046.html#page_285">285</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexmain" id="idx293">Outgoing dependencies, stability metrics, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_123">123</a></p>
+<p class="indexmain" id="idx294">Overconfidence, foolishness of, <a href="part0011.html#page_9">9</a>–<a href="part0011.html#page_12">12</a></p>
+<p class="indexmain1"><strong class="calibre8">P</strong></p>
+<p class="indexmain" id="idx295">Package by component, <a href="part0049.html#page_310">310</a>–<a href="part0049.html#page_315">315</a>, <a href="part0049.html#page_318">318</a></p>
+<p class="indexmain" id="idx296">Package by feature, <a href="part0049.html#page_306">306</a>–<a href="part0049.html#page_307">307</a>, <a href="part0049.html#page_317">317</a></p>
+<p class="indexmain" id="idx297">Package by layer</p>
+<p class="indexsub">access modifiers, <a href="part0049.html#page_317">317</a>–<a href="part0049.html#page_318">318</a></p>
+<p class="indexsub">horizontal layering of code, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexsub">why it is considered bad, <a href="part0049.html#page_310">310</a>–<a href="part0049.html#page_311">311</a></p>
+<p class="indexmain" id="idx298">Packages, organization vs. encapsulation, <a href="part0049.html#page_316">316</a>–<a href="part0049.html#page_319">319</a></p>
+<p class="indexmain" id="idx299">Page-Jones, Meilir, <a href="part0015.html#page_29">29</a></p>
+<p class="indexmain" id="idx300">Partial boundaries</p>
+<p class="indexsub">conclusion, <a href="part0038.html#page_220">220</a></p>
+<p class="indexsub">facades, <a href="part0038.html#page_220">220</a></p>
+<p class="indexsub">one-dimensional boundaries, <a href="part0038.html#page_219">219</a></p>
+<p class="indexsub">reasons to implement, <a href="part0038.html#page_217">217</a>–<a href="part0038.html#page_218">218</a></p>
+<p class="indexsub">skip last step, <a href="part0038.html#page_218">218</a>–<a href="part0038.html#page_219">219</a></p>
+<p class="indexmain" id="idx301">Patches, in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_344">344</a></p>
+<p class="indexmain" id="idx302">PCCU, archaeology project, <a href="part0051.html#page_352">352</a>–<a href="part0051.html#page_354">354</a></p>
+<p class="indexmain" id="idx303">PDP-11/60 computer, <a href="part0051.html#page_349">349</a>–<a href="part0051.html#page_351">351</a></p>
+<p class="indexmain" id="idx304">Performance, as low-level concern, <a href="part0045.html#page_281">281</a></p>
+<p class="indexmain" id="idx305">Périphérique anti-pattern of ports and adapters, <a href="part0049.html#page_320">320</a>–<a href="part0049.html#page_321">321</a></p>
+<p class="indexmain" id="idx306">Physical addressing example, <a href="part0029.html#page_145">145</a>–<a href="part0029.html#page_146">146</a></p>
+<p class="indexmain" id="idx307">Plugin architecture</p>
+<p class="indexsub">in <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">for device independence, <a href="part0016.html#page_44">44</a></p>
+<p class="indexsub">drawing boundaries for axis of change, <a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">of lower-level components into higher-level components, <a href="part0033.html#page_187">187</a></p>
+<p class="indexsub">Main component as, <a href="part0040.html#page_237">237</a></p>
+<p class="indexsub">start with presumption of, <a href="part0031.html#page_170">170</a>–<a href="part0031.html#page_171">171</a></p>
+<p class="indexmain" id="idx308">Pointers</p>
+<p class="indexsub">in creating polymorphic behavior, <a href="part0016.html#page_43">43</a></p>
+<p class="indexsub">functional, <a href="part0014.html#page_22">22</a>–<a href="part0014.html#page_23">23</a></p>
+<p class="indexmain" id="idx309">Policy</p>
+<p class="indexsub">in clean architecture, <a href="part0036.html#page_203">203</a></p>
+<p class="indexsub">high-level. <em class="calibre9">See</em> <a href="part0052.html#idx195">High-level policy</a></p>
+<p class="indexsub">overview of, <a href="part0033.html#page_183">183</a>–<a href="part0033.html#page_184">184</a></p>
+<p class="indexsub">software systems as statements of, <a href="part0033.html#page_183">183</a></p>
+<p class="indexsub">splitting data streams, <a href="part0039.html#page_227">227</a>–<a href="part0039.html#page_228">228</a></p>
+<p class="indexmain" id="idx310">Polymorphic dispatch, <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_344">344</a></p>
+<p class="indexmain" id="idx311">Polymorphism</p>
+<p class="indexsub">crossing circle boundaries with dynamic, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">dependency inversion, <a href="part0016.html#page_44">44</a>–<a href="part0016.html#page_47">47</a></p>
+<p class="indexsub"><a id="page_393"></a>flow of control in dynamic, <a href="part0032.html#page_177">177</a>–<a href="part0032.html#page_178">178</a></p>
+<p class="indexsub">in object-oriented programming, <a href="part0014.html#page_22">22</a>, <a href="part0016.html#page_40">40</a>–<a href="part0016.html#page_43">43</a></p>
+<p class="indexsub">power of, <a href="part0016.html#page_43">43</a>–<a href="part0016.html#page_44">44</a></p>
+<p class="indexmain" id="idx312">Ports and adapters</p>
+<p class="indexsub">access modifiers, <a href="part0049.html#page_318">318</a></p>
+<p class="indexsub">approach to code organization, <a href="part0049.html#page_308">308</a>–<a href="part0049.html#page_310">310</a></p>
+<p class="indexsub">decouple dependencies with source code trees, <a href="part0049.html#page_319">319</a>–<a href="part0049.html#page_320">320</a></p>
+<p class="indexsub">Périphérique anti-pattern of, <a href="part0049.html#page_320">320</a>–<a href="part0049.html#page_321">321</a></p>
+<p class="indexmain" id="idx313">Positional stability, component, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_123">123</a></p>
+<p class="indexmain" id="idx314">Premature decisions, coupling to, <a href="part0031.html#page_160">160</a>–<a href="part0031.html#page_163">163</a></p>
+<p class="indexmain" id="idx315">“Presentation Domain Data Layering” (Fowler), <a href="part0049.html#page_305">305</a>–<a href="part0049.html#page_306">306</a></p>
+<p class="indexmain" id="idx316">Presenters</p>
+<p class="indexsub">in clean architecture, <a href="part0036.html#page_203">203</a>, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub">component architecture, <a href="part0048.html#page_301">301</a></p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexmain" id="idx317">Presenters and humble objects</p>
+<p class="indexsub">conclusion, <a href="part0037.html#page_215">215</a></p>
+<p class="indexsub">data mappers, <a href="part0037.html#page_214">214</a>–<a href="part0037.html#page_215">215</a></p>
+<p class="indexsub">database getaways, <a href="part0037.html#page_214">214</a></p>
+<p class="indexsub">Humble Object pattern, <a href="part0037.html#page_212">212</a></p>
+<p class="indexsub">overview of, <a href="part0037.html#page_211">211</a>–<a href="part0037.html#page_212">212</a></p>
+<p class="indexsub">Presenters and Views, <a href="part0037.html#page_212">212</a>–<a href="part0037.html#page_213">213</a></p>
+<p class="indexsub">service listeners, <a href="part0037.html#page_215">215</a></p>
+<p class="indexsub">testing and architecture, <a href="part0037.html#page_213">213</a></p>
+<p class="indexmain" id="idx318">Processes, partitioning into classes/separating classes, <a href="part0020.html#page_71">71</a>–<a href="part0020.html#page_72">72</a></p>
+<p class="indexmain" id="idx319">Processor</p>
+<p class="indexsub">is detail, <a href="part0043.html#page_265">265</a>–<a href="part0043.html#page_269">269</a></p>
+<p class="indexsub">mutability and, <a href="part0017.html#page_52">52</a></p>
+<p class="indexmain" id="idx320">Product, video sales case study, <a href="part0048.html#page_298">298</a></p>
+<p class="indexmain" id="idx321">Productivity</p>
+<p class="indexsub">decreasing, increasing cost of code, <a href="part0011.html#page_5">5</a>–<a href="part0011.html#page_7">7</a></p>
+<p class="indexsub">signature of a mess, <a href="part0011.html#page_8">8</a>–<a href="part0011.html#page_9">9</a></p>
+<p class="indexmain" id="idx322">Programming languages</p>
+<p class="indexsub">abstract components in, <a href="part0027.html#page_125">125</a>–<a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">components, <a href="part0025.html#page_96">96</a></p>
+<p class="indexsub">dynamically typed, <a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">ISP and, <a href="part0022.html#page_85">85</a></p>
+<p class="indexsub">statically typed, <a href="part0023.html#page_87">87</a></p>
+<p class="indexsub">variables in functional languages, <a href="part0017.html#page_51">51</a></p>
+<p class="indexmain" id="idx323">Programming paradigms</p>
+<p class="indexsub">functional programming. <em class="calibre9">See</em> <a href="part0052.html#idx184">Functional programming</a></p>
+<p class="indexsub">history of, <a href="part0013.html#page_19">19</a>–<a href="part0013.html#page_20">20</a></p>
+<p class="indexsub">object-oriented programming. <em class="calibre9">See</em> <a href="part0052.html#idx276">Object-oriented programming</a></p>
+<p class="indexsub">overview of, <a href="part0014.html#page_21">21</a>–<a href="part0014.html#page_24">24</a></p>
+<p class="indexsub">structured programming. <em class="calibre9">See</em> <a href="part0052.html#idx400">Structured programming</a></p>
+<p class="indexmain" id="idx324">Proof</p>
+<p class="indexsub">discipline of, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexsub">structured programming lacking, <a href="part0015.html#page_30">30</a>–<a href="part0015.html#page_31">31</a></p>
+<p class="indexmain" id="idx325">Proxies, using with frameworks, <a href="part0047.html#page_293">293</a></p>
+<p class="indexmain" id="idx326">Public types</p>
+<p class="indexsub">misuse of, <a href="part0049.html#page_315">315</a>–<a href="part0049.html#page_316">316</a></p>
+<p class="indexsub">vs. types that are published in modules, <a href="part0049.html#page_319">319</a></p>
+<p class="indexmain" id="idx327">Python</p>
+<p class="indexsub">DIP and, <a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">ISP and, <a href="part0022.html#page_85">85</a></p>
+<p class="indexmain1"><strong class="calibre8">R</strong></p>
+<p class="indexmain" id="idx328">Race conditions</p>
+<p class="indexsub">due to mutable variables, <a href="part0017.html#page_52">52</a></p>
+<p class="indexsub">protecting against concurrent updates and, <a href="part0017.html#page_53">53</a></p>
+<p class="indexmain" id="idx329"><a id="page_394"></a>RAM</p>
+<p class="indexsub">4-TEL archaeology project, <a href="part0051.html#page_341">341</a>, <a href="part0051.html#page_343">343</a>–<a href="part0051.html#page_344">344</a></p>
+<p class="indexsub">replacing disks, <a href="part0045.html#page_280">280</a>–<a href="part0045.html#page_281">281</a></p>
+<p class="indexmain" id="idx330">Rational (company), <a href="part0051.html#page_367">367</a>, <a href="part0051.html#page_368">368</a></p>
+<p class="indexmain" id="idx331">RDBMS (relational database management systems), <a href="part0045.html#page_279">279</a>–<a href="part0045.html#page_283">283</a></p>
+<p class="indexmain" id="idx332">Real-time operating system (RTOS) is detail, <a href="part0043.html#page_269">269</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx333">Relational database management systems (RDBMS), <a href="part0045.html#page_279">279</a>–<a href="part0045.html#page_283">283</a></p>
+<p class="indexmain" id="idx334">Relational databases, <a href="part0045.html#page_278">278</a>, <a href="part0045.html#page_281">281</a>–<a href="part0045.html#page_283">283</a></p>
+<p class="indexmain" id="idx335">Relaxed layered architecture, <a href="part0049.html#page_311">311</a>–<a href="part0049.html#page_312">312</a></p>
+<p class="indexmain" id="idx336">Releases</p>
+<p class="indexsub">effect of cycle in component dependency graph, <a href="part0027.html#page_115">115</a>–<a href="part0027.html#page_117">117</a></p>
+<p class="indexsub">eliminating dependency cycles, <a href="part0027.html#page_113">113</a>–<a href="part0027.html#page_115">115</a></p>
+<p class="indexsub">numbering new component, <a href="part0027.html#page_113">113</a></p>
+<p class="indexsub">Reuse/Release Equivalence Principle for new, <a href="part0026.html#page_104">104</a>–<a href="part0026.html#page_105">105</a></p>
+<p class="indexmain" id="idx337">Remote terminals, DLU/DRU archaeology project, <a href="part0051.html#page_354">354</a>–<a href="part0051.html#page_356">356</a></p>
+<p class="indexmain" id="idx338">REP (Reuse/Release Equivalence Principle), <a href="part0026.html#page_104">104</a>–<a href="part0026.html#page_105">105</a>, <a href="part0026.html#page_108">108</a>–<a href="part0026.html#page_110">110</a></p>
+<p class="indexmain" id="idx339">Request models, business rules, <a href="part0034.html#page_193">193</a>–<a href="part0034.html#page_194">194</a></p>
+<p class="indexmain" id="idx340">ReSharper, plugin argument, <a href="part0031.html#page_172">172</a>–<a href="part0031.html#page_173">173</a></p>
+<p class="indexmain" id="idx341">Response models, business rules, <a href="part0034.html#page_193">193</a>–<a href="part0034.html#page_194">194</a></p>
+<p class="indexmain" id="idx342">REST, leave options open in development, <a href="part0029.html#page_141">141</a></p>
+<p class="indexmain" id="idx343">Reusability. <em class="calibre9">See</em> <a href="part0052.html#idx104">CRP (Common Reuse Principle)</a></p>
+<p class="indexmain" id="idx344">Reuse/Release Equivalence Principle (REP), <a href="part0026.html#page_104">104</a>–<a href="part0026.html#page_105">105</a>, <a href="part0026.html#page_108">108</a>–<a href="part0026.html#page_110">110</a></p>
+<p class="indexmain" id="idx345">Risks</p>
+<p class="indexsub">architecture should mitigate costs of, <a href="part0029.html#page_139">139</a>–<a href="part0029.html#page_140">140</a></p>
+<p class="indexsub">of frameworks, <a href="part0047.html#page_293">293</a>–<a href="part0047.html#page_294">294</a></p>
+<p class="indexmain" id="idx346">ROM boards, <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_341">341</a></p>
+<p class="indexmain" id="idx347">ROSE product, archaeology project, <a href="part0051.html#page_368">368</a>–<a href="part0051.html#page_370">370</a></p>
+<p class="indexmain" id="idx348">RTOS (real-time operating system) is detail, <a href="part0043.html#page_269">269</a>–<a href="part0043.html#page_271">271</a></p>
+<p class="indexmain" id="idx349">Ruby</p>
+<p class="indexsub">components as gem files, <a href="part0025.html#page_96">96</a></p>
+<p class="indexsub">DIP and, <a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">ISP and, <a href="part0022.html#page_85">85</a></p>
+<p class="indexmain" id="idx350">RVM tool, module management, <a href="part0026.html#page_104">104</a></p>
+<p class="indexmain1"><strong class="calibre8">S</strong></p>
+<p class="indexmain" id="idx351">SAC (service area computer), archaeology project</p>
+<p class="indexsub">4-TEL using, <a href="part0051.html#page_340">340</a>–<a href="part0051.html#page_341">341</a></p>
+<p class="indexsub">architecture, <a href="part0051.html#page_345">345</a>–<a href="part0051.html#page_347">347</a></p>
+<p class="indexsub">conclusion, <a href="part0051.html#page_349">349</a></p>
+<p class="indexsub">dispatch determination, <a href="part0051.html#page_345">345</a></p>
+<p class="indexsub">DLU/DRU archaeology project, <a href="part0051.html#page_354">354</a>–<a href="part0051.html#page_356">356</a></p>
+<p class="indexsub">Europe, <a href="part0051.html#page_348">348</a>–<a href="part0051.html#page_349">349</a></p>
+<p class="indexsub">grand redesign, <a href="part0051.html#page_347">347</a>–<a href="part0051.html#page_348">348</a></p>
+<p class="indexsub">overview of, <a href="part0051.html#page_344">344</a></p>
+<p class="indexmain" id="idx352">SAP (Stable Abstractions Principle)</p>
+<p class="indexsub">avoiding zones of exclusion, <a href="part0027.html#page_130">130</a></p>
+<p class="indexsub">distance from main sequence, <a href="part0027.html#page_130">130</a>–<a href="part0027.html#page_132">132</a></p>
+<p class="indexsub">drawing boundary lines, <a href="part0031.html#page_173">173</a></p>
+<p class="indexsub">introduction to, <a href="part0027.html#page_126">126</a>–<a href="part0027.html#page_127">127</a></p>
+<p class="indexsub">main sequence, <a href="part0027.html#page_127">127</a>–<a href="part0027.html#page_130">130</a></p>
+<p class="indexsub">measuring abstraction, <a href="part0027.html#page_127">127</a></p>
+<p class="indexsub">where to put high-level policy, <a href="part0027.html#page_126">126</a></p>
+<p class="indexmain" id="idx353">SC (service center), <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_340">340</a></p>
+<p class="indexmain" id="idx354"><a id="page_395"></a>Scalability</p>
+<p class="indexsub">kitty problem and services, <a href="part0041.html#page_242">242</a>–<a href="part0041.html#page_243">243</a></p>
+<p class="indexsub">services not only option for building, <a href="part0041.html#page_241">241</a></p>
+<p class="indexmain" id="idx355">Schmidt, Doug, <a href="part0043.html#page_256">256</a>–<a href="part0043.html#page_258">258</a></p>
+<p class="indexmain" id="idx356">Scientific methods, proving statements false, <a href="part0015.html#page_30">30</a>–<a href="part0015.html#page_31">31</a></p>
+<p class="indexmain" id="idx357">Scope, of changing architecture, <a href="part0012.html#page_15">15</a></p>
+<p class="indexmain" id="idx358">Screaming architecture. <em class="calibre9">See</em> <a href="part0052.html#idx22">Architecture, screaming</a></p>
+<p class="indexmain" id="idx359">SDP (Stable Dependencies Principle)</p>
+<p class="indexsub">abstract components, <a href="part0027.html#page_125">125</a>–<a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">not all components should be, <a href="part0027.html#page_124">124</a>–<a href="part0027.html#page_125">125</a></p>
+<p class="indexsub">not all components should be stable, <a href="part0027.html#page_123">123</a>–<a href="part0027.html#page_125">125</a></p>
+<p class="indexsub">overview of, <a href="part0027.html#page_120">120</a></p>
+<p class="indexsub">stability, <a href="part0027.html#page_120">120</a>–<a href="part0027.html#page_121">121</a></p>
+<p class="indexsub">stability metrics, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_123">123</a></p>
+<p class="indexsub">Stable Abstractions Principle, <a href="part0027.html#page_127">127</a></p>
+<p class="indexmain" id="idx360">Security, testing API, <a href="part0042.html#page_253">253</a></p>
+<p class="indexmain" id="idx361">Selection, as program control structure, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexmain" id="idx362">Separation of components, as big concern in architecture, <a href="part0014.html#page_24">24</a></p>
+<p class="indexmain" id="idx363">Sequence, as program control structure, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexmain" id="idx364">Serial communication bus, SAC archaeology project, <a href="part0051.html#page_347">347</a></p>
+<p class="indexmain" id="idx365">Service area computer. <em class="calibre9">See</em> <a href="part0052.html#idx351">SAC (service area computer), archaeology project</a></p>
+<p class="indexmain" id="idx366">Service center (SC), <a href="part0011.html#page_4">4</a>-TEL archaeology project, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_340">340</a></p>
+<p class="indexmain" id="idx367">Service-level decoupling mode, <a href="part0030.html#page_153">153</a>, <a href="part0030.html#page_156">156</a>–<a href="part0030.html#page_157">157</a></p>
+<p class="indexmain" id="idx368">Services</p>
+<p class="indexsub">component-based, <a href="part0041.html#page_245">245</a>–<a href="part0041.html#page_246">246</a></p>
+<p class="indexsub">conclusion, <a href="part0041.html#page_247">247</a></p>
+<p class="indexsub">cross-cutting concerns, <a href="part0041.html#page_246">246</a>–<a href="part0041.html#page_247">247</a></p>
+<p class="indexsub">decoupling fallacy, <a href="part0041.html#page_240">240</a>–<a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">as function calls vs. architecture, <a href="part0041.html#page_240">240</a></p>
+<p class="indexsub">Humble Object boundaries for, <a href="part0037.html#page_214">214</a>–<a href="part0037.html#page_215">215</a></p>
+<p class="indexsub">independent development/deployment fallacy, <a href="part0041.html#page_241">241</a></p>
+<p class="indexsub">kitty problem, <a href="part0041.html#page_242">242</a>–<a href="part0041.html#page_243">243</a></p>
+<p class="indexsub">objects to the rescue, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">overview of, <a href="part0041.html#page_239">239</a></p>
+<p class="indexsub">as strongest boundary, <a href="part0032.html#page_180">180</a>–<a href="part0032.html#page_181">181</a></p>
+<p class="indexmain" id="idx369">Set program interrupt (SPI) instruction, aluminum die-cast archaeology project, <a href="part0051.html#page_339">339</a></p>
+<p class="indexmain" id="idx370">Shape, of change, <a href="part0012.html#page_15">15</a></p>
+<p class="indexmain" id="idx371">Single Responsibility Principle. <em class="calibre9">See</em> <a href="part0052.html#idx387">SRP (Single Responsibility Principle)</a></p>
+<p class="indexmain" id="idx372">SOA (service-oriented architecture)</p>
+<p class="indexsub">decoupling mode, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">in Electronic Receptionist archaeology project, <a href="part0051.html#page_360">360</a>–<a href="part0051.html#page_361">361</a></p>
+<p class="indexsub">reasons for popularity of, <a href="part0041.html#page_239">239</a></p>
+<p class="indexmain" id="idx373">Sockets, local processes communicate via, <a href="part0032.html#page_180">180</a></p>
+<p class="indexmain" id="idx374">Software</p>
+<p class="indexsub">clean embedded architecture isolates OS from, <a href="part0043.html#page_270">270</a></p>
+<p class="indexsub">components. <em class="calibre9">See</em> <a href="part0052.html#idx84">Components</a></p>
+<p class="indexsub">eliminating target-hardware bottleneck with layers, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_263">263</a></p>
+<p class="indexsub">fuzzy line between firmware and, <a href="part0043.html#page_263">263</a>–<a href="part0043.html#page_264">264</a></p>
+<p class="indexsub">getting it right, <a href="part0010.html#page_1">1</a>–<a href="part0010.html#page_2">2</a></p>
+<p class="indexsub"><a id="page_396"></a>SOLID principles, <a href="part0018.html#page_58">58</a></p>
+<p class="indexsub">value of architecture vs. behavior, <a href="part0012.html#page_14">14</a>–<a href="part0012.html#page_18">18</a></p>
+<p class="indexmain" id="idx375">Software development</p>
+<p class="indexsub">fighting for architecture over function, <a href="part0012.html#page_18">18</a></p>
+<p class="indexsub">like a science, <a href="part0015.html#page_31">31</a></p>
+<p class="indexmain" id="idx376">Software reuse</p>
+<p class="indexsub">Common Reuse Principle, <a href="part0026.html#page_107">107</a>–<a href="part0026.html#page_108">108</a></p>
+<p class="indexsub">reusable components and, <a href="part0026.html#page_104">104</a></p>
+<p class="indexsub">Reuse/Release Equivalence Principle, <a href="part0026.html#page_104">104</a>–<a href="part0026.html#page_105">105</a></p>
+<p class="indexmain" id="idx377">SOLID principles</p>
+<p class="indexsub">Dependency Inversion Principle. <em class="calibre9">See</em> <a href="part0052.html#idx135">DIP (Dependency Inversion Principle)</a></p>
+<p class="indexsub">designing component-based services using, <a href="part0041.html#page_245">245</a>–<a href="part0041.html#page_246">246</a></p>
+<p class="indexsub">history of, <a href="part0018.html#page_57">57</a>–<a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">Interface Segregation Principle. <em class="calibre9">See</em> <a href="part0052.html#idx219">ISP (Interface Segregation Principle)</a></p>
+<p class="indexsub">Liskov Substitution Principle. <em class="calibre9">See</em> <a href="part0052.html#idx243">LSP (Liskov Substitution Principle)</a></p>
+<p class="indexsub">OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexsub">Open-Closed Principle. <em class="calibre9">See</em> <a href="part0052.html#idx280">OCP (Open-Closed Principle)</a></p>
+<p class="indexsub">Single Responsibility Principle. <em class="calibre9">See</em> <a href="part0052.html#idx387">SRP (Single Responsibility Principle)</a></p>
+<p class="indexmain" id="idx378">Source code, compiling, <a href="part0025.html#page_97">97</a>–<a href="part0025.html#page_98">98</a></p>
+<p class="indexmain" id="idx379">Source code dependencies</p>
+<p class="indexsub">creating boundary crossing via, <a href="part0032.html#page_176">176</a></p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">decoupling, <a href="part0033.html#page_184">184</a>–<a href="part0033.html#page_185">185</a>, <a href="part0049.html#page_319">319</a></p>
+<p class="indexsub">dependency inversion, <a href="part0016.html#page_44">44</a>–<a href="part0016.html#page_47">47</a></p>
+<p class="indexsub">local processes as, <a href="part0032.html#page_180">180</a></p>
+<p class="indexsub">OCP example, <a href="part0020.html#page_72">72</a></p>
+<p class="indexsub">referring only to abstractions, <a href="part0023.html#page_87">87</a>–<a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">UI components reuse game rules via, <a href="part0039.html#page_222">222</a>–<a href="part0039.html#page_223">223</a></p>
+<p class="indexmain" id="idx380">Source code trees, decoupling dependencies, <a href="part0049.html#page_319">319</a>–<a href="part0049.html#page_321">321</a></p>
+<p class="indexmain" id="idx381">Source-level decoupling mode, <a href="part0030.html#page_155">155</a>–<a href="part0030.html#page_157">157</a>, <a href="part0032.html#page_176">176</a>–<a href="part0032.html#page_178">178</a></p>
+<p class="indexmain" id="idx382">Spelunking, architecture mitigates costs of, <a href="part0029.html#page_139">139</a>–<a href="part0029.html#page_140">140</a></p>
+<p class="indexmain" id="idx383">SPI (set program interrupt) instruction, aluminum die-cast archaeology project, <a href="part0051.html#page_339">339</a></p>
+<p class="indexmain" id="idx384">Splitting data streams, <a href="part0039.html#page_227">227</a>–<a href="part0039.html#page_228">228</a></p>
+<p class="indexmain" id="idx385">Square/rectangle problem, LSP, <a href="part0021.html#page_79">79</a></p>
+<p class="indexmain" id="idx386">Squares of integers, functional programming, <a href="part0017.html#page_50">50</a>–<a href="part0017.html#page_51">51</a></p>
+<p class="indexmain" id="idx387">SRP (Single Responsibility Principle)</p>
+<p class="indexsub">accidental duplication example, <a href="part0019.html#page_63">63</a>–<a href="part0019.html#page_65">65</a></p>
+<p class="indexsub">Common Closure Principle vs., <a href="part0026.html#page_106">106</a>–<a href="part0026.html#page_107">107</a></p>
+<p class="indexsub">conclusion, <a href="part0019.html#page_66">66</a>–<a href="part0019.html#page_67">67</a></p>
+<p class="indexsub">decoupling layers, <a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">defined, <a href="part0018.html#page_59">59</a></p>
+<p class="indexsub">dependency management, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">in good software architecture, <a href="part0020.html#page_71">71</a></p>
+<p class="indexsub">grouping policies into components, <a href="part0033.html#page_186">186</a>–<a href="part0033.html#page_187">187</a></p>
+<p class="indexsub">keeping changes localized, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">merges, <a href="part0019.html#page_65">65</a></p>
+<p class="indexsub">overview of, <a href="part0019.html#page_61">61</a>–<a href="part0019.html#page_63">63</a></p>
+<p class="indexsub">solutions, <a href="part0019.html#page_66">66</a>–<a href="part0019.html#page_67">67</a></p>
+<p class="indexsub">use case analysis, <a href="part0048.html#page_299">299</a></p>
+<p class="indexsub"><a id="page_397"></a>where to draw boundaries, <a href="part0031.html#page_172">172</a>–<a href="part0031.html#page_173">173</a></p>
+<p class="indexmain" id="idx388">Stability, component</p>
+<p class="indexsub">measuring, <a href="part0027.html#page_122">122</a>–<a href="part0027.html#page_123">123</a></p>
+<p class="indexsub">relationship between abstraction and, <a href="part0027.html#page_127">127</a>–<a href="part0027.html#page_130">130</a></p>
+<p class="indexsub">SAP. <em class="calibre9">See</em> <a href="part0052.html#idx352">SAP (Stable Abstractions Principle)</a></p>
+<p class="indexsub">understanding, <a href="part0027.html#page_120">120</a>–<a href="part0027.html#page_121">121</a></p>
+<p class="indexmain" id="idx389">Stable Abstractions Principle. <em class="calibre9">See</em> <a href="part0052.html#idx352">SAP (Stable Abstractions Principle)</a></p>
+<p class="indexmain" id="idx390">Stable components</p>
+<p class="indexsub">abstract components as, <a href="part0027.html#page_125">125</a>–<a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">as harmless in Zone of Pain, <a href="part0027.html#page_129">129</a></p>
+<p class="indexsub">not all components should be, <a href="part0027.html#page_123">123</a>–<a href="part0027.html#page_125">125</a></p>
+<p class="indexsub">placing high-level policies in, <a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">Stable Abstractions Principle, <a href="part0027.html#page_126">126</a>–<a href="part0027.html#page_127">127</a></p>
+<p class="indexmain" id="idx391">Stable Dependencies Principle. <em class="calibre9">See</em> <a href="part0052.html#idx359">SDP (Stable Dependencies Principle)</a></p>
+<p class="indexmain" id="idx392">Stakeholders</p>
+<p class="indexsub">scope vs. shape for cost of change, <a href="part0012.html#page_15">15</a></p>
+<p class="indexsub">seniority of architecture over function, <a href="part0012.html#page_18">18</a></p>
+<p class="indexsub">values provided by software systems, <a href="part0012.html#page_14">14</a></p>
+<p class="indexmain" id="idx393">State</p>
+<p class="indexsub">concurrency issues from mutation, <a href="part0017.html#page_53">53</a></p>
+<p class="indexsub">storing transactions but not, <a href="part0017.html#page_54">54</a>–<a href="part0017.html#page_55">55</a></p>
+<p class="indexmain" id="idx394">Static analysis tools, architecture violations, <a href="part0049.html#page_313">313</a></p>
+<p class="indexmain" id="idx395">Static vs. dynamic polymorphism, <a href="part0032.html#page_177">177</a></p>
+<p class="indexmain" id="idx396">Strategy pattern</p>
+<p class="indexsub">creating one-dimensional boundaries, <a href="part0038.html#page_219">219</a></p>
+<p class="indexsub">OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexmain" id="idx397">Streams, data</p>
+<p class="indexsub">clean architecture and, <a href="part0039.html#page_224">224</a>–<a href="part0039.html#page_226">226</a></p>
+<p class="indexsub">crossing, <a href="part0039.html#page_226">226</a></p>
+<p class="indexsub">splitting, <a href="part0039.html#page_227">227</a>–<a href="part0039.html#page_228">228</a></p>
+<p class="indexmain" id="idx398">Structural coupling, testing API, <a href="part0042.html#page_252">252</a></p>
+<p class="indexmain" id="idx399">Structure. <em class="calibre9">See</em> <a href="part0052.html#idx19">Architecture</a></p>
+<p class="indexmain" id="idx400">Structured programming</p>
+<p class="indexsub">Dijkstra’s proclamation on goto statements, <a href="part0015.html#page_28">28</a>–<a href="part0015.html#page_29">29</a></p>
+<p class="indexsub">discipline of proof, <a href="part0015.html#page_27">27</a>–<a href="part0015.html#page_28">28</a></p>
+<p class="indexsub">functional decomposition in, <a href="part0015.html#page_29">29</a></p>
+<p class="indexsub">history of, <a href="part0014.html#page_22">22</a></p>
+<p class="indexsub">lack of formal proofs, <a href="part0015.html#page_30">30</a></p>
+<p class="indexsub">overview of, <a href="part0015.html#page_26">26</a></p>
+<p class="indexsub">role of science in, <a href="part0015.html#page_30">30</a>–<a href="part0015.html#page_31">31</a></p>
+<p class="indexsub">role of tests in, <a href="part0015.html#page_31">31</a></p>
+<p class="indexsub">value of, <a href="part0015.html#page_31">31</a>–<a href="part0015.html#page_32">32</a></p>
+<p class="indexmain" id="idx401">Substitution</p>
+<p class="indexsub">LSP. <em class="calibre9">See</em> <a href="part0052.html#idx243">LSP (Liskov Substitution Principle)</a></p>
+<p class="indexsub">programming to interfaces and, <a href="part0043.html#page_271">271</a>–<a href="part0043.html#page_272">272</a></p>
+<p class="indexmain" id="idx402">Subtypes, defining, <a href="part0021.html#page_78">78</a></p>
+<p class="indexmain1"><strong class="calibre8">T</strong></p>
+<p class="indexmain" id="idx403">Target-hardware bottleneck, <a href="part0043.html#page_261">261</a>, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_272">272</a></p>
+<p class="indexmain" id="idx404">TAS (Teradyne Applied Systems), <a href="part0051.html#page_334">334</a>–<a href="part0051.html#page_338">338</a>, <a href="part0051.html#page_339">339</a>–<a href="part0051.html#page_344">344</a></p>
+<p class="indexmain" id="idx405">Template Method pattern, OO approach for cross-cutting concerns, <a href="part0041.html#page_244">244</a>–<a href="part0041.html#page_245">245</a></p>
+<p class="indexmain" id="idx406"><a id="page_398"></a>Test boundary</p>
+<p class="indexsub">conclusion, <a href="part0042.html#page_253">253</a></p>
+<p class="indexsub">designing for testability, <a href="part0042.html#page_251">251</a></p>
+<p class="indexsub">Fragile Tests Problem, <a href="part0042.html#page_251">251</a></p>
+<p class="indexsub">overview of, <a href="part0042.html#page_249">249</a>–<a href="part0042.html#page_250">250</a></p>
+<p class="indexsub">testing API, <a href="part0042.html#page_252">252</a>–<a href="part0042.html#page_253">253</a></p>
+<p class="indexsub">tests as system components, <a href="part0042.html#page_250">250</a></p>
+<p class="indexmain" id="idx407">Testable architecture</p>
+<p class="indexsub">clean architecture creating, <a href="part0036.html#page_202">202</a></p>
+<p class="indexsub">clean embedded architecture as, <a href="part0043.html#page_262">262</a>–<a href="part0043.html#page_272">272</a></p>
+<p class="indexsub">overview of, <a href="part0035.html#page_198">198</a></p>
+<p class="indexmain" id="idx408">Testing</p>
+<p class="indexsub">and architecture, <a href="part0037.html#page_213">213</a></p>
+<p class="indexsub">Presenters and Views, <a href="part0037.html#page_212">212</a>–<a href="part0037.html#page_213">213</a></p>
+<p class="indexsub">in structured programming, <a href="part0015.html#page_31">31</a></p>
+<p class="indexsub">unit. <em class="calibre9">See</em> <a href="part0052.html#idx423">Unit testing</a></p>
+<p class="indexsub">via Humble Object pattern, <a href="part0037.html#page_212">212</a></p>
+<p class="indexmain" id="idx409">Threads</p>
+<p class="indexsub">mutability and, <a href="part0017.html#page_52">52</a></p>
+<p class="indexsub">schedule/order of execution, <a href="part0032.html#page_179">179</a></p>
+<p class="indexmain" id="idx410">Three-tiered “architecture” (as topology), <a href="part0031.html#page_161">161</a></p>
+<p class="indexmain" id="idx411">Top-down design, component structure, <a href="part0027.html#page_118">118</a>–<a href="part0027.html#page_119">119</a></p>
+<p class="indexmain" id="idx412">Transactional memory, <a href="part0017.html#page_53">53</a></p>
+<p class="indexmain" id="idx413">Transactions, storing, <a href="part0017.html#page_54">54</a>–<a href="part0017.html#page_55">55</a></p>
+<p class="indexmain" id="idx414">Transitive dependencies, violating software principles, <a href="part0020.html#page_75">75</a></p>
+<p class="indexmain" id="idx415">Trouble tickets, CDS archaeology project, <a href="part0051.html#page_362">362</a>–<a href="part0051.html#page_364">364</a></p>
+<p class="indexmain" id="idx416">True duplication, <a href="part0030.html#page_154">154</a>–<a href="part0030.html#page_155">155</a></p>
+<p class="indexmain" id="idx417">Turning, Alan, <a href="part0014.html#page_23">23</a></p>
+<p class="indexmain1"><strong class="calibre8">U</strong></p>
+<p class="indexmain" id="idx418">UI (user interface). <em class="calibre9">See also</em> <a href="part0052.html#idx190">GUI (graphical user interface)</a></p>
+<p class="indexsub">applying LSP to, <a href="part0021.html#page_80">80</a></p>
+<p class="indexsub">clean architecture independent from, <a href="part0036.html#page_202">202</a></p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">decoupling business rules from, <a href="part0046.html#page_287">287</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexsub">decoupling layers, <a href="part0030.html#page_152">152</a>–<a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">decoupling use cases, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">Hunt the Wumpus adventure game, <a href="part0039.html#page_222">222</a>–<a href="part0039.html#page_223">223</a></p>
+<p class="indexsub">independent developability, <a href="part0016.html#page_47">47</a>, <a href="part0030.html#page_154">154</a></p>
+<p class="indexsub">Interface Segregation Principle, <a href="part0022.html#page_84">84</a></p>
+<p class="indexsub">programming to, <a href="part0043.html#page_271">271</a>–<a href="part0043.html#page_272">272</a></p>
+<p class="indexsub">reducing volatility of, <a href="part0023.html#page_88">88</a></p>
+<p class="indexsub">SAC archaeology project, <a href="part0051.html#page_346">346</a></p>
+<p class="indexmain" id="idx419">UML class diagram</p>
+<p class="indexsub">package by layer, <a href="part0049.html#page_304">304</a>–<a href="part0049.html#page_305">305</a>, <a href="part0049.html#page_310">310</a></p>
+<p class="indexsub">ports and adapters, <a href="part0049.html#page_308">308</a>–<a href="part0049.html#page_310">310</a></p>
+<p class="indexsub">relaxed layered architecture, <a href="part0049.html#page_311">311</a>–<a href="part0049.html#page_312">312</a></p>
+<p class="indexmain" id="idx420">Uncle Bob, <a href="part0051.html#page_367">367</a>, <a href="part0051.html#page_369">369</a></p>
+<p class="indexmain" id="idx421">UNIFY database system, VRS archaeology project, <a href="part0051.html#page_358">358</a>–<a href="part0051.html#page_359">359</a></p>
+<p class="indexmain" id="idx422">Union Accounting system, archaeology project, <a href="part0051.html#page_326">326</a>–<a href="part0051.html#page_334">334</a></p>
+<p class="indexmain" id="idx423">Unit testing</p>
+<p class="indexsub">creating testable architecture, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">effect of cycle in component dependency graph, <a href="part0027.html#page_116">116</a>–<a href="part0027.html#page_117">117</a></p>
+<p class="indexsub">via Humble Object pattern, <a href="part0037.html#page_212">212</a></p>
+<p class="indexmain" id="idx424">UNIX, IO device driver functions, <a href="part0016.html#page_41">41</a>–<a href="part0016.html#page_44">44</a></p>
+<p class="indexmain" id="idx425">Upgrades, risks of frameworks, <a href="part0047.html#page_293">293</a></p>
+<p class="indexmain" id="idx426">Urgency, Eisenhower’s matrix of importance vs., <a href="part0012.html#page_16">16</a>–<a href="part0012.html#page_17">17</a></p>
+<p class="indexmain" id="idx427">Use cases</p>
+<p class="indexsub">architecture must support, <a href="part0030.html#page_148">148</a></p>
+<p class="indexsub">business rules for, <a href="part0034.html#page_191">191</a>–<a href="part0034.html#page_194">194</a></p>
+<p class="indexsub">clean architecture scenario, <a href="part0036.html#page_207">207</a>–<a href="part0036.html#page_208">208</a></p>
+<p class="indexsub"><a id="page_399"></a>coupling to premature decisions with, <a href="part0031.html#page_160">160</a></p>
+<p class="indexsub">creating testable architecture, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">crossing circle boundaries, <a href="part0036.html#page_206">206</a></p>
+<p class="indexsub">decoupling, <a href="part0030.html#page_152">152</a></p>
+<p class="indexsub">decoupling mode, <a href="part0030.html#page_153">153</a></p>
+<p class="indexsub">Dependency Rule for, <a href="part0036.html#page_204">204</a></p>
+<p class="indexsub">duplication of, <a href="part0030.html#page_155">155</a></p>
+<p class="indexsub">good architecture centered on, <a href="part0035.html#page_196">196</a>, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">independent developability and, <a href="part0030.html#page_154">154</a></p>
+<p class="indexsub">video sales case study, <a href="part0048.html#page_298">298</a>–<a href="part0048.html#page_300">300</a></p>
+<p class="indexmain" id="idx428">User interface</p>
+<p class="indexsub">GUI. <em class="calibre9">See</em> <a href="part0052.html#idx190">GUI (graphical user interface)</a></p>
+<p class="indexsub">UI. <em class="calibre9">See</em> <a href="part0052.html#idx418">UI (user interface)</a></p>
+<p class="indexmain" id="idx429">Utility library, Zone of Pain, <a href="part0027.html#page_129">129</a></p>
+<p class="indexmain" id="idx430">Uucp connection, <a href="part0051.html#page_366">366</a></p>
+<p class="indexmain1"><strong class="calibre8">V</strong></p>
+<p class="indexmain" id="idx431">Values, software system</p>
+<p class="indexsub">architecture (structure), <a href="part0012.html#page_14">14</a>–<a href="part0012.html#page_15">15</a></p>
+<p class="indexsub">behavior, <a href="part0012.html#page_14">14</a></p>
+<p class="indexsub">Eisenhower’s matrix of importance vs. urgency, <a href="part0012.html#page_16">16</a>–<a href="part0012.html#page_17">17</a></p>
+<p class="indexsub">fighting for seniority of architecture, <a href="part0012.html#page_18">18</a></p>
+<p class="indexsub">function vs. architecture, <a href="part0012.html#page_15">15</a>–<a href="part0012.html#page_16">16</a></p>
+<p class="indexsub">overview of, <a href="part0012.html#page_14">14</a></p>
+<p class="indexmain" id="idx432">Variables, functional language, <a href="part0017.html#page_51">51</a></p>
+<p class="indexmain" id="idx433">Varian 620/f minicomputer, Union Accounting archaeology project, <a href="part0051.html#page_331">331</a>–<a href="part0051.html#page_334">334</a></p>
+<p class="indexmain" id="idx434">Video sales case study</p>
+<p class="indexsub">component architecture, <a href="part0048.html#page_300">300</a>–<a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">conclusion, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">dependency management, <a href="part0048.html#page_302">302</a></p>
+<p class="indexsub">on process/decisions of good architect, <a href="part0048.html#page_297">297</a>–<a href="part0048.html#page_298">298</a></p>
+<p class="indexsub">product, <a href="part0048.html#page_298">298</a></p>
+<p class="indexsub">use case analysis, <a href="part0048.html#page_298">298</a>–<a href="part0048.html#page_300">300</a></p>
+<p class="indexmain" id="idx435">View Model, Presenters and Views, <a href="part0037.html#page_213">213</a></p>
+<p class="indexmain" id="idx436">Views</p>
+<p class="indexsub">component architecture, <a href="part0048.html#page_301">301</a></p>
+<p class="indexsub">Presenters and, <a href="part0037.html#page_212">212</a>–<a href="part0037.html#page_213">213</a></p>
+<p class="indexmain" id="idx437">Vignette Grande, architects registry exam, <a href="part0051.html#page_371">371</a>–<a href="part0051.html#page_372">372</a></p>
+<p class="indexmain" id="idx438">Visual Studio, plugin argument, <a href="part0031.html#page_172">172</a>–<a href="part0031.html#page_173">173</a></p>
+<p class="indexmain" id="idx439">Voice technologies, archaeology projects</p>
+<p class="indexsub">Electronic Receptionist, <a href="part0051.html#page_359">359</a>–<a href="part0051.html#page_361">361</a></p>
+<p class="indexsub">Voice Response System, <a href="part0051.html#page_357">357</a>–<a href="part0051.html#page_359">359</a></p>
+<p class="indexmain" id="idx440">Volatile components</p>
+<p class="indexsub">dependency graph and, <a href="part0027.html#page_118">118</a></p>
+<p class="indexsub">design for testability, <a href="part0042.html#page_251">251</a></p>
+<p class="indexsub">placing in volatile software, <a href="part0027.html#page_126">126</a></p>
+<p class="indexsub">as problematic in Zone of Pain, <a href="part0027.html#page_129">129</a></p>
+<p class="indexsub">Stable Dependencies Principle and, <a href="part0027.html#page_120">120</a></p>
+<p class="indexmain" id="idx441">Von Neumann, <a href="part0016.html#page_34">34</a></p>
+<p class="indexmain" id="idx442">VRS (Voice Response System), archaeology projects, <a href="part0051.html#page_357">357</a>–<a href="part0051.html#page_359">359</a>, <a href="part0051.html#page_362">362</a>–<a href="part0051.html#page_363">363</a></p>
+<p class="indexmain1"><strong class="calibre8">W</strong></p>
+<p class="indexmain" id="idx443">Web</p>
+<p class="indexsub">as delivery system for your application, <a href="part0035.html#page_197">197</a>–<a href="part0035.html#page_198">198</a></p>
+<p class="indexsub">Dependency Rule for, <a href="part0036.html#page_205">205</a></p>
+<p class="indexsub">is detail, <a href="part0046.html#page_285">285</a>–<a href="part0046.html#page_289">289</a></p>
+<p class="indexmain" id="idx444">Web servers</p>
+<p class="indexsub">creating testable architecture without, <a href="part0035.html#page_198">198</a></p>
+<p class="indexsub"><a id="page_400"></a>as option to be left open, <a href="part0029.html#page_141">141</a>, <a href="part0035.html#page_197">197</a></p>
+<p class="indexsub">writing own, <a href="part0031.html#page_163">163</a>–<a href="part0031.html#page_165">165</a></p>
+<p class="indexmain" id="idx445">Weekly build, <a href="part0027.html#page_112">112</a>–<a href="part0027.html#page_113">113</a></p>
+<p class="indexmain" id="idx446">Wiki text, architectural success story, <a href="part0031.html#page_164">164</a></p>
+<p class="indexmain1"><strong class="calibre8">Y</strong></p>
+<p class="indexmain" id="idx447">Yourdon, Ed, <a href="part0015.html#page_29">29</a></p>
+<p class="indexmain1"><strong class="calibre8">Z</strong></p>
+<p class="indexmain" id="idx448">Zones of exclusion</p>
+<p class="indexsub">avoiding, <a href="part0027.html#page_130">130</a></p>
+<p class="indexsub">relationship between abstraction/stability, <a href="part0027.html#page_128">128</a></p>
+<p class="indexsub">Zone of Pain, <a href="part0027.html#page_129">129</a></p>
+<p class="indexsub">Zone of Uselessness, <a href="part0027.html#page_129">129</a>–<a href="part0027.html#page_130">130</a><a id="page_401"></a><a id="page_402"></a><a id="page_403"></a><a id="page_404"></a><a id="page_405"></a><a id="page_406"></a></p>
+</body></html>

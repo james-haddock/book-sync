@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xml:lang="en-us" lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis">
+<head>
+<title>Refactoring: Improving the Design of Existing Code</title>
+<link rel="stylesheet" type="text/css" href="9780134757704.css"/>
+</head>
+<body>
+<section epub:type="bodymatter">
+<h2 class="h2" id="ch04"><span epub:type="pagebreak" id="page_85"/>Chapter 4<br/>Building Tests</h2>
+<p class="noindent">Refactoring is a valuable tool, but it can&#8217;t come alone. To do refactoring properly, I need a solid suite of tests to spot my inevitable mistakes. Even with automated refactoring tools, many of my refactorings will still need checking via a test suite.</p>
+<p class="indent">I don&#8217;t find this to be a disadvantage. Even without refactoring, writing good tests increases my effectiveness as a programmer. This was a surprise for me and is counterintuitive for most programmers&#8212;so it&#8217;s worth explaining why.</p>
+<h3 class="h3" id="ch04lev1sec1">The Value of Self-Testing Code</h3>
+<p class="noindent">If you look at how most programmers spend their time, you&#8217;ll find that writing code is actually quite a small fraction. Some time is spent figuring out what ought to be going on, some time is spent designing, but most time is spent debugging. I&#8217;m sure every reader can remember long hours of debugging&#8212;often, well into the night. Every programmer can tell a story of a bug that took a whole day (or more) to find. Fixing the bug is usually pretty quick, but finding it is a nightmare. And then, when you do fix a bug, there&#8217;s always a chance that another one will appear and that you might not even notice it till much later. And you&#8217;ll spend ages finding that bug.</p>
+<p class="indent">The event that started me on the road to self-testing code was a talk at OOPSLA in 1992. Someone (I think it was &#8220;Bedarra&#8221; Dave Thomas) said offhandedly, &#8220;Classes should contain their own tests.&#8221; So I decided to incorporate tests into the code base together with the production code. As I was also doing iterative development, I tried adding tests as I completed each iteration. The project on which I was working at that time was quite small, so we put out iterations every week or so. Running the tests became fairly straightforward&#8212;but although it was easy, it was still pretty boring. This was because every test produced output to the console that I had to check. Now I&#8217;m a pretty lazy person and am prepared to work quite hard in order to avoid work. I realized that, instead of looking at the screen to see if it printed out some information from the model, I could get the <span epub:type="pagebreak" id="page_86"/>computer to make that test. All I had to do was put the output I expected in the test code and do a comparison. Now I could run the tests and they would just print &#8220;OK&#8221; to the screen if all was well. The software was now self-testing.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Make sure all tests are fully automatic and that they check their own results.</em></p>
+</div>
+<p class="indent">Now it was easy to run tests&#8212;as easy as compiling. So I started to run tests every time I compiled. Soon, I began to notice my productivity had shot upward. I realized that I wasn&#8217;t spending so much time debugging. If I added a bug that was caught by a previous test, it would show up as soon as I ran that test. The test had worked before, so I would know that the bug was in the work I had done since I last tested. And I ran the tests frequently&#8212;which means only a few minutes had elapsed. I thus knew that the source of the bug was the code I had just written. As it was a small amount of code that was still fresh in my mind, the bug was easy to find. Bugs that would have otherwise taken an hour or more to find now took a couple of minutes at most. Not only was my software self-testing, but by running the tests frequently I had a powerful bug detector.</p>
+<p class="indent">As I noticed this, I became more aggressive about doing the tests. Instead of waiting for the end of an increment, I would add the tests immediately after writing a bit of function. Every day I would add a couple of new features and the tests to test them. I hardly ever spent more than a few minutes hunting for a regression bug.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>A suite of tests is a powerful bug detector that decapitates the time it takes to find bugs.</em></p>
+</div>
+<p class="indent">Tools for writing and organizing these tests have developed a great deal since my experiments. While flying from Switzerland to Atlanta for OOPSLA 1997, Kent Beck paired with Erich Gamma to port his unit testing framework from Smalltalk to Java. The resulting framework, called JUnit, has been enormously influential for program testing, inspiring a huge variety of similar tools <span class="pd_maroon">[<a href="biblo.xhtml#bib41">mf-xunit</a>]</span> in lots of different languages.</p>
+<p class="indent">Admittedly, it is not so easy to persuade others to follow this route. Writing the tests means a lot of extra code to write. Unless you have actually experienced how it speeds programming, self-testing does not seem to make sense. This is not helped by the fact that many people have never learned to write tests or even to think about tests. When tests are manual, they are gut-wrenchingly boring. But when they are automatic, tests can actually be quite fun to write.</p>
+<p class="indent">In fact, one of the most useful times to write tests is before I start programming. When I need to add a feature, I begin by writing the test. This isn&#8217;t as backward as it sounds. By writing the test, I&#8217;m asking myself what needs to be done to add the function. Writing the test also concentrates me on the interface rather than the implementation (always a good thing). It also means I have a clear point at which I&#8217;m done coding&#8212;when the test works.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_87"/>Kent Beck baked this habit of writing the test first into a technique called Test-Driven Development (TDD) <span class="pd_maroon">[<a href="biblo.xhtml#bib36">mf-tdd</a>]</span>. The Test-Driven Development approach to programming relies on short cycles of writing a (failing) test, writing the code to make that test work, and refactoring to ensure the result is as clean as possible. This test-code-refactor cycle should occur many times per hour, and can be a very productive and calming way to write code. I&#8217;m not going to discuss it further here, but I do use and warmly recommend it.</p>
+<p class="indent">That&#8217;s enough of the polemic. Although I believe everyone would benefit by writing self-testing code, it is not the point of this book. This book is about refactoring. Refactoring requires tests. If you want to refactor, you have to write tests. This chapter gives you a start in doing this for JavaScript. This is not a testing book, so I&#8217;m not going to go into much detail. I&#8217;ve found, however, that with testing a remarkably small amount of work can have surprisingly big benefits.</p>
+<p class="indent">As with everything else in this book, I describe the testing approach using examples. When I develop code, I write the tests as I go. But sometimes, I need to refactor some code without tests&#8212;then I have to make the code self-testing before I begin.</p>
+<h3 class="h3" id="ch04lev1sec2">Sample Code to Test</h3>
+<p class="noindent">Here&#8217;s some code to look at and test. The code supports a simple application that allows a user to examine and manipulate a production plan. The (crude) UI looks like this:</p>
+<figure class="fig-group">
+<img src="graphics/p0087_01.jpg" aria-describedby="alt_p0087_01" alt="A screenshot of an application to examine and manipulate a production plan."/>
+<aside class="hidden" id="alt_p0087_01">
+<p>The production plan application is titled &#145;Province: Asia.&#146; The values 30 and 20 are entered in the demand and price fields, respectively. Following this is a list of three producers. In Byzantium, the values 10 and 9 are entered in the cost and production fields, respectively, and the full revenue is shown as 90. In Attalia, the values 12 and 10 are entered in the cost and production fields, respectively, and the full revenue is shown as 120. In Sinope, the values 10 and 6 are entered in the cost and production fields, respectively, and the full revenue is shown as 60. At the bottom, the shortfall is shown to be 5 and the profit is shown to be 230.</p>
+</aside>
+</figure>
+<p class="indent"><span epub:type="pagebreak" id="page_88"/>The production plan has a demand and price for each province. Each province has producers, each of which can produce a certain number of units at a particular price. The UI also shows how much revenue each producer would earn if they sell all their production. At the bottom, the screen shows the shortfall in production (the demand minus the total production) and the profit for this plan. The UI allows the user to manipulate the demand, price, and the individual producer&#8217;s production and costs to see the effect on the production shortfall and profits. Whenever a user changes any number in the display, all the others update immediately.</p>
+<p class="indent">I&#8217;m showing a user interface here, so you can sense how the software is used, but I&#8217;m only going to concentrate on the business logic part of the software&#8212;that is, the classes that calculate the profit and the shortfall, not the code that generates the HTML and hooks up the field changes to the underlying business logic. This chapter is just an introduction to the world of self-testing code, so it makes sense for me to start with the easiest case&#8212;which is code that doesn&#8217;t involve user interface, persistence, or external service interaction. Such separation, however, is a good idea in any case: Once this kind of business logic gets at all complicated, I will separate it from the UI mechanics so I can more easily reason about it and test it.</p>
+<p class="indent">This business logic code involves two classes: one that represents a single producer, and the other that represents a whole province. The province&#8217;s constructor takes a JavaScript object&#8212;one we could imagine being supplied by a JSON document.</p>
+<p class="indent">Here&#8217;s the code that loads the province from the JSON data:</p>
+<p class="pro-title"><em>class Province&#8230;</em></p>
+<p class="codelink"><a id="p0088_01a" href="ch04_images.xhtml#p0088_01">Click here to view code image</a></p>
+<pre class="pre">constructor(doc) {
+  this._name = doc.name;
+  this._producers = [];
+  this._totalProduction = 0;
+  this._demand = doc.demand;
+  this._price = doc.price;
+  doc.producers.forEach(d =&gt; this.addProducer(new Producer(this, d)));
+}
+addProducer(arg) {
+  this._producers.push(arg);
+  this._totalProduction += arg.production;
+}</pre>
+<p class="indent">This function creates suitable JSON data. I can create a sample province for testing by constructing a province object with the result of this function.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_89"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0089_01a" href="ch04_images.xhtml#p0089_01">Click here to view code image</a></p>
+<pre class="pre">function sampleProvinceData() {
+  return {
+    name: "Asia",
+    producers: [
+      {name: "Byzantium", cost: 10, production: 9},
+      {name: "Attalia",   cost: 12, production: 10},
+      {name: "Sinope",    cost: 10, production: 6},
+    ],
+    demand: 30,
+    price: 20
+  };
+}</pre>
+<p class="indent">The province class has accessors for the various data values:</p>
+<p class="pro-title"><em>class Province&#8230;</em></p>
+<p class="codelink"><a id="p0089_02a" href="ch04_images.xhtml#p0089_02">Click here to view code image</a></p>
+<pre class="pre">get name()    {return this._name;}
+get producers() {return this._producers.slice();}
+get totalProduction()    {return this._totalProduction;}
+set totalProduction(arg) {this._totalProduction = arg;}
+get demand()    {return this._demand;}
+set demand(arg) {this._demand = parseInt(arg);}
+get price()    {return this._price;}
+set price(arg) {this._price = parseInt(arg);}</pre>
+<p class="indent">The setters will be called with strings from the UI that contain the numbers, so I need to parse the numbers to use them reliably in calculations.</p>
+<p class="indent">The producer class is mostly a simple data holder:</p>
+<p class="pro-title"><em>class Producer&#8230;</em></p>
+<p class="codelink"><a id="p0089_03a" href="ch04_images.xhtml#p0089_03">Click here to view code image</a></p>
+<pre class="pre">constructor(aProvince, data) {
+  this._province = aProvince;
+  this._cost = data.cost;
+  this._name = data.name;
+  this._production = data.production || 0;
+}
+get name() {return this._name;}
+get cost()    {return this._cost;}
+set cost(arg) {this._cost = parseInt(arg);}
+
+get production() {return this._production;}
+set production(amountStr) {
+  const amount = parseInt(amountStr);
+  const newProduction = Number.isNaN(amount) ? 0 : amount;
+  this._province.totalProduction += newProduction - this._production;
+  this._production = newProduction;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_90"/>The way that <code>set production</code> updates the derived data in the province is ugly, and whenever I see that I want to refactor to remove it. But I have to write tests before that I can refactor it.</p>
+<p class="indent">The calculation for the shortfall is simple.</p>
+<p class="pro-title"><em>class Province&#8230;</em></p>
+<p class="codelink"><a id="p0090_01a" href="ch04_images.xhtml#p0090_01">Click here to view code image</a></p>
+<pre class="pre">get shortfall() {
+  return this._demand - this.totalProduction;
+}</pre>
+<p class="indent">That for the profit is a bit more involved.</p>
+<p class="pro-title"><em>class Province&#8230;</em></p>
+<p class="codelink"><a id="p0090_02a" href="ch04_images.xhtml#p0090_02">Click here to view code image</a></p>
+<pre class="pre">get profit() {
+  return this.demandValue - this.demandCost;
+}
+get demandCost() {
+  let remainingDemand = this.demand;
+  let result = 0;
+  this.producers
+    .sort((a,b) =&gt; a.cost - b.cost)
+    .forEach(p =&gt; {
+      const contribution = Math.min(remainingDemand, p.production);
+        remainingDemand -= contribution;
+        result += contribution * p.cost;
+    });
+  return result;
+}
+get demandValue() {
+  return this.satisfiedDemand * this.price;
+}
+get satisfiedDemand() {
+  return Math.min(this._demand, this.totalProduction);
+}</pre>
+<h3 class="h3" id="ch04lev1sec3">A First Test</h3>
+<p class="noindent">To test this code, I&#8217;ll need some sort of testing framework. There are many out there, even just for JavaScript. The one I&#8217;ll use is Mocha <span class="pd_maroon">[<a href="biblo.xhtml#bib43">mocha</a>]</span>, which is reasonably common and well-regarded. I won&#8217;t go into a full explanation of how to use the framework, just show some example tests with it. You should be able to adapt, easily enough, a different framework to build similar tests.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_91"/>Here is a simple test for the shortfall calculation:</p>
+<p class="codelink"><a id="p0091_01a" href="ch04_images.xhtml#p0091_01">Click here to view code image</a></p>
+<pre class="pre">describe('province', function() {
+  it('shortfall', function() {
+    const asia = new Province(sampleProvinceData());
+    assert.equal(asia.shortfall, 5);
+  });
+});</pre>
+<p class="indent">The Mocha framework divides up the test code into blocks, each grouping together a suite of tests. Each test appears in an <code>it</code> block. For this simple case, the test has two steps. The first step sets up some fixture&#8212;data and objects that are needed for the test: in this case, a loaded province object. The second line verifies some characteristic of that fixture&#8212;in this case, that the shortfall is the amount that should be expected given the initial data.</p>
+<div class="blockquote">
+<p class="noindent">Different developers use the descriptive strings in the <code>describe</code> and <code>it</code> blocks differently. Some would write a sentence that explains what the test is testing, but others prefer to leave them empty, arguing that the descriptive sentence is just duplicating the code in the same way a comment does. I like to put in just enough to identify which test is which when I get failures.</p>
+</div>
+<p class="indent">If I run this test in a NodeJS console, the output looks like this:</p>
+<pre class="pre">&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;
+
+  1 passing (61ms)</pre>
+<p class="indent">Note the simplicity of the feedback&#8212;just a summary of how many tests are run and how many have passed.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Always make sure a test will fail when it should.</em></p>
+</div>
+<p class="indent">When I write a test against existing code like this, it&#8217;s nice to see that all is well&#8212;but I&#8217;m naturally skeptical. Particularly, once I have a lot of tests running, I&#8217;m always nervous that a test isn&#8217;t really exercising the code the way I think it is, and thus won&#8217;t catch a bug when I need it to. So I like to see every test fail at least once when I write it. My favorite way of doing that is to temporarily inject a fault into the code, for example:</p>
+<p class="pro-title"><em>class Province&#8230;</em></p>
+<p class="codelink"><a id="p0091_02a" href="ch04_images.xhtml#p0091_02">Click here to view code image</a></p>
+<pre class="pre">get shortfall() {
+  return this._demand - this.totalProduction <span class="pd_maroon1">* 2</span>;
+}</pre>
+<p class="indent">Here&#8217;s what the console now looks like:</p>
+<p class="codelink"><a id="p0092_01a" href="ch04_images.xhtml#p0092_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_92"/>!
+
+  0 passing (72ms)
+  1 failing
+
+  1) province shortfall:
+     AssertionError: expected -20 to equal 5
+      at Context.&lt;anonymous&gt; (src/tester.js:10:12)</pre>
+<p class="indent">The framework indicates which test failed and gives some information about the nature of the failure&#8212;in this case, what value was expected and what value actually turned up. I therefore notice at once that something failed&#8212;and I can immediately see which tests failed, giving me a clue as to what went wrong (and, in this case, confirming the failure was where I injected it).</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Run tests frequently. Run those exercising the code you&#8217;re working on at least every few minutes; run all tests at least daily.</em></p>
+</div>
+<p class="indent">In a real system, I might have thousands of tests. A good test framework allows me to run them easily and to quickly see if any have failed. This simple feedback is essential to self-testing code. When I work, I&#8217;ll be running tests very frequently&#8212;checking progress with new code or checking for mistakes with refactoring.</p>
+<p class="indent">The Mocha framework can use different libraries, which it calls assertion libraries, to verify the fixture for a test. Being JavaScript, there are a quadzillion of them out there, some of which may still be current when you&#8217;re reading this. The one I&#8217;m using at the moment is Chai <span class="pd_maroon">[<a href="biblo.xhtml#bib5">chai</a>]</span>. Chai allows me to write my validations either using an &#8220;assert&#8221; style:</p>
+<p class="codelink"><a id="p0092_02a" href="ch04_images.xhtml#p0092_02">Click here to view code image</a></p>
+<pre class="pre">describe('province', function() {
+  it('shortfall', function() {
+    const asia = new Province(sampleProvinceData());
+    <span class="pd_maroon1">assert.equal(asia.shortfall, 5);</span>
+  });
+});</pre>
+<p class="noindent">or an &#8220;expect&#8221; style:</p>
+<p class="codelink"><a id="p0092_03a" href="ch04_images.xhtml#p0092_03">Click here to view code image</a></p>
+<pre class="pre">describe('province', function() {
+  it('shortfall', function() {
+    const asia = new Province(sampleProvinceData());
+    <span class="pd_maroon1">expect(asia.shortfall).equal(5);</span>
+  });
+});</pre>
+<p class="indent">I usually prefer the assert style, but at the moment I mostly use the expect style while working in JavaScript.</p>
+<p class="indent">Different environments provide different ways to run tests. When I&#8217;m programming in Java, I use an IDE that gives me a graphical test runner. Its progress bar <span epub:type="pagebreak" id="page_93"/>is green as long as all the tests pass, and turns red should any of them fail. My colleagues often use the phrases &#8220;green bar&#8221; and &#8220;red bar&#8221; to describe the state of tests. I might say, &#8220;Never refactor on a red bar,&#8221; meaning you shouldn&#8217;t be refactoring if your test suite has a failing test. Or, I might say, &#8220;Revert to green&#8221; to say you should undo recent changes and go back to the last state where you had all-passing test suite (usually by going back to a recent version-control checkpoint).</p>
+<p class="indent">Graphical test runners are nice, but not essential. I usually have my tests set to run from a single key in Emacs, and observe the text feedback in my compilation window. The key point is that I can quickly see if my tests are all OK.</p>
+<h3 class="h3" id="ch04lev1sec4">Add Another Test</h3>
+<p class="noindent">Now I&#8217;ll continue adding more tests. The style I follow is to look at all the things the class should do and test each one of them for any conditions that might cause the class to fail. This is not the same as testing every public method, which is what some programmers advocate. Testing should be risk-driven; remember, I&#8217;m trying to find bugs, now or in the future. Therefore I don&#8217;t test accessors that just read and write a field: They are so simple that I&#8217;m not likely to find a bug there.</p>
+<p class="indent">This is important because trying to write too many tests usually leads to not writing enough. I get many benefits from testing even if I do only a little testing. My focus is to test the areas that I&#8217;m most worried about going wrong. That way I get the most benefit for my testing effort.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>It is better to write and run incomplete tests than not to run complete tests.</em></p>
+</div>
+<p class="indent">So I&#8217;ll start by hitting the other main output for this code&#8212;the profit calculation. Again, I&#8217;ll just do a basic test for profit on my initial fixture.</p>
+<p class="codelink"><a id="p0093_01a" href="ch04_images.xhtml#p0093_01">Click here to view code image</a></p>
+<pre class="pre">describe('province', function() {
+  it('shortfall', function() {
+    const asia = new Province(sampleProvinceData());
+    expect(asia.shortfall).equal(5);
+  });
+  <span class="pd_maroon1">it('profit', function() {</span>
+    <span class="pd_maroon1">const asia = new Province(sampleProvinceData());</span>
+    <span class="pd_maroon1">expect(asia.profit).equal(230);</span>
+  <span class="pd_maroon1">});</span>
+});</pre>
+<p class="indent">That shows the final result, but the way I got it was by first setting the expected value to a placeholder, then replacing it with whatever the program produced (<code>230</code>). I could have calculated it by hand myself, but since the code is supposed to be working correctly, I&#8217;ll just trust it for now. Once I have that new test working <span epub:type="pagebreak" id="page_94"/>correctly, I break it by altering the profit calculation with a spurious <code>* 2</code>. I satisfy myself that the test fails as it should, then revert my injected fault. This pattern&#8212;write with a placeholder for the expected value, replace the placeholder with the code&#8217;s actual value, inject a fault, revert the fault&#8212;is a common one I use when adding tests to existing code.</p>
+<p class="indent">There is some duplication between these tests&#8212;both of them set up the fixture with the same first line. Just as I&#8217;m suspicious of duplicated code in regular code, I&#8217;m suspicious of it in test code, so will look to remove it by factoring to a common place. One option is to raise the constant to the outer scope.</p>
+<p class="codelink"><a id="p0094_01a" href="ch04_images.xhtml#p0094_01">Click here to view code image</a></p>
+<pre class="pre">describe('province', function() {
+  <span class="pd_maroon1">const asia = new Province(sampleProvinceData());   // DON'T DO THIS</span>
+  it('shortfall', function() {
+    expect(asia.shortfall).equal(5);
+  });
+  it('profit', function() {
+    expect(asia.profit).equal(230);
+  });
+});</pre>
+<p class="indent">But as the comment indicates, I never do this. It will work for the moment, but it introduces a petri dish that&#8217;s primed for one of the nastiest bugs in testing&#8212;a shared fixture which causes tests to interact. The <code>const</code> keyword in JavaScript only means the reference to <code>asia</code> is constant, not the content of that object. Should a future test change that common object, I&#8217;ll end up with intermittent test failures due to tests interacting through the shared fixture, yielding different results depending on what order the tests are run in. That&#8217;s a nondeterminism in the tests that can lead to long and difficult debugging at best, and a collapse of confidence in the tests at worst. Instead, I prefer to do this:</p>
+<p class="codelink"><a id="p0094_02a" href="ch04_images.xhtml#p0094_02">Click here to view code image</a></p>
+<pre class="pre">describe('province', function() {
+  <span class="pd_maroon1">let asia;</span>
+  <span class="pd_maroon1">beforeEach(function() {</span>
+    <span class="pd_maroon1">asia = new Province(sampleProvinceData());</span>
+  <span class="pd_maroon1">});</span>
+  it('shortfall', function() {
+    expect(asia.shortfall).equal(5);
+  });
+  it('profit', function() {
+    expect(asia.profit).equal(230);
+  });
+});</pre>
+<p class="indent">The <code>beforeEach</code> clause is run before each test runs, clearing out <code>asia</code> and setting it to a fresh value each time. This way I build a fresh fixture before each test is run, which keeps the tests isolated and prevents the nondeterminism that causes so much trouble.</p>
+<p class="indent">When I give this advice, some people are concerned that building a fresh fixture every time will slow down the tests. Most of the time, it won&#8217;t be noticeable. If <span epub:type="pagebreak" id="page_95"/>it is a problem, I&#8217;d consider a shared fixture, but then I will need to be really careful that no test ever changes it. I can also use a shared fixture if I&#8217;m sure it is truly immutable. But my reflex is to use a fresh fixture because the debugging cost of making a mistake with a shared fixture has bit me too often in the past.</p>
+<p class="indent">Given I run the setup code in <code>beforeEach</code> with every test, why not leave the setup code inside the individual <code>it</code> blocks? I like my tests to all operate on a common bit of fixture, so I can become familiar with that standard fixture and see the various characteristics to test on it. The presence of the <code>beforeEach</code> block signals to the reader that I&#8217;m using a standard fixture. You can then look at all the tests within the scope of that <code>describe</code> block and know they all take the same base data as a starting point.</p>
+<h3 class="h3" id="ch04lev1sec5">Modifying the Fixture</h3>
+<p class="noindent">So far, the tests I&#8217;ve written show how I probe the properties of the fixture once I&#8217;ve loaded it. But in use, that fixture will be regularly updated by the users as they change values.</p>
+<p class="indent">Most of the updates are simple setters, and I don&#8217;t usually bother to test those as there&#8217;s little chance they will be the source of a bug. But there is some complicated behavior around Producer&#8217;s production setter, so I think that&#8217;s worth a test.</p>
+<p class="pro-title"><em>describe(&#8217;province&#8217;&#8230;</em></p>
+<p class="codelink"><a id="p0095_01a" href="ch04_images.xhtml#p0095_01">Click here to view code image</a></p>
+<pre class="pre">it('change production', function() {
+    asia.producers[0].production = 20;
+    expect(asia.shortfall).equal(-6);
+    expect(asia.profit).equal(292);
+});</pre>
+<p class="indent">This is a common pattern. I take the initial standard fixture that&#8217;s <strong>set up</strong> by the <code>beforeEach</code> block, I <strong>exercise</strong> that fixture for the test, then I <strong>verify</strong> the fixture has done what I think it should have done. If you read much about testing, you&#8217;ll hear these phases described variously as setup-exercise-verify, given-when-then, or arrange-act-assert. Sometimes you&#8217;ll see all the steps present within the test itself, in other cases the common early phases can be pushed out into standard setup routines such as <code>beforeEach</code>.</p>
+<div class="blockquote">
+<p class="noindent">(There is an implicit fourth phase that&#8217;s usually not mentioned: <strong>teardown</strong>. Teardown removes the fixture between tests so that different tests don&#8217;t interact with each other. By doing all my setup in <code>beforeEach</code>, I allow the test framework to implicitly tear down my fixture between tests, so I can take the teardown phase for granted. Most writers on tests gloss over teardown&#8212;reasonably so, since most of the time we ignore it. But occasionally, it can be important to have an explicit teardown operation, particularly if we have a fixture that we have to share between tests because it&#8217;s slow to create.)</p>
+</div>
+<p class="indent"><span epub:type="pagebreak" id="page_96"/>In this test, I&#8217;m verifying two different characteristics in a single <code>it</code> clause. As a general rule, it&#8217;s wise to have only a single verify statement in each <code>it</code> clause. This is because the test will fail on the first verification failure&#8212;which can often hide useful information when you&#8217;re figuring out why a test is broken. In this case, I feel the two are closely enough connected that I&#8217;m happy to have them in the same test. Should I wish to separate them into separate <code>it</code> clauses, I can do that later.</p>
+<h3 class="h3" id="ch04lev1sec6">Probing the Boundaries</h3>
+<p class="noindent">So far my tests have focused on regular usage, often referred to as &#8220;happy path&#8221; conditions where everything is going OK and things are used as expected. But it&#8217;s also good to throw tests at the boundaries of these conditions&#8212;to see what happens when things might go wrong.</p>
+<p class="indent">Whenever I have a collection of something, such as producers in this example, I like to see what happens when it&#8217;s empty.</p>
+<p class="codelink"><a id="p0096_01a" href="ch04_images.xhtml#p0096_01">Click here to view code image</a></p>
+<pre class="pre">describe('no producers', function() {
+  let noProducers;
+  beforeEach(function() {
+    const data = {
+      name: "No proudcers",
+      producers: [],
+      demand: 30,
+      price: 20
+    };
+    noProducers = new Province(data);
+  });
+  it('shortfall', function() {
+    expect(noProducers.shortfall).equal(30);
+  });
+  it('profit', function() {
+    expect(noProducers.profit).equal(0);
+  });</pre>
+<p class="indent">With numbers, zeros are good things to probe:</p>
+<p class="pro-title"><em>describe(&#8217;province&#8217;&#8230;</em></p>
+<p class="codelink"><a id="p0096_02a" href="ch04_images.xhtml#p0096_02">Click here to view code image</a></p>
+<pre class="pre">it('zero demand', function() {
+  asia.demand = 0;
+    expect(asia.shortfall).equal(-25);
+    expect(asia.profit).equal(0);
+});</pre>
+<p class="noindent">as are negatives:</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_97"/><em>describe(&#8217;province&#8217;&#8230;</em></p>
+<p class="codelink"><a id="p0097_01a" href="ch04_images.xhtml#p0097_01">Click here to view code image</a></p>
+<pre class="pre">it('negative demand', function() {
+  asia.demand = -1;
+  expect(asia.shortfall).equal(-26);
+  expect(asia.profit).equal(-10);
+});</pre>
+<p class="indent">At this point, I may start to wonder if a negative demand resulting in a negative profit really makes any sense for the domain. Shouldn&#8217;t the minimum demand be zero? In which case, perhaps, the setter should react differently to a negative argument&#8212;raising an error or setting the value to zero anyway. These are good questions to ask, and writing tests like this helps me think about how the code ought to react to boundary cases.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Think of the boundary conditions under which things might go wrong and concentrate your tests there.</em></p>
+</div>
+<p class="indent">The setters take a string from the fields in the UI, which are constrained to only accept numbers&#8212;but they can still be blank, so I should have tests that ensure the code responds to the blanks the way I want it to.</p>
+<p class="pro-title"><em>describe(&#8217;province&#8217;&#8230;</em></p>
+<p class="codelink"><a id="p0097_02a" href="ch04_images.xhtml#p0097_02">Click here to view code image</a></p>
+<pre class="pre">it('empty string demand', function() {
+  asia.demand = "";
+  expect(asia.shortfall).NaN;
+  expect(asia.profit).NaN;
+});</pre>
+<p class="indent">Notice how I&#8217;m playing the part of an enemy to my code. I&#8217;m actively thinking about how I can break it. I find that state of mind to be both productive and fun. It indulges the mean-spirited part of my psyche.</p>
+<p class="indent">This one is interesting:</p>
+<p class="codelink"><a id="p0097_03a" href="ch04_images.xhtml#p0097_03">Click here to view code image</a></p>
+<pre class="pre">describe('string for producers', function() {
+  it('', function() {
+    const data = {
+      name: "String producers",
+      producers: "",
+      demand: 30,
+      price: 20
+    };
+    const prov = new Province(data);
+    expect(prov.shortfall).equal(0);
+  });</pre>
+<p class="indent">This doesn&#8217;t produce a simple failure reporting that the shortfall isn&#8217;t 0. Here&#8217;s the console output:</p>
+<p class="codelink"><a id="p0098_01a" href="ch04_images.xhtml#p0098_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_98"/>&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;&#8217;!
+
+  9 passing (74ms)
+  1 failing
+
+  1) string for producers :
+     TypeError: doc.producers.forEach is not a function
+      at new Province (src/main.js:22:19)
+      at Context.&lt;anonymous&gt; (src/tester.js:86:18)</pre>
+<p class="indent">Mocha treats this as a failure&#8212;but many testing frameworks distinguish between this situation, which they call an error, and a regular failure. A failure indicates a verify step where the actual value is outside the bounds expected by the verify statement. But this <strong>error</strong> is a different animal&#8212;it&#8217;s an exception raised during an earlier phase (in this case, the setup). This looks like an exception that the authors of the code hadn&#8217;t anticipated, so we get an error sadly familiar to JavaScript programmers (&#8220;&#8230; is not a function&#8221;).</p>
+<p class="indent">How should the code respond to such a case? One approach is to add some handling that would give a better error response&#8212;either raising a more meaningful error message, or just setting <code>producers</code> to an empty array (with perhaps a log message). But there may also be valid reasons to leave it as it is. Perhaps the input object is produced by a trusted source&#8212;such as another part of the same code base. Putting in lots of validation checks between modules in the same code base can result in duplicate checks that cause more trouble than they are worth, especially if they duplicate validation done elsewhere. But if that input object is coming in from an external source, such as a JSON-encoded request, then validation checks are needed, and should be tested. In either case, writing tests like this raises these kinds of questions.</p>
+<p class="indent">If I&#8217;m writing tests like this before refactoring, I would probably discard this test. Refactoring should preserve observable behavior; an error like this is outside the bounds of observable, so I need not be concerned if my refactoring changes the code&#8217;s response to this condition.</p>
+<div class="blockquote">
+<p class="noindent">If this error could lead to bad data running around the program, causing a failure that will be hard to debug, I might use <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a> (<a class="pd_maroon" href="ch10.xhtml#page_302">302</a>)</span></em> to fail fast. I don&#8217;t add tests to catch such assertion failures, as they are themselves a form of test.</p>
+</div>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Don&#8217;t let the fear that testing can&#8217;t catch all bugs stop you from writing tests that catch most bugs.</em></p>
+</div>
+<p class="indent">When do you stop? I&#8217;m sure you have heard many times that you cannot prove that a program has no bugs by testing. That&#8217;s true, but it does not affect the ability of testing to speed up programming. I&#8217;ve seen various proposed rules to ensure you have tested every combination of everything. It&#8217;s worth taking a look at these&#8212;but don&#8217;t let them get to you. There is a law of diminishing returns in testing, and there is the danger that by trying to write too many tests you <span epub:type="pagebreak" id="page_99"/>become discouraged and end up not writing any. You should concentrate on where the risk is. Look at the code and see where it becomes complex. Look at a function and consider the likely areas of error. Your tests will not find every bug, but as you refactor, you will understand the program better and thus find more bugs. Although I always start refactoring with a test suite, I invariably add to it as I go along.</p>
+<h3 class="h3" id="ch04lev1sec7">Much More Than This</h3>
+<p class="noindent">That&#8217;s as far as I&#8217;m going to go with this chapter&#8212;after all, this is a book on refactoring, not on testing. But testing is an important topic, both because it&#8217;s a necessary foundation for refactoring and because it&#8217;s a valuable tool in its own right. While I&#8217;ve been happy to see the growth of refactoring as a programming practice since I wrote this book, I&#8217;ve been even happier to see the change in attitudes to testing. Previously seen as the responsibility of a separate (and inferior) group, testing is now increasingly a first-class concern of any decent software developer. Architectures often are, rightly, judged on their testability.</p>
+<p class="indent">The kinds of tests I&#8217;ve shown here are unit tests, designed to operate on a small area of the code and run fast. They are the backbone of self-testing code; most tests in such a system are unit tests. There are other kinds of tests too, focusing on integration between components, exercising multiple levels of the software together, looking for performance issues, etc. (And even more varied than the types of tests are the arguments people get into about how to classify tests.)</p>
+<p class="indent">Like most aspects of programming, testing is an iterative activity. Unless you are either very skilled or very lucky, you won&#8217;t get your tests right the first time. I find I&#8217;m constantly working on the test suite&#8212;just as much as I work on the main code. Naturally, this means adding new tests as I add new features, but it also involves looking at the existing tests. Are they clear enough? Do I need to refactor them so I can more easily understand what they are doing? Have I got the right tests? An important habit to get into is to respond to a bug by first writing a test that clearly reveals the bug. Only after I have the test do I fix the bug. By having the test, I know the bug will stay dead. I also think about that bug and its test: Does it give me clues to other gaps in the test suite?</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>When you get a bug report, start by writing a unit test that exposes the bug.</em></p>
+</div>
+<p class="indent">A common question is, &#8220;How much testing is enough?&#8221; There&#8217;s no good measurement for this. Some people advocate using test coverage <span class="pd_maroon">[<a href="biblo.xhtml#bib35">mf-tc</a>]</span> as a measure, but test coverage analysis is only good for identifying untested areas of the code, not for assessing the quality of a test suite.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_100"/>The best measure for a good enough test suite is subjective: How confident are you that if someone introduces a defect into the code, some test will fail? This isn&#8217;t something that can be objectively analyzed, and it doesn&#8217;t account for false confidence, but the aim of self-testing code is to get that confidence. If I can refactor my code and be pretty sure that I&#8217;ve not introduced a bug because my tests come back green&#8212;then I can be happy that I have good enough tests.</p>
+<p class="indent">It is possible to write too many tests. One sign of that is when I spend more time changing the tests than the code under test&#8212;and I feel the tests are slowing me down. But while over-testing does happen, it&#8217;s vanishingly rare compared to under-testing.</p>
+</section>
+</body>
+</html>

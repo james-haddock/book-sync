@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis" xml:lang="en-us" lang="en-us">
+  <head>
+    <title>Clean Architecture</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+<h2 class="h2f" id="ch5"><a id="page_33" class="calibre3"></a><span class="gray">5</span><br class="calibre12"/>O<small class="calibre7">BJECT-ORIENTED</small> P<small class="calibre7">ROGRAMMING</small></h2>
+<div class="image1"><img src="../images/00015.jpeg" alt="Image" class="calibre2"/></div>
+<p class="noindent1"><a id="page_34"></a>As we will see, the basis of a good architecture is the understanding and application of the principles of object-oriented design (OO). But just what is OO?</p>
+<p class="noindent1">One answer to this question is “The combination of data and function.” Although often cited, this is a very unsatisfying answer because it implies that <code class="calibre11">o.f()</code> is somehow different from <code class="calibre11">f(o)</code>. This is absurd. Programmers were passing data structures into functions long before 1966, when Dahl and Nygaard moved the function call stack frame to the heap and invented OO.</p>
+<p class="noindent1">Another common answer to this question is “A way to model the real world.” This is an evasive answer at best. What does “modeling the real world” actually mean, and why is it something we would want to do? Perhaps this statement is intended to imply that OO makes software easier to understand because it has a closer relationship to the real world—but even that statement is evasive and too loosely defined. It does not tell us what OO is.</p>
+<p class="noindent1">Some folks fall back on three magic words to explain the nature of OO: <em class="calibre9">encapsulation</em>, <em class="calibre9">inheritance</em>, and <em class="calibre9">polymorphism</em>. The implication is that OO is the proper admixture of these three things, or at least that an OO language must support these three things.</p>
+<p class="noindent1">Let’s examine each of these concepts in turn.</p>
+<h3 class="h1" id="toclev_21">E<small class="calibre13">NCAPSULATION</small>?</h3>
+<p class="noindent1">The reason encapsulation is cited as part of the definition of OO is that OO languages provide easy and effective encapsulation of data and function. As a result, a line can be drawn around a cohesive set of data and functions. Outside of that line, the data is hidden and only some of the functions are known. We see this concept in action as the private data members and the public member functions of a class.</p>
+<p class="noindent1">This idea is certainly not unique to OO. Indeed, we had perfect encapsulation in C. Consider this simple C program:</p>
+<p class="codelink"><a id="page_35"></a><a id="pch5ex01" href="part0054_split_001.html#pch5ex01a">Click here to view code image</a></p>
+<p class="pre-ex">point.h</p>
+<p class="pre">struct Point;<br class="calibre6"/>
+struct Point* makePoint(double x, double y);<br class="calibre6"/>
+double distance (struct Point *p1, struct Point *p2);</p>
+<p class="codelink"><a id="pch5ex02" href="part0054_split_002.html#pch5ex02a">Click here to view code image</a></p>
+<p class="pre-ex1">point.c</p>
+<p class="pre1">#include "point.h"<br class="calibre6"/>
+#include &lt;stdlib.h&gt;<br class="calibre6"/>
+#include &lt;math.h&gt;<br class="calibre6"/>
+ <br class="calibre6"/>
+struct Point {<br class="calibre6"/>
+  double x,y;<br class="calibre6"/>
+};<br class="calibre6"/>
+ <br class="calibre6"/>
+struct Point* makepoint(double x, double y) {<br class="calibre6"/>
+  struct Point* p = malloc(sizeof(struct Point));<br class="calibre6"/>
+  p-&gt;x = x;<br class="calibre6"/>
+  p-&gt;y = y;<br class="calibre6"/>
+  return p;<br class="calibre6"/>
+}<br class="calibre6"/>
+ <br class="calibre6"/>
+double distance(struct Point* p1, struct Point* p2) {<br class="calibre6"/>
+  double dx = p1-&gt;x - p2-&gt;x;<br class="calibre6"/>
+  double dy = p1-&gt;y - p2-&gt;y;<br class="calibre6"/>
+  return sqrt(dx*dx+dy*dy);<br class="calibre6"/>
+}</p>
+<p class="noindent1">The users of <code class="calibre11">point.h</code> have no access whatsoever to the members of <code class="calibre11">struct Point</code>. They can call the <code class="calibre11">makePoint()</code> function, and the <code class="calibre11">distance()</code> function, but they have absolutely no knowledge of the implementation of either the <code class="calibre11">Point</code> data structure or the functions.</p>
+<p class="noindent1">This is perfect encapsulation—in a non-OO language. C programmers used to do this kind of thing all the time. We would forward declare data structures and functions in header files, and then implement them in <a id="page_36"></a>implementation files. Our users never had access to the elements in those implementation files.</p>
+<p class="noindent1">But then came OO in the form of C++—and the perfect encapsulation of C was broken.</p>
+<p class="noindent1">The C++ compiler, for technical reasons,<sup class="calibre10"><a id="ch5fn-1" href="part0016.html#ch5fn1">1</a></sup> needed the member variables of a class to be declared in the header file of that class. So our <code class="calibre11">Point</code> program changed to look like this:</p>
+<p class="codelink"><a id="pch5ex03" href="part0054_split_003.html#pch5ex03a">Click here to view code image</a></p>
+<p class="pre-ex">point.h</p>
+<p class="pre">class Point {<br class="calibre6"/>
+public:<br class="calibre6"/>
+  Point(double x, double y);<br class="calibre6"/>
+  double distance(const Point&amp; p) const;<br class="calibre6"/>
+ <br class="calibre6"/>
+private:<br class="calibre6"/>
+  double x;<br class="calibre6"/>
+  double y;<br class="calibre6"/>
+};</p>
+<p class="codelink"><a id="pch5ex04" href="part0054_split_004.html#pch5ex04a">Click here to view code image</a></p>
+<p class="pre-ex1">point.cc</p>
+<p class="pre1">#include "point.h"<br class="calibre6"/>
+#include &lt;math.h&gt;<br class="calibre6"/>
+ <br class="calibre6"/>
+Point::Point(double x, double y)<br class="calibre6"/>
+: x(x), y(y)<br class="calibre6"/>
+{}<br class="calibre6"/>
+
+<br class="calibre6"/>
+double Point::distance(const Point&amp; p) const {<br class="calibre6"/>
+  double dx = x-p.x;<br class="calibre6"/>
+  double dy = y-p.y;<br class="calibre6"/>
+  return sqrt(dx*dx + dy*dy);<br class="calibre6"/>
+}</p>
+<p class="noindent1"><a id="page_37"></a>Clients of the header file <code class="calibre11">point.h</code> know about the member variables <code class="calibre11">x</code> and <code class="calibre11">y</code>! The compiler will prevent access to them, but the client still knows they exist. For example, if those member names are changed, the <code class="calibre11">point.cc</code> file must be recompiled! Encapsulation has been broken.</p>
+<p class="noindent1">Indeed, the way encapsulation is partially repaired is by introducing the <code class="calibre11">public</code>, <code class="calibre11">private</code>, and <code class="calibre11">protected</code> keywords into the language. This, however, was a <em class="calibre9">hack</em> necessitated by the technical need for the compiler to see those variables in the header file.</p>
+<p class="noindent1">Java and C# simply abolished the header/implementation split altogether, thereby weakening encapsulation even more. In these languages, it is impossible to separate the declaration and definition of a class.</p>
+<p class="noindent1">For these reasons, it is difficult to accept that OO depends on strong encapsulation. Indeed, many OO languages<sup class="calibre10"><a id="ch5fn-2" href="part0016.html#ch5fn2">2</a></sup> have little or no enforced encapsulation.</p>
+<p class="noindent1">OO certainly does depend on the idea that programmers are well-behaved enough to not circumvent encapsulated data. Even so, the languages that claim to provide OO have only weakened the once perfect encapsulation we enjoyed with C.</p>
+<h3 class="h1" id="toclev_22">I<small class="calibre13">NHERITANCE</small>?</h3>
+<p class="noindent1">If OO languages did not give us better encapsulation, then they certainly gave us inheritance.</p>
+<p class="noindent1">Well—sort of. Inheritance is simply the redeclaration of a group of variables and functions within an enclosing scope. This is something C programmers<sup class="calibre10"><a id="ch5fn-3" href="part0016.html#ch5fn3">3</a></sup> were able to do manually long before there was an OO language.</p>
+<p class="noindent1"><a id="page_38"></a>Consider this addition to our original <code class="calibre11">point.h</code> <code class="calibre11">C</code> program:</p>
+<p class="codelink"><a id="pch5ex05" href="part0054_split_005.html#pch5ex05a">Click here to view code image</a></p>
+<p class="pre-ex">namedPoint.h</p>
+<p class="pre">struct NamedPoint;<br class="calibre6"/>
+ <br class="calibre6"/>
+struct NamedPoint* makeNamedPoint(double x, double y, char* name);<br class="calibre6"/>
+void setName(struct NamedPoint* np, char* name);<br class="calibre6"/>
+char* getName(struct NamedPoint* np);</p>
+<p class="codelink"><a id="pch5ex06" href="part0054_split_006.html#pch5ex06a">Click here to view code image</a></p>
+<p class="pre-ex">namedPoint.c</p>
+<p class="pre">#include "namedPoint.h"<br class="calibre6"/>
+#include &lt;stdlib.h&gt;<br class="calibre6"/>
+ <br class="calibre6"/>
+struct NamedPoint {<br class="calibre6"/>
+  double x,y;<br class="calibre6"/>
+  char* name;<br class="calibre6"/>
+};<br class="calibre6"/>
+ <br class="calibre6"/>
+struct NamedPoint* makeNamedPoint(double x, double y, char* name) {<br class="calibre6"/>
+  struct NamedPoint* p = malloc(sizeof(struct NamedPoint));<br class="calibre6"/>
+  p-&gt;x = x;<br class="calibre6"/>
+  p-&gt;y = y;<br class="calibre6"/>
+  p-&gt;name = name;<br class="calibre6"/>
+  return p;<br class="calibre6"/>
+}<br class="calibre6"/>
+ <br class="calibre6"/>
+void setName(struct NamedPoint* np, char* name) {<br class="calibre6"/>
+  np-&gt;name = name;<br class="calibre6"/>
+}<br class="calibre6"/>
+ <br class="calibre6"/>
+char* getName(struct NamedPoint* np) {<br class="calibre6"/>
+  return np-&gt;name;<br class="calibre6"/>
+}</p>
+<p class="codelink"><a id="page_39"></a><a id="pch5ex07" href="part0054_split_007.html#pch5ex07a">Click here to view code image</a></p>
+<p class="pre-ex1">main.c</p>
+<p class="pre1">#include "point.h"<br class="calibre6"/>
+#include "namedPoint.h"<br class="calibre6"/>
+#include &lt;stdio.h&gt;<br class="calibre6"/>
+ <br class="calibre6"/>
+int main(int ac, char** av) {<br class="calibre6"/>
+  struct NamedPoint* origin = makeNamedPoint(0.0, 0.0, "origin");<br class="calibre6"/>
+  struct NamedPoint* upperRight = makeNamedPoint  (1.0, 1.0, "upperRight");<br class="calibre6"/>
+  printf("distance=%f\n",<br class="calibre6"/>
+    distance(<br class="calibre6"/>
+             (struct Point*) origin, <br class="calibre6"/>
+             (struct Point*) upperRight));<br class="calibre6"/>
+}</p>
+<p class="noindent1">If you look carefully at the <code class="calibre11">main</code> program, you’ll see that the <code class="calibre11">NamedPoint</code> data structure acts as though it is a derivative of the <code class="calibre11">Point</code> data structure. This is because the order of the first two fields in <code class="calibre11">NamedPoint</code> is the same as <code class="calibre11">Point</code>. In short, <code class="calibre11">NamedPoint</code> can masquerade as <code class="calibre11">Point</code> because <code class="calibre11">NamedPoint</code> is a pure superset of <code class="calibre11">Point</code> and maintains the ordering of the members that correspond to <code class="calibre11">Point</code>.</p>
+<p class="noindent1">This kind of trickery was a common practice<sup class="calibre10"><a id="ch5fn-4" href="part0016.html#ch5fn4">4</a></sup> of programmers prior to the advent of OO. In fact, such trickery is how C++ implements single inheritance.</p>
+<p class="noindent1">Thus we might say that we had a kind of inheritance long before OO languages were invented. That statement wouldn’t quite be true, though. We had a trick, but it’s not nearly as convenient as true inheritance. Moreover, multiple inheritance is a considerably more difficult to achieve by such trickery.</p>
+<p class="noindent1"><a id="page_40"></a>Note also that in <code class="calibre11">main.c</code>, I was forced to cast the <code class="calibre11">NamedPoint</code> arguments to <code class="calibre11">Point</code>. In a real OO language, such upcasting would be implicit.</p>
+<p class="noindent1">It’s fair to say that while OO languages did not give us something completely brand new, it did make the masquerading of data structures significantly more convenient.</p>
+<p class="noindent1">To recap: We can award no point to OO for encapsulation, and perhaps a half-point for inheritance. So far, that’s not such a great score.</p>
+<p class="noindent1">But there’s one more attribute to consider.</p>
+<h3 class="h1" id="toclev_23">P<small class="calibre13">OLYMORPHISM</small>?</h3>
+<p class="noindent1">Did we have polymorphic behavior before OO languages? Of course we did. Consider this simple C <code class="calibre11">copy</code> program.</p>
+<p class="codelink"><a id="pch5ex08" href="part0054_split_008.html#pch5ex08a">Click here to view code image</a></p>
+<p class="pre2">#include &lt;stdio.h&gt;<br class="calibre6"/>
+
+<br class="calibre6"/>
+void copy() {<br class="calibre6"/>
+  int c;<br class="calibre6"/>
+  while ((c=getchar()) != EOF)<br class="calibre6"/>
+    putchar(c);<br class="calibre6"/>
+}</p>
+<p class="noindent1">The function <code class="calibre11">getchar()</code> reads from <code class="calibre11">STDIN</code>. But which device is <code class="calibre11">STDIN</code>? The <code class="calibre11">putchar()</code> function writes to <code class="calibre11">STDOUT</code>. But which device is that? These functions are <em class="calibre9">polymorphic</em>—their behavior depends on the type of <code class="calibre11">STDIN</code> and <code class="calibre11">STDOUT</code>.</p>
+<p class="noindent1">It’s as though <code class="calibre11">STDIN</code> and <code class="calibre11">STDOUT</code> are Java-style interfaces that have implementations for each device. Of course, there are no interfaces in the example C program—so how does the call to <code class="calibre11">getchar()</code> actually get delivered to the device driver that reads the character?</p>
+<p class="noindent1"><a id="page_41"></a>The answer to that question is pretty straightforward. The UNIX operating system requires that every IO device driver provide five standard functions:<sup class="calibre10"><a id="ch5fn-5" href="part0016.html#ch5fn5">5</a></sup> <code class="calibre11">open</code>, <code class="calibre11">close</code>, <code class="calibre11">read</code>, <code class="calibre11">write</code>, and <code class="calibre11">seek</code>. The signatures of those functions must be identical for every IO driver.</p>
+<p class="noindent1">The <code class="calibre11">FILE</code> data structure contains five pointers to functions. In our example, it might look like this:</p>
+<p class="codelink"><a id="pch5ex09" href="part0054_split_009.html#pch5ex09a">Click here to view code image</a></p>
+<p class="pre2">struct FILE {<br class="calibre6"/>
+  void (*open)(char* name, int mode);<br class="calibre6"/>
+  void (*close)();<br class="calibre6"/>
+  int (*read)();<br class="calibre6"/>
+  void (*write)(char);<br class="calibre6"/>
+  void (*seek)(long index, int mode);<br class="calibre6"/>
+};</p>
+<p class="noindent1">The IO driver for the console will define those functions and load up a <code class="calibre11">FILE</code> data structure with their addresses—something like this:</p>
+<p class="codelink"><a id="pch5ex010" href="part0054_split_010.html#pch5ex010a">Click here to view code image</a></p>
+<p class="pre2">#include "file.h"<br class="calibre6"/>
+ <br class="calibre6"/>
+void open(char* name, int mode) {/*...*/}<br class="calibre6"/>
+void close() {/*...*/};<br class="calibre6"/>
+int read() {int c;/*...*/ return c;}<br class="calibre6"/>
+void write(char c) {/*...*/}<br class="calibre6"/>
+void seek(long index, int mode) {/*...*/}<br class="calibre6"/>
+ <br class="calibre6"/>
+struct FILE console = {open, close, read, write, seek};</p>
+<p class="noindent1">Now if <code class="calibre11">STDIN</code> is defined as a <code class="calibre11">FILE*</code>, and if it points to the console data structure, then <code class="calibre11">getchar()</code> might be implemented this way:</p>
+<p class="codelink"><a id="page_42"></a><a id="pch5ex011" href="part0054_split_011.html#pch5ex011a">Click here to view code image</a></p>
+<p class="pre2">extern struct FILE* STDIN;<br class="calibre6"/>
+ <br class="calibre6"/>
+int getchar() {<br class="calibre6"/>
+  return STDIN-&gt;read();<br class="calibre6"/>
+}</p>
+<p class="noindent1">In other words, <code class="calibre11">getchar()</code> simply calls the function pointed to by the <code class="calibre11">read</code> pointer of the <code class="calibre11">FILE</code> data structure pointed to by <code class="calibre11">STDIN</code>.</p>
+<p class="noindent1">This simple trick is the basis for all polymorphism in OO. In C++, for example, every virtual function within a class has a pointer in a table called a <code class="calibre11">vtable</code>, and all calls to virtual functions go through that table. Constructors of derivatives simply load their versions of those functions into the <code class="calibre11">vtable</code> of the object being created.</p>
+<p class="noindent1">The bottom line is that polymorphism is an application of pointers to functions. Programmers have been using pointers to functions to achieve polymorphic behavior since Von Neumann architectures were first implemented in the late 1940s. In other words, OO has provided nothing new.</p>
+<p class="noindent1">Ah, but that’s not quite correct. OO languages may not have given us polymorphism, but they have made it much safer and much more convenient.</p>
+<p class="noindent1">The problem with explicitly using pointers to functions to create polymorphic behavior is that pointers to functions are <em class="calibre9">dangerous</em>. Such use is driven by a set of manual conventions. You have to remember to follow the convention to initialize those pointers. You have to remember to follow the convention to call all your functions through those pointers. If any programmer fails to remember these conventions, the resulting bug can be devilishly hard to track down and eliminate.</p>
+<p class="noindent1">OO languages eliminate these conventions and, therefore, these dangers. Using an OO language makes polymorphism trivial. That fact provides an enormous power that old C programmers could only dream of. On this <a id="page_43"></a>basis, we can conclude that OO imposes discipline on indirect transfer of control.</p>
+<h4 class="h2">T<small class="calibre13">HE</small> P<small class="calibre13">OWER OF</small> P<small class="calibre13">OLYMORPHISM</small></h4>
+<p class="noindent1">What’s so great about polymorphism? To better appreciate its charms, let’s reconsider the example <code class="calibre11">copy</code> program. What happens to that program if a new IO device is created? Suppose we want to use the <code class="calibre11">copy</code> program to copy data from a handwriting recognition device to a speech synthesizer device: How do we need to change the <code class="calibre11">copy</code> program to get it to work with those new devices?</p>
+<p class="noindent1">We don’t need any changes at all! Indeed, we don’t even need to recompile the <code class="calibre11">copy</code> program. Why? Because the source code of the <code class="calibre11">copy</code> program does not depend on the source code of the IO drivers. As long as those IO drivers implement the five standard functions defined by <code class="calibre11">FILE</code>, the <code class="calibre11">copy</code> program will be happy to use them.</p>
+<p class="noindent1">In short, the IO devices have become plugins to the <code class="calibre11">copy</code> program.</p>
+<p class="noindent1">Why did the UNIX operating system make IO devices plugins? Because we learned, in the late 1950s, that our programs should be <em class="calibre9">device independent</em>. Why? Because we wrote lots of programs that were device <em class="calibre9">dependent</em>, only to discover that we really wanted those programs to do the same job but use a different device.</p>
+<p class="noindent1">For example, we often wrote programs that read input data from decks of cards,<sup class="calibre10"><a id="ch5fn-6" href="part0016.html#ch5fn6">6</a></sup> and then punched new decks of cards as output. Later, our customers stopped giving us decks of cards and started giving us reels of magnetic tape. This was very inconvenient, because it meant rewriting large portions of the original program. It would be very convenient if the same program worked interchangeably with cards or tape.</p>
+<p class="noindent1"><a id="page_44"></a>The plugin architecture was invented to support this kind of IO device independence, and has been implemented in almost every operating system since its introduction. Even so, most programmers did not extend the idea to their own programs, because using pointers to functions was dangerous.</p>
+<p class="noindent1">OO allows the plugin architecture to be used anywhere, for anything.</p>
+<h4 class="h2">D<small class="calibre13">EPENDENCY</small> I<small class="calibre13">NVERSION</small></h4>
+<p class="noindent1">Imagine what software was like before a safe and convenient mechanism for polymorphism was available. In the typical calling tree, main functions called high-level functions, which called mid-level functions, which called low-level functions. In that calling tree, however, source code dependencies inexorably followed the flow of control (<a href="part0016.html#ch5fig1">Figure 5.1</a>).</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00016.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch5fig1"></a><strong class="calibre8">Figure 5.1</strong> Source code dependencies versus flow of control</p>
+</div>
+<p class="noindent1">For <code class="calibre11">main</code> to call one of the high-level functions, it had to mention the name of the module that contained that function In C, this was a <code class="calibre11">#include</code>. In Java, it was an <code class="calibre11">import</code> statement. In C#, it was a <code class="calibre11">using</code> statement. Indeed, every caller was forced to mention the name of the module that contained the callee.</p>
+<p class="noindent1"><a id="page_45"></a>This requirement presented the software architect with few, if any, options. The flow of control was dictated by the behavior of the system, and the source code dependencies were dictated by that flow of control.</p>
+<p class="noindent1">When polymorphism is brought into play, however, something very different can happen (<a href="part0016.html#ch5fig2">Figure 5.2</a>).</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00017.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch5fig2"></a><strong class="calibre8">Figure 5.2</strong> Dependency inversion</p>
+</div>
+<p class="noindent1">In <a href="part0016.html#ch5fig2">Figure 5.2</a>, module <code class="calibre11">HL1</code> calls the <code class="calibre11">F()</code> function in module <code class="calibre11">ML1</code>. The fact that it calls this function through an interface is a source code contrivance. At runtime, the interface doesn’t exist. <code class="calibre11">HL1</code> simply calls <code class="calibre11">F()</code> within <code class="calibre11">ML1</code>.<sup class="calibre10"><a id="ch5fn-7" href="part0016.html#ch5fn7">7</a></sup></p>
+<p class="noindent1">Note, however, that the source code dependency (the inheritance relationship) between <code class="calibre11">ML1</code> and the interface <code class="calibre11">I</code> points in the opposite direction compared to the flow of control. This is called <em class="calibre9">dependency inversion</em>, and its implications for the software architect are profound.</p>
+<p class="noindent1">The fact that OO languages provide safe and convenient polymorphism means that <em class="calibre9">any source code dependency, no matter where it is, can be inverted</em>.</p>
+<p class="noindent1">Now look back at that calling tree in <a href="part0016.html#ch5fig1">Figure 5.1</a>, and its many source code dependencies. Any of those source code dependencies can be turned around by inserting an interface between them.</p>
+<p class="noindent1"><a id="page_46"></a>With this approach, software architects working in systems written in OO languages have <em class="calibre9">absolute control</em> over the direction of all source code dependencies in the system. They are not constrained to align those dependencies with the flow of control. No matter which module does the calling and which module is called, the software architect can point the source code dependency in either direction.</p>
+<p class="noindent1">That is power! That is the power that OO provides. That’s what OO is really all about—at least from the architect’s point of view.</p>
+<p class="noindent1">What can you do with that power? As an example, you can rearrange the source code dependencies of your system so that the database and the user interface (UI) depend on the business rules (<a href="part0016.html#ch5fig3">Figure 5.3</a>), rather than the other way around.</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00018.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch5fig3"></a><strong class="calibre8">Figure 5.3</strong> The database and the user interface depend on the business rules</p>
+</div>
+<p class="noindent1">This means that the UI and the database can be plugins to the business rules. It means that the source code of the business rules never mentions the UI or the database.</p>
+<p class="noindent1">As a consequence, the business rules, the UI, and the database can be compiled into three separate components or deployment units (e.g., jar files, DLLs, or Gem files) that have the same dependencies as the source code. The component containing the business rules will not depend on the components containing the UI and database.</p>
+<p class="noindent1">In turn, the business rules can be <em class="calibre9">deployed independently</em> of the UI and the database. Changes to the UI or the database need not have any effect on the business rules. Those components can be deployed separately and independently.</p>
+<p class="noindent1"><a id="page_47"></a>In short, when the source code in a component changes, only that component needs to be redeployed. This is <em class="calibre9">independent deployability</em>.</p>
+<p class="noindent1">If the modules in your system can be deployed independently, then they can be developed independently by different teams. That’s <em class="calibre9">independent developability</em>.</p>
+<h3 class="h1" id="toclev_24">C<small class="calibre13">ONCLUSION</small></h3>
+<p class="noindent1">What is OO? There are many opinions and many answers to this question. To the software architect, however, the answer is clear: OO is the ability, through the use of polymorphism, to gain absolute control over every source code dependency in the system. It allows the architect to create a plugin architecture, in which modules that contain high-level policies are independent of modules that contain low-level details. The low-level details are relegated to plugin modules that can be deployed and developed independently from the modules that contain high-level policies.</p>
+<p class="fn"><a id="page_48"></a><a id="ch5fn1" href="part0016.html#ch5fn-1">1</a>. The C++ compiler needs to know the size of the instances of each class.</p>
+<p class="fn"><a id="ch5fn2" href="part0016.html#ch5fn-2">2</a>. For example, Smalltalk, Python, JavaScript, Lua, and Ruby.</p>
+<p class="fn"><a id="ch5fn3" href="part0016.html#ch5fn-3">3</a>. Not just C programmers: Most languages of that era had the capability to masquerade one data structure as another.</p>
+<p class="fn"><a id="ch5fn4" href="part0016.html#ch5fn-4">4</a>. Indeed it still is.</p>
+<p class="fn"><a id="ch5fn5" href="part0016.html#ch5fn-5">5</a>. UNIX systems vary; this is just an example.</p>
+<p class="fn"><a id="ch5fn6" href="part0016.html#ch5fn-6">6</a>. Punched cards—IBM Hollerith cards, 80 columns wide. I’m sure many of you have never even seen one of these, but they were commonplace in the 1950s, 1960s, and even 1970s.</p>
+<p class="fn"><a id="ch5fn7" href="part0016.html#ch5fn-7">7</a>. Albeit indirectly.</p>
+</body></html>

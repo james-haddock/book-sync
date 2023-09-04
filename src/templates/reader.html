@@ -1,81 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>{{ book.title }}</title>
-  <link href="{{ url_for('static', filename='static/css/main.css') }}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Your Book Title</title>
+    <link href="{{ url_for('static', filename='static/css/main.css') }}" rel="stylesheet">
 </head>
 
-<body>
-  <div
-    class="fixed bottom-0 left-0 w-full backdrop-filter backdrop-blur-md bg-opacity-30 bg-white shadow-md flex justify-between items-center p-4"
-    style="z-index: 2;">
-    <button id="prevButton" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm">Previous</button>
-    <a href='{{ url_for("library") }}'><button class="text-gray-700 font-bold px-4 py-2 rounded-md">Return to
-        Library</button></a>
-    <button id="nextButton" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm">Next</button>
-  </div>
-  <div class="h-screen">
-    <!-- <iframe id="myIframe" src="{{ book.href[book.book_index_number] }}" -->
-      <iframe id="contentFrame" src="{{ book.href[book.book_index_number] }}"
-      style="overflow: hidden; position: absolute; top: 0; left: 0; width: 100vw; height: calc(100vh - 60px); border: 1rem; z-index: 1;"
-      frameborder="0"></iframe>
-  </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Initialize variables
-      let contentFrame = document.getElementById('contentFrame');
-      let nextButton = document.getElementById('nextButton');
-      let prevButton = document.getElementById('prevButton');
-      let offset = 0; // The offset to start displaying content
-      let contentHeight = 0;
-  
-      // Resize iframe based on window size
-      const resizeFrame = () => {
-          contentFrame.style.height = window.innerHeight + "px";
-      };
-  
-      // Update iframe content based on offset
-      const updateContent = () => {
-          let contentDoc = contentFrame.contentDocument || contentFrame.contentWindow.document;
-          contentDoc.documentElement.scrollTop = offset;
-      };
-  
-      // Listen for window resize events
-      window.addEventListener('resize', () => {
-          resizeFrame();
-          updateContent();
-      });
-  
-      // Initialize iframe size
-      resizeFrame();
-  
-      // Listen for Next button click
-      nextButton.addEventListener('click', () => {
-          let frameDoc = contentFrame.contentDocument || contentFrame.contentWindow.document;
-          contentHeight = frameDoc.documentElement.scrollHeight;
-          if (offset + parseInt(contentFrame.style.height) < contentHeight) {
-              offset += parseInt(contentFrame.style.height);
-              updateContent();
-          }
-      });
-  
-      // Listen for Previous button click
-      prevButton.addEventListener('click', () => {
-          if (offset >= parseInt(contentFrame.style.height)) {
-              offset -= parseInt(contentFrame.style.height);
-              updateContent();
-          }
-      });
-  
-      // Update content when iframe is loaded
-      contentFrame.addEventListener('load', () => {
-          updateContent();
-      });
-  });
-  
-</script>
+<body style="overflow: hidden;">
+
+    <div id="iframeWrapper" style="overflow: hidden; position: relative; height: 100vh;">
+        <iframe id="myIframe" style="border: none; width: 100%; position: absolute;"></iframe>
+    </div>
+
+    <div id="navButtons" style="position: fixed; bottom: 0; left: 0; width: 100%; backdrop-filter: backdrop-blur-md; background-color: rgba(255, 255, 255, 0.3); box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; padding: 16px; z-index: 50; transition: opacity 1s; opacity: 1;">
+        <button onclick="prevPage()" id="prevButton" style="background-color: #f0f0f0; padding: 8px 16px; border-radius: 4px; font-size: 14px;">Previous</button>
+        <a href='{{ url_for("library") }}'><button style="font-size: 14px; font-weight: bold; padding: 8px 16px; border-radius: 4px;">Return to Library</button></a>
+        <button onclick="nextPage()" id="nextButton" style="background-color: #f0f0f0; padding: 8px 16px; border-radius: 4px; font-size: 14px;">Next</button>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        let totalPages = 0;
+        let pageSize;
+        let pages = [];
+
+        const contentURL = "{{ book.href[book.book_index_number] }}"; 
+
+        const iframe = document.getElementById('myIframe');
+        iframe.src = contentURL;
+
+        iframe.onload = function () {
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            const contentContainer = iframeDocument.body;
+            pageSize = window.innerHeight;
+
+            const fragment = document.createDocumentFragment();
+            let pageDiv = document.createElement('div');
+            let currentHeight = 0;
+
+            Array.from(contentContainer.childNodes).forEach(node => {
+                if (node.offsetHeight) {
+                    if (currentHeight + node.offsetHeight > pageSize) {
+                        fragment.appendChild(pageDiv);
+                        pageDiv = document.createElement('div');
+                        currentHeight = 0;
+                    }
+                    currentHeight += node.offsetHeight;
+                }
+                pageDiv.appendChild(node.cloneNode(true));
+            });
+
+            if (pageDiv.childNodes.length > 0) {
+                fragment.appendChild(pageDiv);
+            }
+
+            contentContainer.innerHTML = '';
+            contentContainer.appendChild(fragment);
+            pages = Array.from(contentContainer.childNodes);
+            totalPages = pages.length;
+
+            pages.forEach((page, index) => {
+                page.style.display = (index === 0) ? 'block' : 'none';
+            });
+        };
+
+        function showPage(page) {
+            if (page < 0 || page >= totalPages) {
+                return;
+            }
+            pages[currentPage].style.display = 'none';
+            currentPage = page;
+            pages[currentPage].style.display = 'block';
+        }
+
+        function nextPage() {
+            showPage(currentPage + 1);
+        }
+
+        function prevPage() {
+            showPage(currentPage - 1);
+        }
+    </script>
+
 </body>
+
 </html>

@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xml:lang="en-us" lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis">
+<head>
+<title>Refactoring: Improving the Design of Existing Code</title>
+<link rel="stylesheet" type="text/css" href="9780134757704.css"/>
+</head>
+<body>
+<section epub:type="bodymatter">
+<h2 class="h2" id="ch07"><span epub:type="pagebreak" id="page_161"/>Chapter 7<br/>Encapsulation</h2>
+<p class="noindent">Perhaps the most important criteria to be used in decomposing modules is to identify secrets that modules should hide from the rest of the system <span class="pd_maroon">[<a href="biblo.xhtml#bib45">Parnas</a>]</span>. Data structures are the most common secrets, and I can hide data structures by encapsulating them with <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em> and <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec2">Encapsulate Collection</a> (<a class="pd_maroon" href="ch07.xhtml#page_170">170</a>)</span></em>. Even primitive data values can be encapsulated with <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec3">Replace Primitive with Object</a> (<a class="pd_maroon" href="ch07.xhtml#page_174">174</a>)</span></em>&#8212;the magnitude of second-order benefits from doing this often surprises people. Temporary variables often get in the way of refactoring&#8212;I have to ensure they are calculated in the right order and their values are available to other parts of the code that need them. Using <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a> (<a class="pd_maroon" href="ch07.xhtml#page_178">178</a>)</span></em> is a great help here, particularly when splitting up an overly long function.</p>
+<p class="indent">Classes were designed for information hiding. In the previous chapter, I described a way to form them with <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec9">Combine Functions into Class</a> (<a class="pd_maroon" href="ch06.xhtml#page_144">144</a>)</span></em>. The common extract/inline operations also apply to classes with <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec5">Extract Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_182">182</a>)</span></em> and <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec6">Inline Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_186">186</a>)</span></em>.</p>
+<p class="indent">As well as hiding the internals of classes, it&#8217;s often useful to hide connections between classes, which I can do with <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec7">Hide Delegate</a> (<a class="pd_maroon" href="ch07.xhtml#page_189">189</a>)</span></em>. But too much hiding leads to bloated interfaces, so I also need its reverse: <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec8">Remove Middle Man</a> (<a class="pd_maroon" href="ch07.xhtml#page_192">192</a>)</span></em>.</p>
+<p class="indent">Classes and modules are the largest forms of encapsulation, but functions also encapsulate their implementation. Sometimes, I may need to make a wholesale change to an algorithm, which I can do by wrapping it in a function with <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> and applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec9">Substitute Algorithm</a> (<a class="pd_maroon" href="ch07.xhtml#page_195">195</a>)</span></em>.</p>
+<h3 class="h3" id="ch07lev1sec1"><span epub:type="pagebreak" id="page_162"/>Encapsulate Record</h3>
+<p class="noindent">formerly: <em>Replace Record with Data Class</em></p>
+<figure class="fig-group">
+<img src="graphics/p0162_01.jpg" aria-describedby="alt_p0162_01" alt="A figure shows a simple representation and a code for encapsulating a record."/>
+<aside class="hidden" id="alt_p0162_01">
+<p>A diagrammatic representation of the process of encapsulating a record shows an object and a record, where the object includes a hidden storage and other methods. The actual code reads, organization = {name: &#34;Acme Gooseberries&#34;, country: &#34;GB&#34;}; The refactored code reads, class Organization { constructor(data) { this._name = data.name; this._country = data.country; } get name() {return this._name;} set name(arg) {this._name = arg;} get country() {return this._country;} set country(arg) {this._country = arg;} }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec1">Motivation</h4>
+<p class="noindent">This is why I often favor objects over records for mutable data. With objects, I can hide what is stored and provide methods for all three values. The user of the object doesn&#8217;t need to know or care which is stored and which is calculated. This encapsulation also helps with renaming: I can rename the field while providing methods for both the new and the old names, gradually updating callers until they are all done.</p>
+<p class="indent">I just said I favor objects for <em>mutable</em> data. If I have an immutable value, I can just have all three values in my record, using an enrichment step if necessary. Similarly, it&#8217;s easy to copy the field when renaming.</p>
+<p class="indent">I can have two kinds of record structures: those where I declare the legal field names and those that allow me to use whatever I like. The latter are often implemented through a library class called something like hash, map, hashmap, dictionary, or associative array. Many languages provide convenient syntax for creating hashmaps, which makes them useful in many programming situations. The downside of using them is they are aren&#8217;t explicit about their fields. The only <span epub:type="pagebreak" id="page_163"/>way I can tell if they use start/end or start/length is by looking at where they are created and used. This isn&#8217;t a problem if they are only used in a small section of a program, but the wider their scope of usage, the greater problem I get from their implicit structure. I could refactor such implicit records into explicit ones&#8212;but if I need to do that, I&#8217;d rather make them classes instead.</p>
+<p class="indent">It&#8217;s common to pass nested structures of lists and hashmaps which are often serialized into formats like JSON or XML. Such structures can be encapsulated too, which helps if their formats change later on or if I&#8217;m concerned about updates to the data that are hard to keep track of.</p>
+<h5 class="h5" id="ch07lev3sec1"><em>Mechanics</em></h5>
+<ul class="square">
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> on the variable holding the record.</p>
+<div class="blockquote">
+<p class="noindent">Give the functions that encapsulate the record names that are easily searchable.</p>
+</div></li>
+<li><p>Replace the content of the variable with a simple class that wraps the record. Define an accessor inside this class that returns the raw record. Modify the functions that encapsulate the variable to use this accessor.</p></li>
+<li><p>Test.</p></li>
+<li><p>Provide new functions that return the object rather than the raw record.</p></li>
+<li><p>For each user of the record, replace its use of a function that returns the record with a function that returns the object. Use an accessor on the object to get at the field data, creating that accessor if needed. Test after each change.</p>
+<div class="blockquote">
+<p class="noindent">If it&#8217;s a complex record, such as one with a nested structure, focus on clients that update the data first. Consider returning a copy or read-only proxy of the data for clients that only read the data.</p>
+</div></li>
+<li><p>Remove the class&#8217;s raw data accessor and the easily searchable functions that returned the raw record.</p></li>
+<li><p>Test.</p></li>
+<li><p>If the fields of the record are themselves structures, consider using Encapsulate Record and <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec2">Encapsulate Collection</a> (<a class="pd_maroon" href="ch07.xhtml#page_170">170</a>)</span></em> recursively.</p></li>
+</ul>
+<h5 class="h5" id="ch07lev3sec2"><em>Example</em></h5>
+<p class="noindent">I&#8217;ll start with a constant that is widely used across a program.</p>
+<p class="codelink"><a id="p0163_01a" href="ch07_images.xhtml#p0163_01">Click here to view code image</a></p>
+<pre class="pre">const organization = {name: "Acme Gooseberries", country: "GB"};</pre>
+<p class="indent">This is a JavaScript object which is being used as a record structure by various parts of the program, with accesses like this:</p>
+<p class="codelink"><a id="p0164_01a" href="ch07_images.xhtml#p0164_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_164"/>result += `&lt;h1&gt;${organization.name}&lt;/h1&gt;`;</pre>
+<p class="noindent">and</p>
+<pre class="pre">organization.name = newName;</pre>
+<p class="indent">The first step is a simple <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em>.</p>
+<p class="codelink"><a id="p0164_02a" href="ch07_images.xhtml#p0164_02">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function getRawDataOfOrganization() {return organization;}</span></pre>
+<p class="pro-title"><em>example reader&#8230;</em></p>
+<p class="codelink"><a id="p0164_03a" href="ch07_images.xhtml#p0164_03">Click here to view code image</a></p>
+<pre class="pre">result += `&lt;h1&gt;${<span class="pd_maroon1">getRawDataOfOrganization</span>().name}&lt;/h1&gt;`;</pre>
+<p class="pro-title"><em>example writer&#8230;</em></p>
+<p class="codelink"><a id="p0164_04a" href="ch07_images.xhtml#p0164_04">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">getRawDataOfOrganization</span>().name = newName;</pre>
+<p class="indent">It&#8217;s not quite a standard <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em>, since I gave the getter a name deliberately chosen to be both ugly and easy to search for. This is because I intend its life to be short.</p>
+<p class="indent">Encapsulating a record means going deeper than just the variable itself; I want to control how it&#8217;s manipulated. I can do this by replacing the record with a class.</p>
+<p class="pro-title"><em>class Organization&#8230;</em></p>
+<pre class="pre"><span class="pd_maroon1">class Organization {</span>
+  <span class="pd_maroon1">constructor(data) {</span>
+    <span class="pd_maroon1">this._data = data;</span>
+  <span class="pd_maroon1">}</span>
+<span class="pd_maroon1">}</span></pre>
+<p class="pro-title"><em>top level</em></p>
+<p class="codelink"><a id="p0164_05a" href="ch07_images.xhtml#p0164_05">Click here to view code image</a></p>
+<pre class="pre">const organization = <span class="pd_maroon1">new Organization</span>({name: "Acme Gooseberries", country: "GB"});
+
+function getRawDataOfOrganization() {return organization<span class="pd_maroon1">._data</span>;}
+<span class="pd_maroon1">function getOrganization() {return organization;}</span></pre>
+<p class="indent">Now that I have an object in place, I start looking at the users of the record. Any one that updates the record gets replaced with a setter.</p>
+<p class="pro-title"><em>class Organization&#8230;</em></p>
+<p class="codelink"><a id="p0164_06a" href="ch07_images.xhtml#p0164_06">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">set name(aString) {this._data.name = aString;}</span></pre>
+<p class="pro-title"><em>client&#8230;</em></p>
+<pre class="pre"><span class="pd_maroon1">getOrganization().name</span> = newName;</pre>
+<p class="indent">Similarly, I replace any readers with the appropriate getter.</p>
+<p class="pro-title"><em>class Organization&#8230;</em></p>
+<p class="codelink"><a id="p0164_07a" href="ch07_images.xhtml#p0164_07">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get name()    {return this._data.name;}</span></pre>
+<p class="pro-title"><em>client&#8230;</em></p>
+<p class="codelink"><a id="p0164_08a" href="ch07_images.xhtml#p0164_08">Click here to view code image</a></p>
+<pre class="pre">result += `&lt;h1&gt;${<span class="pd_maroon1">getOrganization().name</span>}&lt;/h1&gt;`;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_165"/>After I&#8217;ve done that, I can follow through on my threat to give the ugly sounding function a short life.</p>
+<p class="codelink"><a id="p0165_01a" href="ch07_images.xhtml#p0165_01">Click here to view code image</a></p>
+<pre class="pre"><span class="strike"><span class="pd_maroon1">function getRawDataOfOrganization() {return organization._data;}</span></span>
+function getOrganization() {return organization;}</pre>
+<p class="indent">I&#8217;d also be inclined to fold the <code>_data</code> field directly into the object.</p>
+<p class="codelink"><a id="p0165_02a" href="ch07_images.xhtml#p0165_02">Click here to view code image</a></p>
+<pre class="pre">class Organization {
+  constructor(data) {
+    <span class="pd_maroon1">this._name = data.name;</span>
+    <span class="pd_maroon1">this._country = data.country;</span>
+  }
+  get name()    {return <span class="pd_maroon1">this._name</span>;}
+  set name(aString) {<span class="pd_maroon1">this._name</span> = aString;}
+  get country()    {return <span class="pd_maroon1">this._country</span>;}
+  set country(aCountryCode) {<span class="pd_maroon1">this._country</span> = aCountryCode;}
+}</pre>
+<p class="indent">This has the advantage of breaking the link to the input data record. This might be useful if a reference to it runs around, which would break encapsulation. Should I not fold the data into individual fields, I would be wise to copy <code>_data</code> when I assign it.</p>
+<h5 class="h5" id="ch07lev3sec3"><em>Example: Encapsulating a Nested Record</em></h5>
+<p class="noindent">The above example looks at a shallow record, but what do I do with data that is deeply nested, e.g., coming from a JSON document? The core refactoring steps still apply, and I have to be equally careful with updates, but I do get some options around reads.</p>
+<p class="indent">As an example, here is some slightly more nested data: a collection of customers, kept in a hashmap indexed by their customer ID.</p>
+<p class="codelink"><a id="p0166_01a" href="ch07_images.xhtml#p0166_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_166"/>"1920": {
+  name: "martin",
+  id: "1920",
+  usages: {
+    "2016": {
+      "1": 50,
+      "2": 55,
+      // remaining months of the year
+    },
+    "2015": {
+      "1": 70,
+      "2": 63,
+      // remaining months of the year
+    }
+  }
+},
+"38673": {
+  name: "neal",
+  id: "38673",
+  // more customers in a similar form</pre>
+<p class="indent">With more nested data, reads and writes can be digging into the data structure.</p>
+<p class="pro-title"><em>sample update&#8230;</em></p>
+<p class="codelink"><a id="p0166_02a" href="ch07_images.xhtml#p0166_02">Click here to view code image</a></p>
+<pre class="pre">customerData[customerID].usages[year][month] = amount;</pre>
+<p class="pro-title"><em>sample read&#8230;</em></p>
+<p class="codelink"><a id="p0166_03a" href="ch07_images.xhtml#p0166_03">Click here to view code image</a></p>
+<pre class="pre">function compareUsage (customerID, laterYear, month) {
+  const later   = customerData[customerID].usages[laterYear][month];
+  const earlier = customerData[customerID].usages[laterYear - 1][month];
+  return {laterAmount: later, change: later - earlier};
+}</pre>
+<p class="indent">To encapsulate this data, I also start with <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em>.</p>
+<p class="codelink"><a id="p0166_04a" href="ch07_images.xhtml#p0166_04">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function getRawDataOfCustomers()    {return customerData;}</span>
+<span class="pd_maroon1">function setRawDataOfCustomers(arg) {customerData = arg;}</span></pre>
+<p class="pro-title"><em>sample update&#8230;</em></p>
+<p class="codelink"><a id="p0166_05a" href="ch07_images.xhtml#p0166_05">Click here to view code image</a></p>
+<pre class="pre">getRawDataOfCustomers()[customerID].usages[year][month] = amount;</pre>
+<p class="pro-title"><em>sample read&#8230;</em></p>
+<p class="codelink"><a id="p0166_06a" href="ch07_images.xhtml#p0166_06">Click here to view code image</a></p>
+<pre class="pre">function compareUsage (customerID, laterYear, month) {
+  const later   = getRawDataOfCustomers()[customerID].usages[laterYear][month];
+  const earlier = getRawDataOfCustomers()[customerID].usages[laterYear - 1][month];
+  return {laterAmount: later, change: later - earlier};
+}</pre>
+<p class="indent">I then make a class for the overall data structure.</p>
+<pre class="pre"><span epub:type="pagebreak" id="page_167"/><span class="pd_maroon1">class CustomerData {</span>
+  <span class="pd_maroon1">constructor(data) {</span>
+    <span class="pd_maroon1">this._data = data;</span>
+  <span class="pd_maroon1">}</span>
+<span class="pd_maroon1">}</span></pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0167_01a" href="ch07_images.xhtml#p0167_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function getCustomerData() {return customerData;}</span>
+function getRawDataOfCustomers()    {return customerData<span class="pd_maroon1">._data</span>;}
+function setRawDataOfCustomers(arg) {customerData = <span class="pd_maroon1">new CustomerData</span>(arg);}</pre>
+<p class="indent">The most important area to deal with is the updates. So, while I look at all the callers of <code>getRawDataOfCustomers</code>, I&#8217;m focused on those where the data is changed. To remind you, here&#8217;s the update again:</p>
+<p class="pro-title"><em>sample update&#8230;</em></p>
+<p class="codelink"><a id="p0167_02a" href="ch07_images.xhtml#p0167_02">Click here to view code image</a></p>
+<pre class="pre">getRawDataOfCustomers()[customerID].usages[year][month] = amount;</pre>
+<p class="indent">The general mechanics now say to return the full customer and use an accessor, creating one if needed. I don&#8217;t have a setter on the customer for this update, and this one digs into the structure. So, to make one, I begin by using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on the code that digs into the data structure.</p>
+<p class="pro-title"><em>sample update&#8230;</em></p>
+<p class="codelink"><a id="p0167_03a" href="ch07_images.xhtml#p0167_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">setUsage(customerID, year, month, amount);</span></pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0167_04a" href="ch07_images.xhtml#p0167_04">Click here to view code image</a></p>
+<pre class="pre">function setUsage(customerID, year, month, amount) {
+  getRawDataOfCustomers()[customerID].usages[year][month] = amount;
+}</pre>
+<p class="indent">I then use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> to move it into the new customer data class.</p>
+<p class="pro-title"><em>sample update&#8230;</em></p>
+<p class="codelink"><a id="p0167_05a" href="ch07_images.xhtml#p0167_05">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">getCustomerData()</span>.setUsage(customerID, year, month, amount);</pre>
+<p class="pro-title"><em>class CustomerData&#8230;</em></p>
+<p class="codelink"><a id="p0167_06a" href="ch07_images.xhtml#p0167_06">Click here to view code image</a></p>
+<pre class="pre">setUsage(customerID, year, month, amount) {
+  this._data[customerID].usages[year][month] = amount;
+}</pre>
+<p class="indent">When working with a big data structure, I like to concentrate on the updates. Getting them visible and gathered in a single place is the most important part of the encapsulation.</p>
+<p class="indent">At some point, I will think I&#8217;ve got them all&#8212;but how can I be sure? There&#8217;s a couple of ways to check. One is to modify <code>getRawDataOfCustomers</code> to return a deep copy of the data; if my test coverage is good, one of the tests should break if I missed a modification.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_168"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0168_01a" href="ch07_images.xhtml#p0168_01">Click here to view code image</a></p>
+<pre class="pre">function getCustomerData() {return customerData;}
+function getRawDataOfCustomers()    {return customerData.rawData;}
+function setRawDataOfCustomers(arg) {customerData = new CustomerData(arg);}</pre>
+<p class="pro-title"><em>class CustomerData&#8230;</em></p>
+<p class="codelink"><a id="p0168_02a" href="ch07_images.xhtml#p0168_02">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get rawData() {</span>
+  <span class="pd_maroon1">return _.cloneDeep(this._data);</span>
+<span class="pd_maroon1">}</span></pre>
+<div class="blockquote">
+<p class="noindent">I&#8217;m using the lodash library to make a deep copy.</p>
+</div>
+<p class="indent">Another approach is to return a read-only proxy for the data structure. Such a proxy could raise an exception if the client code tries to modify the underlying object. Some languages make this easy, but it&#8217;s a pain in JavaScript, so I&#8217;ll leave it as an exercise for the reader. I could also take a copy and recursively freeze it to detect any modifications.</p>
+<p class="indent">Dealing with the updates is valuable, but what about the readers? Here there are a few options.</p>
+<p class="indent">The first option is to do the same thing as I did for the setters. Extract all the reads into their own functions and move them into the customer data class.</p>
+<p class="pro-title"><em>class CustomerData&#8230;</em></p>
+<p class="codelink"><a id="p0168_03a" href="ch07_images.xhtml#p0168_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">usage(customerID, year, month) {</span>
+  <span class="pd_maroon1">return this._data[customerID].usages[year][month];</span>
+<span class="pd_maroon1">}</span></pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0168_04a" href="ch07_images.xhtml#p0168_04">Click here to view code image</a></p>
+<pre class="pre">function compareUsage (customerID, laterYear, month) {
+  const later   = getCustomerData().<span class="pd_maroon1">usage(customerID, laterYear, month)</span>;
+  const earlier = getCustomerData().<span class="pd_maroon1">usage(customerID, laterYear - 1, month)</span>;
+  return {laterAmount: later, change: later - earlier};
+}</pre>
+<p class="indent">The great thing about this approach is that it gives <code>customerData</code> an explicit API that captures all the uses made of it. I can look at the class and see all their uses of the data. But this can be a lot of code for lots of special cases. Modern languages provide good affordances for digging into a list-and-hash <span class="pd_maroon">[<a href="biblo.xhtml#bib26">mf-lh</a>]</span> data structure, so it&#8217;s useful to give clients just such a data structure to work with.</p>
+<p class="indent">If the client wants a data structure, I can just hand out the actual data. But the problem with this is that there&#8217;s no way to prevent clients from modifying the data directly, which breaks the whole point of encapsulating all the updates inside functions. Consequently, the simplest thing to do is to provide a copy of the underlying data, using the <code>rawData</code> method I wrote earlier.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_169"/><em>class CustomerData&#8230;</em></p>
+<p class="codelink"><a id="p0169_01a" href="ch07_images.xhtml#p0169_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get rawData() {</span>
+  <span class="pd_maroon1">return _.cloneDeep(this._data);</span>
+<span class="pd_maroon1">}</span></pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0169_02a" href="ch07_images.xhtml#p0169_02">Click here to view code image</a></p>
+<pre class="pre">function compareUsage (customerID, laterYear, month) {
+  const later   = getCustomerData().<span class="pd_maroon1">rawData</span>[customerID].usages[laterYear][month];
+  const earlier = getCustomerData().<span class="pd_maroon1">rawData</span>[customerID].usages[laterYear - 1][month];
+  return {laterAmount: later, change: later - earlier};
+}</pre>
+<p class="indent">But although it&#8217;s simple, there are downsides. The most obvious problem is the cost of copying a large data structure, which may turn out to be a performance problem. As with anything like this, however, the performance cost might be acceptable&#8212;I would want to measure its impact before I start to worry about it. There may also be confusion if clients expect modifying the copied data to modify the original. In those cases, a read-only proxy or freezing the copied data might provide a helpful error should they do this.</p>
+<p class="indent">Another option is more work, but offers the most control: Apply Encapsulate Record recursively. With this, I turn the customer record into its own class, apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec2">Encapsulate Collection</a> (<a class="pd_maroon" href="ch07.xhtml#page_170">170</a>)</span></em> to the usages, and create a usage class. I can then enforce control of updates by using accessors, perhaps applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a> (<a class="pd_maroon" href="ch09.xhtml#page_252">252</a>)</span></em> on the usage objects. But this can be a lot of effort for a large data structure&#8212;and not really needed if I don&#8217;t access that much of the data structure. Sometimes, a judicious mix of getters and new classes may work, using a getter to dig deep into the structure but returning an object that wraps the structure rather than the unencapsulated data. I wrote about this kind of thing in an article &#8220;Refactoring Code to Load a Document&#8221; <span class="pd_maroon">[<a href="biblo.xhtml#bib31">mf-ref-doc</a>]</span>.</p>
+<h3 class="h3" id="ch07lev1sec2"><span epub:type="pagebreak" id="page_170"/>Encapsulate Collection</h3>
+<figure class="fig-group">
+<img src="graphics/p0170_01.jpg" aria-describedby="alt_p0170_01" alt="A figure shows a simple representation and a code for the encapsulate collection."/>
+<aside class="hidden" id="alt_p0170_01">
+<p>A diagrammatic representation of the encapsulate collection shows the data when the data structures are modified appropriately. The actual code reads, class Person { get courses() {return this._courses;} set courses(aList) {this._courses = aList;} The refactored code reads, class Person { get courses() {return this._courses.slice();} addCourse(aCourse) { ... } removeCourse(aCourse) { ... }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec2">Motivation</h4>
+<p class="noindent">I like encapsulating any mutable data in my programs. This makes it easier to see when and how data structures are modified, which then makes it easier to change those data structures when I need to. Encapsulation is often encouraged, particularly by object-oriented developers, but a common mistake occurs when working with collections. Access to a collection variable may be encapsulated, but if the getter returns the collection itself, then that collection&#8217;s membership can be altered without the enclosing class being able to intervene.</p>
+<p class="indent">To avoid this, I provide collection modifier methods&#8212;usually <code>add</code> and <code>remove</code>&#8212;on the class itself. This way, changes to the collection go through the owning class, giving me the opportunity to modify such changes as the program evolves.</p>
+<p class="indent">Iff the team has the habit to not to modify collections outside the original module, just providing these methods may be enough. However, it&#8217;s usually unwise to rely on such habits; a mistake here can lead to bugs that are difficult to track down later. A better approach is to ensure that the getter for the collection does not return the raw collection, so that clients cannot accidentally change it.</p>
+<p class="indent">One way to prevent modification of the underlying collection is by never returning a collection value. In this approach, any use of a collection field is done with specific methods on the owning class, replacing <code>aCustomer.orders.size</code> with <code>aCustomer.numberOfOrders</code>. I don&#8217;t agree with this approach. Modern languages have rich collection classes with standardized interfaces, which can be combined <span epub:type="pagebreak" id="page_171"/>in useful ways such as Collection Pipelines <span class="pd_maroon">[<a href="biblo.xhtml#bib19">mf-cp</a>]</span>. Putting in special methods to handle this kind of functionality adds a lot of extra code and cripples the easy composability of collection operations.</p>
+<p class="indent">Another way is to allow some form of read-only access to a collection. Java, for example, makes it easy to return a read-only proxy to the collection. Such a proxy forwards all reads to the underlying collection, but blocks all writes&#8212;in Java&#8217;s case, throwing an exception. A similar route is used by libraries that base their collection composition on some kind of iterator or enumerable object&#8212;providing that iterator cannot modify the underlying collection.</p>
+<p class="indent">Probably the most common approach is to provide a getting method for the collection, but make it return a copy of the underlying collection. That way, any modifications to the copy don&#8217;t affect the encapsulated collection. This might cause some confusion if programmers expect the returned collection to modify the source field&#8212;but in many code bases, programmers are used to collection getters providing copies. If the collection is huge, this may be a performance issue&#8212;but most lists aren&#8217;t all that big, so the general rules for performance should apply (<em><span class="pd_maroon"><a class="pd_maroon" href="ch02.xhtml#ch02lev1sec8">Refactoring and Performance</a> (<a class="pd_maroon" href="ch02.xhtml#page_64">64</a>)</span></em>).</p>
+<p class="indent">Another difference between using a proxy and a copy is that a modification of the source data will be visible in the proxy but not in a copy. This isn&#8217;t an issue most of the time, because lists accessed in this way are usually only held for a short time.</p>
+<p class="indent">What&#8217;s important here is consistency within a code base. Use only one mechanism so everyone can get used to how it behaves and expect it when calling any collection accessor function.</p>
+<h4 class="h4" id="ch07lev2sec3">Mechanics</h4>
+<ul class="square">
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> if the reference to the collection isn&#8217;t already encapsulated.</p></li>
+<li><p>Add functions to add and remove elements from the collection.</p>
+<div class="blockquote">
+<p class="noindent">If there is a setter for the collection, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a> (<a class="pd_maroon" href="ch11.xhtml#page_331">331</a>)</span></em> if possible. If not, make it take a copy of the provided collection.</p>
+</div></li>
+<li><p>Run static checks.</p></li>
+<li><p>Find all references to the collection. If anyone calls modifiers on the collection, change them to use the new add/remove functions. Test after each change.</p></li>
+<li><p>Modify the getter for the collection to return a protected view on it, using a read-only proxy or a copy.</p></li>
+<li><p>Test.</p></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec4"><span epub:type="pagebreak" id="page_172"/>Example</h4>
+<p class="noindent">I start with a person class that has a field for a list of courses.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0172_01a" href="ch07_images.xhtml#p0172_01">Click here to view code image</a></p>
+<pre class="pre">constructor (name) {
+  this._name = name;
+  this._courses = [];
+}
+get name() {return this._name;}
+get courses() {return this._courses;}
+set courses(aList) {this._courses = aList;}</pre>
+<p class="pro-title"><em>class Course&#8230;</em></p>
+<p class="codelink"><a id="p0172_02a" href="ch07_images.xhtml#p0172_02">Click here to view code image</a></p>
+<pre class="pre">constructor(name, isAdvanced) {
+  this._name = name;
+  this._isAdvanced = isAdvanced;
+}
+get name()       {return this._name;}
+get isAdvanced() {return this._isAdvanced;}</pre>
+<p class="indent">Clients use the course collection to gather information on courses.</p>
+<p class="codelink"><a id="p0172_03a" href="ch07_images.xhtml#p0172_03">Click here to view code image</a></p>
+<pre class="pre">numAdvancedCourses = aPerson.courses
+  .filter(c =&gt; c.isAdvanced)
+  .length
+;</pre>
+<p class="indent">A naive developer would say this class has proper data encapsulation: After all, each field is protected by accessor methods. But I would argue that the list of courses isn&#8217;t properly encapsulated. Certainly, anyone updating the courses as a single value has proper control through the setter:</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<p class="codelink"><a id="p0172_04a" href="ch07_images.xhtml#p0172_04">Click here to view code image</a></p>
+<pre class="pre">const basicCourseNames = readBasicCourseNames(filename);
+aPerson.courses = basicCourseNames.map(name =&gt; new Course(name, false));</pre>
+<p class="indent">But clients might find it easier to update the course list directly.</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<p class="codelink"><a id="p0172_05a" href="ch07_images.xhtml#p0172_05">Click here to view code image</a></p>
+<pre class="pre">for(const name of readBasicCourseNames(filename)) {
+  aPerson.courses.push(new Course(name, false));
+}</pre>
+<p class="indent">This violates encapsulating because the person class has no ability to take control when the list is updated in this way. While the reference to the field is encapsulated, the content of the field is not.</p>
+<p class="indent">I&#8217;ll begin creating proper encapsulation by adding methods to the person class that allow a client to add and remove individual courses.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_173"/><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0173_01a" href="ch07_images.xhtml#p0173_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">addCourse(aCourse) {</span>
+  <span class="pd_maroon1">this._courses.push(aCourse);</span>
+<span class="pd_maroon1">}</span>
+<span class="pd_maroon1">removeCourse(aCourse, fnIfAbsent = () =&gt; {throw new RangeError();}) {</span>
+  <span class="pd_maroon1">const index = this._courses.indexOf(aCourse);</span>
+  <span class="pd_maroon1">if (index === -1) fnIfAbsent();</span>
+  <span class="pd_maroon1">else this._courses.splice(index, 1);</span>
+<span class="pd_maroon1">}</span></pre>
+<p class="indent">With a removal, I have to decide what to do if a client asks to remove an element that isn&#8217;t in the collection. I can either shrug, or raise an error. With this code, I default to raising an error, but give the callers an opportunity to do something else if they wish.</p>
+<p class="indent">I then change any code that calls modifiers directly on the collection to use new methods.</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<p class="codelink"><a id="p0173_02a" href="ch07_images.xhtml#p0173_02">Click here to view code image</a></p>
+<pre class="pre">for(const name of readBasicCourseNames(filename)) {
+  aPerson.<span class="pd_maroon1">addCourse</span>(new Course(name, false));
+}</pre>
+<p class="indent">With individual add and remove methods, there is usually no need for <code>setCourses</code>, in which case I&#8217;ll use <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec7">Remove Setting Method</a> (<a class="pd_maroon" href="ch11.xhtml#page_331">331</a>)</span></em> on it. Should the API need a setting method for some reason, I ensure it puts a copy of the collection in the field.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0173_03a" href="ch07_images.xhtml#p0173_03">Click here to view code image</a></p>
+<pre class="pre">set courses(aList) {this._courses = aList<span class="pd_maroon1">.slice()</span>;}</pre>
+<p class="indent">All this enables the clients to use the right kind of modifier methods, but I prefer to ensure nobody modifies the list without using them. I can do this by providing a copy.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0173_04a" href="ch07_images.xhtml#p0173_04">Click here to view code image</a></p>
+<pre class="pre">get courses() {return this._courses<span class="pd_maroon1">.slice()</span>;}</pre>
+<p class="indent">In general, I find it wise to be moderately paranoid about collections and I&#8217;d rather copy them unnecessarily than debug errors due to unexpected modifications. Modifications aren&#8217;t always obvious; for example, sorting an array in JavaScript modifies the original, while many languages default to making a copy for an operation that changes a collection. Any class that&#8217;s responsible for managing a collection should always give out copies&#8212;but I also get into the habit of making a copy if I do something that&#8217;s liable to change a collection.</p>
+<h3 class="h3" id="ch07lev1sec3"><span epub:type="pagebreak" id="page_174"/>Replace Primitive with Object</h3>
+<p class="noindent">formerly: <em>Replace Data Value with Object</em></p>
+<p class="noindentz">formerly: <em>Replace Type Code with Class</em></p>
+<figure class="fig-group">
+<img src="graphics/p0174_01.jpg" aria-describedby="alt_p0174_01" alt="A figure shows a simple representation and a code for replacing a primitive with an object."/>
+<aside class="hidden" id="alt_p0174_01">
+<p>A diagrammatic representation of replacement of a primitive with object shows a separate class at the top and the actual code reads, orders.filter(o =&#62; &#34;high&#34; === o.priority || &#34;rush&#34; === o.priority); The refactored code reads, orders.filter(o =&#62; o.priority.higherThan(new Priority(&#34;normal&#34;)))</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec5">Motivation</h4>
+<p class="noindent">Often, in early stages of development you make decisions about representing simple facts as simple data items, such as numbers or strings. As development proceeds, those simple items aren&#8217;t so simple anymore. A telephone number may be represented as a string for a while, but later it will need special behavior for formatting, extracting the area code, and the like. This kind of logic can quickly end up being duplicated around the code base, increasing the effort whenever it needs to be used.</p>
+<p class="indent">As soon as I realize I want to do something other than simple printing, I like to create a new class for that bit of data. At first, such a class does little more than wrap the primitive&#8212;but once I have that class, I have a place to put behavior specific to its needs. These little values start very humble, but once nurtured they can grow into useful tools. They may not look like much, but I find their effects on a code base can be surprisingly large. Indeed many experienced developers consider this to be one of the most valuable refactorings in the toolkit&#8212;even though it often seems counterintuitive to a new programmer.</p>
+<h4 class="h4" id="ch07lev2sec6"><span epub:type="pagebreak" id="page_175"/>Mechanics</h4>
+<ul class="square">
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> if it isn&#8217;t already.</p></li>
+<li><p>Create a simple value class for the data value. It should take the existing value in its constructor and provide a getter for that value.</p></li>
+<li><p>Run static checks.</p></li>
+<li><p>Change the setter to create a new instance of the value class and store that in the field, changing the type of the field if present.</p></li>
+<li><p>Change the getter to return the result of invoking the getter of the new class.</p></li>
+<li><p>Test.</p></li>
+<li><p>Consider using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Rename Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> on the original accessors to better reflect what they do.</p></li>
+<li><p>Consider clarifying the role of the new object as a value or reference object by applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a> (<a class="pd_maroon" href="ch09.xhtml#page_252">252</a>)</span></em> or <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec5">Change Value to Reference</a> (<a class="pd_maroon" href="ch09.xhtml#page_256">256</a>)</span></em>.</p></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec7">Example</h4>
+<p class="noindent">I begin with a simple order class that reads its data from a simple record structure. One of its properties is a priority, which it reads as a simple string.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0175_01a" href="ch07_images.xhtml#p0175_01">Click here to view code image</a></p>
+<pre class="pre">constructor(data) {
+  this.priority = data.priority;
+  // more initialization</pre>
+<p class="indent">Some client codes uses it like this:</p>
+<p class="pro-title"><em>client&#8230;</em></p>
+<p class="codelink"><a id="p0175_02a" href="ch07_images.xhtml#p0175_02">Click here to view code image</a></p>
+<pre class="pre">highPriorityCount = orders.filter(o =&gt; "high" === o.priority
+                                    || "rush" === o.priority)
+                          .length;</pre>
+<p class="indent">Whenever I&#8217;m fiddling with a data value, the first thing I do is use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> on it.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0175_03a" href="ch07_images.xhtml#p0175_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get priority()        {return this._priority;}</span>
+<span class="pd_maroon1">set priority(aString) {this._priority = aString;}</span></pre>
+<p class="indent">The constructor line that initializes the priority will now use the setter I define here.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_176"/>This self-encapsulates the field so I can preserve its current use while I manipulate the data itself.</p>
+<p class="indent">I create a simple value class for the priority. It has a constructor for the value and a conversion function to return a string.</p>
+<p class="codelink"><a id="p0176_01a" href="ch07_images.xhtml#p0176_01">Click here to view code image</a></p>
+<pre class="pre">class Priority {
+  constructor(value) {this._value = value;}
+  toString() {return this._value;}
+}</pre>
+<div class="blockquote">
+<p class="noindent">I prefer using a conversion function <code>(toString)</code> rather than a getter <code>(value)</code> here. For clients of the class, asking for the string representation should feel more like a conversion than getting a property.</p>
+</div>
+<p class="indent">I then modify the accessors to use this new class.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0176_02a" href="ch07_images.xhtml#p0176_02">Click here to view code image</a></p>
+<pre class="pre">get priority()        {return this._priority<span class="pd_maroon1">.toString()</span>;}
+set priority(aString) {this._priority = <span class="pd_maroon1">new Priority</span>(aString);}</pre>
+<p class="indent">Now that I have a priority class, I find the current getter on the order to be misleading. It doesn&#8217;t return the priority&#8212;but a string that describes the priority. My immediate move is to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Rename Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em>.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0176_03a" href="ch07_images.xhtml#p0176_03">Click here to view code image</a></p>
+<pre class="pre">get priority<span class="pd_maroon1">String</span>()  {return this._priority.toString();}
+set priority(aString) {this._priority = new Priority(aString);}</pre>
+<p class="pro-title"><em>client&#8230;</em></p>
+<p class="codelink"><a id="p0176_04a" href="ch07_images.xhtml#p0176_04">Click here to view code image</a></p>
+<pre class="pre">highPriorityCount = orders.filter(o =&gt; "high" === o.priority<span class="pd_maroon1">String</span>
+                                    || "rush" === o.priority<span class="pd_maroon1">String</span>)
+                          .length;</pre>
+<p class="indent">In this case, I&#8217;m happy to retain the name of the setter. The name of the argument communicates what it expects.</p>
+<p class="indent">Now I&#8217;m done with the formal refactoring. But as I look at who uses the priority, I consider whether they should use the priority class themselves. As a result, I provide a getter on order that provides the new priority object directly.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0176_05a" href="ch07_images.xhtml#p0176_05">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get priority()        {return this._priority;}</span>
+get priorityString()  {return this._priority.toString();}
+set priority(aString) {this._priority = new Priority(aString);}</pre>
+<p class="pro-title"><em>client&#8230;</em></p>
+<p class="codelink"><a id="p0176_06a" href="ch07_images.xhtml#p0176_06">Click here to view code image</a></p>
+<pre class="pre">highPriorityCount = orders.filter(o =&gt; "high" === o.priority.toString()
+                                    || "rush" === o.priority.toString())
+                          .length;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_177"/>As the priority class becomes useful elsewhere, I would allow clients of the order to use the setter with a priority instance, which I do by adjusting the priority constructor.</p>
+<p class="pro-title"><em>class Priority&#8230;</em></p>
+<p class="codelink"><a id="p0177_01a" href="ch07_images.xhtml#p0177_01">Click here to view code image</a></p>
+<pre class="pre">constructor(value) {
+  <span class="pd_maroon1">if (value instanceof Priority) return value;</span>
+  this._value = value;
+}</pre>
+<p class="indent">The point of all this is that now, my new priority class can be useful as a place for new behavior&#8212;either new to the code or moved from elsewhere. Here&#8217;s some simple code to add validation of priority values and comparison logic:</p>
+<p class="pro-title"><em>class Priority&#8230;</em></p>
+<p class="codelink"><a id="p0177_02a" href="ch07_images.xhtml#p0177_02">Click here to view code image</a></p>
+<pre class="pre">constructor(value) {
+  if (value instanceof Priority) return value;
+  if (Priority.legalValues().includes(value))
+    this._value = value;
+  else
+    throw new Error(`&lt;${value}&gt; is invalid for Priority`);
+}
+toString() {return this._value;}
+get _index() {return Priority.legalValues().findIndex(s =&gt; s === this._value);}
+static legalValues() {return ['low', 'normal', 'high', 'rush'];}
+
+equals(other) {return this._index === other._index;}
+higherThan(other) {return this._index &gt; other._index;}
+lowerThan(other) {return this._index &lt; other._index;}</pre>
+<p class="indent">As I do this, I decide that a priority should be a value object, so I provide an equals method and ensure that it is immutable.</p>
+<p class="indent">Now I&#8217;ve added that behavior, I can make the client code more meaningful:</p>
+<p class="pro-title"><em>client&#8230;</em></p>
+<p class="codelink"><a id="p0177_03a" href="ch07_images.xhtml#p0177_03">Click here to view code image</a></p>
+<pre class="pre">highPriorityCount = orders.filter(o =&gt; o.priority.<span class="pd_maroon1">higherThan(new Priority("normal"))</span>)
+                          .length;</pre>
+<h3 class="h3" id="ch07lev1sec4"><span epub:type="pagebreak" id="page_178"/>Replace Temp with Query</h3>
+<figure class="fig-group">
+<img src="graphics/p0178_01.jpg" aria-describedby="alt_p0178_01" alt="A figure shows a simple representation and a code to replace a temporary variable with a query."/>
+<aside class="hidden" id="alt_p0178_01">
+<p>A diagrammatic representation of replacing a temporary variable with a query shows a temporary variable called later in a function at the top and the actual code reads, const basePrice = this._quantity * this._itemPrice; if (basePrice &#62; 1000) return basePrice * 0.95; else return basePrice * 0.98; The refactored code reads, get basePrice() {this._quantity * this._itemPrice;} ... if (this.basePrice &#62; 1000) return this.basePrice * 0.95; else return this.basePrice * 0.98;</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec8">Motivation</h4>
+<p class="noindent">One use of temporary variables is to capture the value of some code in order to refer to it later in a function. Using a temp allows me to refer to the value while explaining its meaning and avoiding repeating the code that calculates it. But while using a variable is handy, it can often be worthwhile to go a step further and use a function instead.</p>
+<p class="indent">If I&#8217;m working on breaking up a large function, turning variables into their own functions makes it easier to extract parts of the function, since I no longer need <span epub:type="pagebreak" id="page_179"/>to pass in variables into the extracted functions. Putting this logic into functions often also sets up a stronger boundary between the extracted logic and the original function, which helps me spot and avoid awkward dependencies and side effects.</p>
+<p class="indent">Using functions instead of variables also allows me to avoid duplicating the calculation logic in similar functions. Whenever I see variables calculated in the same way in different places, I look to turn them into a single function.</p>
+<p class="indent">This refactoring works best if I&#8217;m inside a class, since the class provides a shared context for the methods I&#8217;m extracting. Outside of a class, I&#8217;m liable to have too many parameters in a top-level function which negates much of the benefit of using a function. Nested functions can avoid this, but they limit my ability to share the logic between related functions.</p>
+<p class="indent">Only some temporary variables are suitable for Replace Temp with Query. The variable needs to be calculated once and then only be read afterwards. In the simplest case, this means the variable is assigned to once, but it&#8217;s also possible to have several assignments in a more complicated lump of code&#8212;all of which has to be extracted into the query. Furthermore, the logic used to calculate the variable must yield the same result when the variable is used later&#8212;which rules out variables used as snapshots with names like <code>oldAddress</code>.</p>
+<h4 class="h4" id="ch07lev2sec9">Mechanics</h4>
+<ul class="square">
+<li><p>Check that the variable is determined entirely before it&#8217;s used, and the code that calculates it does not yield a different value whenever it is used.</p></li>
+<li><p>If the variable isn&#8217;t read-only, and can be made read-only, do so.</p></li>
+<li><p>Test.</p></li>
+<li><p>Extract the assignment of the variable into a function.</p>
+<div class="blockquote">
+<p class="noindent">If the variable and the function cannot share a name, use a temporary name for the function.</p>
+<p class="noindent">Ensure the extracted function is free of side effects. If not, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec1">Separate Query from Modifier</a> (<a class="pd_maroon" href="ch11.xhtml#page_306">306</a>)</span></em>.</p>
+</div></li>
+<li><p>Test.</p></li>
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em> to remove the temp.</p></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec10"><span epub:type="pagebreak" id="page_180"/>Example</h4>
+<p class="noindent">Here is a simple class:</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0180_01a" href="ch07_images.xhtml#p0180_01">Click here to view code image</a></p>
+<pre class="pre">  constructor(quantity, item) {
+    this._quantity = quantity;
+    this._item = item;
+  }
+  
+  get price() {
+    var basePrice = this._quantity * this._item.price;
+    var discountFactor = 0.98;
+    if (basePrice &gt; 1000) discountFactor -= 0.03;
+    return basePrice * discountFactor;
+  }
+}</pre>
+<p class="indent">I want to replace the temps <code>basePrice</code> and <code>discountFactor</code> with methods.</p>
+<p class="indent">Starting with <code>basePrice</code>, I make it <code>const</code> and run tests. This is a good way of checking that I haven&#8217;t missed a reassignment&#8212;unlikely in such a short function but common when I&#8217;m dealing with something larger.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0180_02a" href="ch07_images.xhtml#p0180_02">Click here to view code image</a></p>
+<pre class="pre">  constructor(quantity, item) {
+    this._quantity = quantity;
+    this._item = item;
+  }
+
+  get price() {
+    <span class="pd_maroon1">const</span> basePrice = this._quantity * this._item.price;
+    var discountFactor = 0.98;
+    if (basePrice &gt; 1000) discountFactor -= 0.03;
+    return basePrice * discountFactor;
+  }
+}</pre>
+<p class="indent">I then extract the right-hand side of the assignment to a getting method.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0180_03a" href="ch07_images.xhtml#p0180_03">Click here to view code image</a></p>
+<pre class="pre">get price() {
+  const basePrice = <span class="pd_maroon1">this.basePrice;</span>
+  var discountFactor = 0.98;
+  if (basePrice &gt; 1000) discountFactor -= 0.03;
+  return basePrice * discountFactor;
+}
+
+ <span class="pd_maroon1">get basePrice() {</span>
+   return this._quantity * this._item.price;
+ }</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_181"/>I test, and apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0181_01a" href="ch07_images.xhtml#p0181_01">Click here to view code image</a></p>
+<pre class="pre">get price() {
+  <span class="strike"><span class="pd_maroon1">const basePrice = this.basePrice;</span></span>
+  var discountFactor = 0.98;
+  if (<span class="pd_maroon1">this.</span>basePrice &gt; 1000) discountFactor -= 0.03;
+  return <span class="pd_maroon1">this.</span>basePrice * discountFactor;
+}</pre>
+<p class="indent">I then repeat the steps with <code>discountFactor</code>, first using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>.</p>
+<p class="pro-title"><em>class Order&#8230;</em></p>
+<p class="codelink"><a id="p0181_02a" href="ch07_images.xhtml#p0181_02">Click here to view code image</a></p>
+<pre class="pre">get price() {
+  <span class="pd_maroon1">const</span> discountFactor = <span class="pd_maroon1">this.discountFactor;</span>
+  return this.basePrice * discountFactor;
+}
+
+ <span class="pd_maroon1">get discountFactor() {</span>
+   var discountFactor = 0.98;
+   if (this.basePrice &gt; 1000) discountFactor -= 0.03;
+   return discountFactor;
+ }</pre>
+<p class="indent">In this case I need my extracted function to contain both assignments to <code>discountFactor</code>. I can also set the original variable to be <code>const</code>.</p>
+<p class="indent">Then, I inline:</p>
+<p class="codelink"><a id="p0181_03a" href="ch07_images.xhtml#p0181_03">Click here to view code image</a></p>
+<pre class="pre">get price() {
+  return this.basePrice * <span class="pd_maroon1">this.discountFactor</span>;
+}</pre>
+<h3 class="h3" id="ch07lev1sec5"><span epub:type="pagebreak" id="page_182"/>Extract Class</h3>
+<p class="noindent">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec6">Inline Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_186">186</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0182_01.jpg" aria-describedby="alt_p0182_01" alt="A figure shows a simple representation and a code to extract a class."/>
+<aside class="hidden" id="alt_p0182_01">
+<p>A diagrammatic representation of extract class shows the relevant methods being moved from the old to the new class at the top and the actual code reads, class Person { get officeAreaCode() {return this._officeAreaCode;} get officeNumber() {return this._officeNumber;} The refactored code reads, class Person { get officeAreaCode() {return this._telephoneNumber.areaCode;} get officeNumber() {return this._telephoneNumber.number;} } class TelephoneNumber { get areaCode() {return this._areaCode;} get number() {return this._number;} }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec11">Motivation</h4>
+<p class="noindent">You&#8217;ve probably read guidelines that a class should be a crisp abstraction, only handle a few clear responsibilities, and so on. In practice, classes grow. You add some operations here, a bit of data there. You add a responsibility to a class feeling that it&#8217;s not worth a separate class&#8212;but as that responsibility grows and breeds, the class becomes too complicated. Soon, your class is as crisp as a microwaved duck.</p>
+<p class="indent">Imagine a class with many methods and quite a lot of data. A class that is too big to understand easily. You need to consider where it can be split&#8212;and split it. A good sign is when a subset of the data and a subset of the methods seem to go together. Other good signs are subsets of data that usually change together or are particularly dependent on each other. A useful test is to ask yourself what would happen if you remove a piece of data or a method. What other fields and methods would become nonsense?</p>
+<p class="indent">One sign that often crops up later in development is the way the class is sub-typed. You may find that subtyping affects only a few features or that some features need to be subtyped one way and other features a different way.</p>
+<h4 class="h4" id="ch07lev2sec12"><span epub:type="pagebreak" id="page_183"/>Mechanics</h4>
+<ul class="square">
+<li><p>Decide how to split the responsibilities of the class.</p></li>
+<li><p>Create a new child class to express the split-off responsibilities.</p>
+<div class="blockquote">
+<p class="noindent">If the responsibilities of the original parent class no longer match its name, rename the parent.</p>
+</div></li>
+<li><p>Create an instance of the child class when constructing the parent and add a link from parent to child.</p></li>
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec2">Move Field</a> (<a class="pd_maroon" href="ch08.xhtml#page_207">207</a>)</span></em> on each field you wish to move. Test after each move.</p></li>
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> to move methods to the new child. Start with lower-level methods (those being called rather than calling). Test after each move.</p></li>
+<li><p>Review the interfaces of both classes, remove unneeded methods, change names to better fit the new circumstances.</p></li>
+<li><p>Decide whether to expose the new child. If so, consider applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a> (<a class="pd_maroon" href="ch09.xhtml#page_252">252</a>)</span></em> to the child class.</p></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec13">Example</h4>
+<p class="noindent">I start with a simple person class:</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0183_01a" href="ch07_images.xhtml#p0183_01">Click here to view code image</a></p>
+<pre class="pre">get name()    {return this._name;}
+set name(arg) {this._name = arg;}
+get telephoneNumber() {return `(${this.officeAreaCode}) ${this.officeNumber}`;}
+get officeAreaCode()    {return this._officeAreaCode;}
+set officeAreaCode(arg) {this._officeAreaCode = arg;}
+get officeNumber() {return this._officeNumber;}
+set officeNumber(arg) {this._officeNumber = arg;}</pre>
+<p class="indent">Here. I can separate the telephone number behavior into its own class. I start by defining an empty telephone number class:</p>
+<pre class="pre">class TelephoneNumber {
+}</pre>
+<p class="indent">That was easy! Next, I create an instance of telephone number when constructing the person:</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0183_02a" href="ch07_images.xhtml#p0183_02">Click here to view code image</a></p>
+<pre class="pre">constructor() {
+  <span class="pd_maroon1">this._telephoneNumber = new TelephoneNumber();</span>
+}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_184"/><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0184_01a" href="ch07_images.xhtml#p0184_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get officeAreaCode()    {return this._officeAreaCode;}</span>
+<span class="pd_maroon1">set officeAreaCode(arg) {this._officeAreaCode = arg;}</span></pre>
+<p class="indent">I then use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec2">Move Field</a> (<a class="pd_maroon" href="ch08.xhtml#page_207">207</a>)</span></em> on one of the fields.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0184_02a" href="ch07_images.xhtml#p0184_02">Click here to view code image</a></p>
+<pre class="pre">get officeAreaCode()    {return this._<span class="pd_maroon1">telephoneNumber</span>.officeAreaCode;}
+set officeAreaCode(arg) {this._<span class="pd_maroon1">telephoneNumber</span>.officeAreaCode = arg;}</pre>
+<p class="indent">I test, then move the next field.</p>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0184_03a" href="ch07_images.xhtml#p0184_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get officeNumber() {return this._officeNumber;}</span>
+<span class="pd_maroon1">set officeNumber(arg) {this._officeNumber = arg;}</span></pre>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0184_04a" href="ch07_images.xhtml#p0184_04">Click here to view code image</a></p>
+<pre class="pre">get officeNumber() {return this._<span class="pd_maroon1">telephoneNumber</span>.officeNumber;}
+set officeNumber(arg) {this._<span class="pd_maroon1">telephoneNumber</span>.officeNumber = arg;}</pre>
+<p class="indent">Test again, then move the telephone number method.</p>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0184_05a" href="ch07_images.xhtml#p0184_05">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get telephoneNumber() {return `(${this.officeAreaCode}) ${this.officeNumber}`;}</span></pre>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0184_06a" href="ch07_images.xhtml#p0184_06">Click here to view code image</a></p>
+<pre class="pre">get telephoneNumber() {return <span class="pd_maroon1">this._telephoneNumber.telephoneNumber;</span>}</pre>
+<p class="indent">Now I should tidy things up. Having &#8220;office&#8221; as part of the telephone number code makes no sense, so I rename them.</p>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0184_07a" href="ch07_images.xhtml#p0184_07">Click here to view code image</a></p>
+<pre class="pre">get <span class="pd_maroon1">areaCode</span>()    {return this.<span class="pd_maroon1">_areaCode</span>;}
+set <span class="pd_maroon1">areaCode</span>(arg) {this.<span class="pd_maroon1">_areaCode</span> = arg;}
+
+get <span class="pd_maroon1">number</span>()    {return this.<span class="pd_maroon1">_number</span>;}
+set <span class="pd_maroon1">number</span>(arg) {this.<span class="pd_maroon1">_number</span> = arg;}</pre>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0184_08a" href="ch07_images.xhtml#p0184_08">Click here to view code image</a></p>
+<pre class="pre">get officeAreaCode()    {return this._telephoneNumber.<span class="pd_maroon1">areaCode</span>;}
+set officeAreaCode(arg) {this._telephoneNumber.<span class="pd_maroon1">areaCode</span> = arg;}
+get officeNumber()    {return this._telephoneNumber.<span class="pd_maroon1">number</span>;}
+set officeNumber(arg) {this._telephoneNumber.<span class="pd_maroon1">number</span> = arg;}</pre>
+<p class="indent">The telephone number method on the telephone number class also doesn&#8217;t make much sense, so I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Rename Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em>.</p>
+<p class="pro-title"><em>class TelephoneNumber&#8230;</em></p>
+<p class="codelink"><a id="p0184_09a" href="ch07_images.xhtml#p0184_09">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">toString()</span> {return `(${this.areaCode}) ${this.number}`;}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_185"/><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0185_01a" href="ch07_images.xhtml#p0185_01">Click here to view code image</a></p>
+<pre class="pre">get telephoneNumber() {return this._telephoneNumber.<span class="pd_maroon1">toString()</span>;}</pre>
+<p class="indent">Telephone numbers are generally useful, so I think I&#8217;ll expose the new object to clients. I can replace those &#8220;office&#8221; methods with accessors for the telephone number. But this way, the telephone number will work better as a Value Object [<a href="biblo.xhtml#bib39">mf-vo</a>], so I would apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec4">Change Reference to Value</a> (<a class="pd_maroon" href="ch09.xhtml#page_252">252</a>)</span></em> first (that refactoring&#8217;s example shows how I&#8217;d do that for the telephone number).</p>
+<h3 class="h3" id="ch07lev1sec6"><span epub:type="pagebreak" id="page_186"/>Inline Class</h3>
+<p class="noindent">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec5">Extract Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_182">182</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0186_01.jpg" aria-describedby="alt_p0186_01" alt="A figure shows a simple representation and a code pertaining to an inline class."/>
+<aside class="hidden" id="alt_p0186_01">
+<p>A diagrammatic representation of an inline class at the top shows the features moved from one to another class. The actual code reads, class Person { get officeAreaCode() {return this._telephoneNumber.areaCode;} get officeNumber() {return this._telephoneNumber.number;} } class TelephoneNumber { get areaCode() {return this._areaCode;} get number() {return this._number;} } The refactored code reads, class Person { get officeAreaCode() {return this._officeAreaCode;} get officeNumber() {return this._officeNumber;}</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec14">Motivation</h4>
+<p class="noindent">Inline Class is the inverse of <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec5">Extract Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_182">182</a>)</span></em>. I use Inline Class if a class is no longer pulling its weight and shouldn&#8217;t be around any more. Often, this is the result of refactoring that moves other responsibilities out of the class so there is little left. At that point, I fold the class into another&#8212;one that makes most use of the runt class.</p>
+<p class="indent">Another reason to use Inline Class is if I have two classes that I want to refactor into a pair of classes with a different allocation of features. I may find it easier to first use Inline Class to combine them into a single class, then <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec5">Extract Class</a> (<a class="pd_maroon" href="ch07.xhtml#page_182">182</a>)</span></em> to make the new separation. This is a general approach when reorganizing things: Sometimes, it&#8217;s easier to move elements one at a time from one context to another, but sometimes it&#8217;s better to use an inline refactoring to collapse the contexts together, then use an extract refactoring to separate them into different elements.</p>
+<h4 class="h4" id="ch07lev2sec15"><span epub:type="pagebreak" id="page_187"/>Mechanics</h4>
+<ul class="square">
+<li><p>In the target class, create functions for all the public functions of the source class. These functions should just delegate to the source class.</p></li>
+<li><p>Change all references to source class methods so they use the target class&#8217;s delegators instead. Test after each change.</p></li>
+<li><p>Move all the functions and data from the source class into the target, testing after each move, until the source class is empty.</p></li>
+<li><p>Delete the source class and hold a short, simple funeral service.</p></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec16">Example</h4>
+<p class="noindent">Here&#8217;s a class that holds a couple of pieces of tracking information for a shipment.</p>
+<p class="codelink"><a id="p0187_01a" href="ch07_images.xhtml#p0187_01">Click here to view code image</a></p>
+<pre class="pre">class TrackingInformation {
+  get shippingCompany()    {return this._shippingCompany;}
+  set shippingCompany(arg) {this._shippingCompany = arg;}
+  get trackingNumber()    {return this._trackingNumber;}
+  set trackingNumber(arg) {this._trackingNumber = arg;}
+  get display()            {
+    return `${this.shippingCompany}: ${this.trackingNumber}`;
+  }
+}</pre>
+<p class="indent">It&#8217;s used as part of a shipment class.</p>
+<p class="pro-title"><em>class Shipment&#8230;</em></p>
+<p class="codelink"><a id="p0187_02a" href="ch07_images.xhtml#p0187_02">Click here to view code image</a></p>
+<pre class="pre">get trackingInfo() {
+  return this._trackingInformation.display;
+}
+get trackingInformation()    {return this._trackingInformation;}
+set trackingInformation(aTrackingInformation) {
+  this._trackingInformation = aTrackingInformation;
+}</pre>
+<p class="indent">While this class may have been worthwhile in the past, I no longer feel it&#8217;s pulling its weight, so I want to inline it into <code>Shipment</code>.</p>
+<p class="indent">I start by looking at places that are invoking the methods of <code>TrackingInformation</code>.</p>
+<p class="pro-title"><em>caller&#8230;</em></p>
+<p class="codelink"><a id="p0187_03a" href="ch07_images.xhtml#p0187_03">Click here to view code image</a></p>
+<pre class="pre">aShipment.trackingInformation.shippingCompany = request.vendor;</pre>
+<p class="indent">I&#8217;m going to move all such functions to <code>Shipment</code>, but I do it slightly differently to how I usually do <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em>. In this case, I start by putting a delegating method into the shipment, and adjusting the client to call that.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_188"/><em>class Shipment&#8230;</em></p>
+<p class="codelink"><a id="p0188_01a" href="ch07_images.xhtml#p0188_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">set shippingCompany(arg) {this._trackingInformation.shippingCompany = arg;}</span></pre>
+<p class="pro-title"><em>caller&#8230;</em></p>
+<p class="codelink"><a id="p0188_02a" href="ch07_images.xhtml#p0188_02">Click here to view code image</a></p>
+<pre class="pre">aShipment.<span class="strike"><span class="pd_maroon1">trackingInformation.</span></span>shippingCompany = request.vendor;</pre>
+<p class="indent">I do this for all the elements of tracking information that are used by clients. Once I&#8217;ve done that, I can move all the elements of the tracking information over into the shipment class.</p>
+<p class="indent">I start by applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> to the <code>display</code> method.</p>
+<p class="pro-title"><em>class Shipment&#8230;</em></p>
+<p class="codelink"><a id="p0188_03a" href="ch07_images.xhtml#p0188_03">Click here to view code image</a></p>
+<pre class="pre">get trackingInfo() {
+  return <span class="pd_maroon1">`${this.shippingCompany}: ${this.trackingNumber}`;</span>
+}</pre>
+<p class="indent">I move the shipping company field.</p>
+<p class="codelink"><a id="p0188_04a" href="ch07_images.xhtml#p0188_04">Click here to view code image</a></p>
+<pre class="pre">get shippingCompany()    {return this.<span class="strike"><span class="pd_maroon1">_trackingInformation.</span></span>_shippingCompany;}
+set shippingCompany(arg) {this.<span class="strike"><span class="pd_maroon1">_trackingInformation.</span></span>_shippingCompany = arg;}</pre>
+<p class="indent">I don&#8217;t use the full mechanics for <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec2">Move Field</a> (<a class="pd_maroon" href="ch08.xhtml#page_207">207</a>)</span></em> since in this case I only reference <code>shippingCompany</code> from <code>Shipment</code> which is the target of the move. I thus don&#8217;t need the steps that put a reference from the source to the target.</p>
+<p class="indent">I continue until everything is moved over. Once I&#8217;ve done that, I can delete the tracking information class.</p>
+<p class="pro-title"><em>class Shipment&#8230;</em></p>
+<p class="codelink"><a id="p0188_05a" href="ch07_images.xhtml#p0188_05">Click here to view code image</a></p>
+<pre class="pre">get trackingInfo() {
+  return `${this.shippingCompany}: ${this.trackingNumber}`;
+}
+get shippingCompany()    {return this._shippingCompany;}
+set shippingCompany(arg) {this._shippingCompany = arg;}
+get trackingNumber()    {return this._trackingNumber;}
+set trackingNumber(arg) {this._trackingNumber = arg;}</pre>
+<h3 class="h3" id="ch07lev1sec7"><span epub:type="pagebreak" id="page_189"/>Hide Delegate</h3>
+<p class="noindent">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec8">Remove Middle Man</a> (<a class="pd_maroon" href="ch07.xhtml#page_192">192</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0189_01.jpg" aria-describedby="alt_p0189_01" alt="A figure shows a simple representation and a code to hide a delegate."/>
+<aside class="hidden" id="alt_p0189_01">
+<p>A diagrammatic representation at the top shows that the client calls a delegate class of an object and its methods, on the server that is hiding the delegate. The actual code reads, manager = aPerson.department.manager; The refactored code reads, manager = aPerson.manager; class Person { get manager() {return this.department.manager;}</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec17">Motivation</h4>
+<p class="noindent">One of the keys&#8212;if not <em>the</em> key&#8212;to good modular design is encapsulation. Encapsulation means that modules need to know less about other parts of the system. Then, when things change, fewer modules need to be told about the change&#8212;which makes the change easier to make.</p>
+<p class="indent">When we are first taught about object orientation, we are told that encapsulation means hiding our fields. As we become more sophisticated, we realize there is more that we can encapsulate.</p>
+<p class="indent">If I have some client code that calls a method defined on an object in a field of a server object, the client needs to know about this delegate object. If the delegate changes its interface, changes propagate to all the clients of the server that use the delegate. I can remove this dependency by placing a simple delegating method on the server that hides the delegate. Then any changes I make to the delegate propagate only to the server and not to the clients.</p>
+<figure class="fig-group">
+<img src="graphics/p0190_01.jpg" aria-describedby="alt_p0190_01" alt="A UML diagram to create a delegating method on the server is shown."/>
+<aside class="hidden" id="alt_p0190_01">
+<p>The class client is dependent over the class server that holds the method labeled &#145;aMethod,&#146; which in turn is associated with the class delegate that holds the &#145;amethod&#146;. The constraint delegate.aMethod() is placed in a note symbol and attached to &#145;aMethod&#146; of the server by a dashed line.</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec18"><span epub:type="pagebreak" id="page_190"/>Mechanics</h4>
+<ul class="square">
+<li><p>For each method on the delegate, create a simple delegating method on the server.</p></li>
+<li><p>Adjust the client to call the server. Test after each change.</p></li>
+<li><p>If no client needs to access the delegate anymore, remove the server&#8217;s accessor for the delegate.</p></li>
+<li><p>Test.</p></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec19">Example</h4>
+<p class="noindent">I start with a person and a department.</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0190_02a" href="ch07_images.xhtml#p0190_02">Click here to view code image</a></p>
+<pre class="pre">constructor(name) {
+  this._name = name;
+}
+get name() {return this._name;}
+get department()    {return this._department;}
+set department(arg) {this._department = arg;}</pre>
+<p class="pro-title"><em>class Department&#8230;</em></p>
+<p class="codelink"><a id="p0190_03a" href="ch07_images.xhtml#p0190_03">Click here to view code image</a></p>
+<pre class="pre">get chargeCode()    {return this._chargeCode;}
+set chargeCode(arg) {this._chargeCode = arg;}
+get manager()    {return this._manager;}
+set manager(arg) {this._manager = arg;}</pre>
+<p class="indent">Some client code wants to know the manager of a person. To do this, it needs to get the department first.</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<p class="codelink"><a id="p0190_04a" href="ch07_images.xhtml#p0190_04">Click here to view code image</a></p>
+<pre class="pre">manager = aPerson.department.manager;</pre>
+<p class="indent">This reveals to the client how the department class works and that the department is responsible for tracking the manager. I can reduce this coupling by <span epub:type="pagebreak" id="page_191"/>hiding the department class from the client. I do this by creating a simple delegating method on person:</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0191_01a" href="ch07_images.xhtml#p0191_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get manager() {return this._department.manager;}</span></pre>
+<p class="indent">I now need to change all clients of person to use this new method:</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<p class="codelink"><a id="p0191_02a" href="ch07_images.xhtml#p0191_02">Click here to view code image</a></p>
+<pre class="pre">manager = aPerson<span class="strike"><span class="pd_maroon1">.department</span></span>.manager;</pre>
+<p class="indent">Once I&#8217;ve made the change for all methods of department and for all the clients of person, I can remove the <code>department</code> accessor on person.</p>
+<h3 class="h3" id="ch07lev1sec8"><span epub:type="pagebreak" id="page_192"/>Remove Middle Man</h3>
+<p class="noindent">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec7">Hide Delegate</a> (<a class="pd_maroon" href="ch07.xhtml#page_189">189</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0192_01.jpg" aria-describedby="alt_p0192_01" alt="A figure shows a simple representation and a code to remove the middleman."/>
+<aside class="hidden" id="alt_p0192_01">
+<p>A diagrammatic representation of the process to remove the middleman, shows the client calling the delegate directly at the top, and the actual code reads, manager = aPerson.manager; class Person { get manager() {return this.department.manager;} The refactored code reads, manager = aPerson.department.manager;</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec20">Motivation</h4>
+<p class="noindent">In the motivation for <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec7">Hide Delegate</a> (<a class="pd_maroon" href="ch07.xhtml#page_189">189</a>)</span></em>, I talked about the advantages of encapsulating the use of a delegated object. There is a price for this. Every time the client wants to use a new feature of the delegate, I have to add a simple delegating method to the server. After adding features for a while, I get irritated with all this forwarding. The server class is just a middle man (<em><span class="pd_maroon"><a class="pd_maroon" href="ch03.xhtml#ch03lev1sec18">Middle Man</a> (<a class="pd_maroon" href="ch03.xhtml#page_81">81</a>)</span></em>), and perhaps it&#8217;s time for the client to call the delegate directly. (This smell often pops up when people get overenthusiastic about following the Law of Demeter, which I&#8217;d like a lot more if it were called the Occasionally Useful Suggestion of Demeter.)</p>
+<p class="indent">It&#8217;s hard to figure out what the right amount of hiding is. Fortunately, with <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec7">Hide Delegate</a> (<a class="pd_maroon" href="ch07.xhtml#page_189">189</a>)</span></em> and Remove Middle Man, it doesn&#8217;t matter so much. I can adjust my code as time goes on. As the system changes, the basis for how much I hide also changes. A good encapsulation six months ago may be awkward now. Refactoring means I never have to say I&#8217;m sorry&#8212;I just fix it.</p>
+<h4 class="h4" id="ch07lev2sec21"><span epub:type="pagebreak" id="page_193"/>Mechanics</h4>
+<ul class="square">
+<li><p>Create a getter for the delegate.</p></li>
+<li><p>For each client use of a delegating method, replace the call to the delegating method by chaining through the accessor. Test after each replacement.</p>
+<div class="blockquote">
+<p class="noindent">If all calls to a delegating method are replaced, you can delete the delegating method.</p>
+<p class="noindent">With automated refactorings, you can use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> on the delegate field and then <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> on all the methods that use it.</p>
+</div></li>
+</ul>
+<h4 class="h4" id="ch07lev2sec22">Example</h4>
+<p class="noindent">I begin with a person class that uses a linked department object to determine a manager. (If you&#8217;re reading this book sequentially, this example may look eerily familiar.)</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<pre class="pre">manager = aPerson.manager;</pre>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0193_01a" href="ch07_images.xhtml#p0193_01">Click here to view code image</a></p>
+<pre class="pre">get manager() {return this._department.manager;}</pre>
+<p class="pro-title"><em>class Department&#8230;</em></p>
+<p class="codelink"><a id="p0193_02a" href="ch07_images.xhtml#p0193_02">Click here to view code image</a></p>
+<pre class="pre">get manager()   {return this._manager;}</pre>
+<p class="indent">This is simple to use and encapsulates the department. However, if lots of methods are doing this, I end up with too many of these simple delegations on the person. That&#8217;s when it is good to remove the middle man. First, I make an accessor for the delegate:</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0193_03a" href="ch07_images.xhtml#p0193_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get department()   {return this._department;}</span></pre>
+<p class="indent">Now I go to each client at a time and modify them to use the department directly.</p>
+<p class="pro-title"><em>client code&#8230;</em></p>
+<p class="codelink"><a id="p0193_04a" href="ch07_images.xhtml#p0193_04">Click here to view code image</a></p>
+<pre class="pre">manager = aPerson<span class="pd_maroon1">.department</span>.manager;</pre>
+<p class="indent">Once I&#8217;ve done this with all the clients, I can remove the manager method from <code>Person</code>. I can repeat this process for any other simple delegations on <code>Person</code>.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_194"/>I can do a mixture here. Some delegations may be so common that I&#8217;d like to keep them to make client code easier to work with. There is no absolute reason why I should either hide a delegate or remove a middle man&#8212;particular circumstances suggest which approach to take, and reasonable people can differ on what works best.</p>
+<p class="indent">If I have automated refactorings, then there&#8217;s a useful variation on these steps. First, I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em> on <code>department</code>. This changes the manager getter to use the public department getter:</p>
+<p class="pro-title"><em>class Person&#8230;</em></p>
+<p class="codelink"><a id="p0194_01a" href="ch07_images.xhtml#p0194_01">Click here to view code image</a></p>
+<pre class="pre">get manager() {return this.department.manager;}</pre>
+<div class="blockquote">
+<p class="noindent"><span class="pd_brown"><em>The change is rather too subtle in JavaScript, but by removing the underscore from</em> <code>department</code> <em>I&#8217;m using the new getter rather than accessing the field directly.</em></span></p>
+</div>
+<p class="indent">Then I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> on the manager method to replace all the callers at once.</p>
+<h3 class="h3" id="ch07lev1sec9"><span epub:type="pagebreak" id="page_195"/>Substitute Algorithm</h3>
+<figure class="fig-group">
+<img src="graphics/p0195_01.jpg" aria-describedby="alt_p0195_01" alt="A figure shows a simple representation and a code for the substitute algorithm."/>
+<aside class="hidden" id="alt_p0195_01">
+<p>A diagrammatic representation of the substitute algorithm at the top shows the body of the method replaced with a new algorithm. The actual code reads, function foundPerson(people) { for(let i = 0; i &#60; people.length; i++) { if (people[i] === &#34;Don&#34;) { return &#34;Don&#34;; } if (people[i] === &#34;John&#34;) { return &#34;John&#34;; } if (people[i] === &#34;Kent&#34;) { return &#34;Kent&#34;; } } return &#34;&#34;; } The refactored code reads, function foundPerson(people) { const candidates = [&#34;Don&#34;, &#34;John&#34;, &#34;Kent&#34;]; return people.find(p =&#62; candidates.includes(p)) || &#39;&#39;; }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch07lev2sec23">Motivation</h4>
+<p class="noindent">I&#8217;ve never tried to skin a cat. I&#8217;m told there are several ways to do it. I&#8217;m sure some are easier than others. So it is with algorithms. If I find a clearer way to do something, I replace the complicated way with the clearer way. Refactoring can break down something complex into simpler pieces, but sometimes I just reach the point at which I have to remove the whole algorithm and replace it with something simpler. This occurs as I learn more about the problem and realize that there&#8217;s an easier way to do it. It also happens if I start using a library that supplies features that duplicate my code.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_196"/>Sometimes, when I want to change the algorithm to work slightly differently, it&#8217;s easier to start by replacing it with something that would make my change more straightforward to make.</p>
+<p class="indent">When I have to take this step, I have to be sure I&#8217;ve decomposed the method as much as I can. Replacing a large, complex algorithm is very difficult; only by making it simple can I make the substitution tractable.</p>
+<h4 class="h4" id="ch07lev2sec24">Mechanics</h4>
+<ul class="square">
+<li><p>Arrange the code to be replaced so that it fills a complete function.</p></li>
+<li><p>Prepare tests using this function only, to capture its behavior.</p></li>
+<li><p>Prepare your alternative algorithm.</p></li>
+<li><p>Run static checks.</p></li>
+<li><p>Run tests to compare the output of the old algorithm to the new one. If they are the same, you&#8217;re done. Otherwise, use the old algorithm for comparison in testing and debugging.</p></li>
+</ul>
+</section>
+</body>
+</html>

@@ -81,16 +81,16 @@ def registration_form():
 @app.route("/data/<UUID>/<nav>", methods=['GET', 'POST'])
 def read_book(UUID: str, nav=None):
     book = books[UUID]
-    if nav == 'next' and book.book_index_number < len(book.href):
-        book.book_index_number += 1
-        return render_template(book.href[book.book_index_number])
-    elif nav == 'session':
-        return render_template(book.href[book.book_index_number])
-    elif nav == 'load':
-        return render_template('/templates/reader.html', UUID=UUID, book=book)
-    else:
-        return render_template(book.href[book.book_index_number])
-    
+    # if nav == 'next' and book.book_index_number < len(book.href):
+    #     book.book_index_number += 1
+    #     return render_template(book.href[book.book_index_number])
+    # elif nav == 'session':
+    #     return render_template(book.href[book.book_index_number])
+    # elif nav == 'load':
+        # return render_template('/templates/reader.html', UUID=UUID, book=book)
+    # else:
+    #     return render_template(book.href[book.book_index_number])
+    return render_template('/templates/reader.html', UUID=UUID, book=book)
 
 
 
@@ -168,7 +168,7 @@ def upload():
             book_instance_id = str(uuid.uuid4())
             extract_book(uploaded_file, book_instance_id)
             filename = os.path.splitext(uploaded_file.filename)[0]
-            book = Textbook(filename)
+            book = Textbook(book_instance_id)
             book_manager.add_book(book)
             flash('success', f'{book.title} uploaded successfully!')
             return redirect(url_for('library'))

@@ -1,0 +1,1372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xml:lang="en-us" lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis">
+<head>
+<title>Refactoring: Improving the Design of Existing Code</title>
+<link rel="stylesheet" type="text/css" href="9780134757704.css"/>
+</head>
+<body>
+<section epub:type="bodymatter">
+<h2 class="h2" id="ch06"><span epub:type="pagebreak" id="page_105"/>Chapter 6<br/>A First Set of Refactorings</h2>
+<p class="noindent">I&#8217;m starting the catalog with a set of refactorings that I consider the most useful to learn first.</p>
+<p class="indent">Probably the most common refactoring I do is extracting code into a function (<em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>) or a variable (<em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec3">Extract Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_119">119</a>)</span></em>). Since refactoring is all about change, it&#8217;s no surprise that I also frequently use the inverses of those two (<em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> and <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>).</p>
+<p class="indent">Extraction is all about giving names, and I often need to change the names as I learn. <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> changes names of functions; I also use that refactoring to add or remove a function&#8217;s arguments. For variables, I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec7">Rename Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_137">137</a>)</span></em>, which relies on <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em>. When changing function arguments, I often find it useful to combine a common clump of arguments into a single object with <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec8">Introduce Parameter Object</a> (<a class="pd_maroon" href="ch06.xhtml#page_140">140</a>)</span></em>.</p>
+<p class="indent">Forming and naming functions are essential low-level refactorings&#8212;but, once created, it&#8217;s necessary to group functions into higher-level modules. I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec9">Combine Functions into Class</a> (<a class="pd_maroon" href="ch06.xhtml#page_144">144</a>)</span></em> to group functions, together with the data they operate on, into a class. Another path I take is to combine them into a transform (<em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec10">Combine Functions into Transform</a> (<a class="pd_maroon" href="ch06.xhtml#page_149">149</a>)</span></em>), which is particularly handy with read-only data. At a step further in scale, I can often form these modules into distinct processing phases using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec11">Split Phase</a> (<a class="pd_maroon" href="ch06.xhtml#page_154">154</a>)</span></em>.</p>
+<h3 class="h3" id="ch06lev1sec1"><span epub:type="pagebreak" id="page_106"/>Extract Function</h3>
+<p class="noindent">formerly: <em>Extract Method</em></p>
+<p class="noindentz">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0106_01.jpg" aria-describedby="alt_p0106_01" alt="A figure shows a representation and a code of an extract function."/>
+<aside class="hidden" id="alt_p0106_01">
+<p>The diagrammatic representation of extract function shows a few lines of code, where the lines at the center are highlighted and point to an extract method. The actual code reads, function printOwing (invoice) { printBanner(); let outstanding = calculateOutstanding(); //print details console.log(&#39;name: ${invoice.customer}&#39;); console.log(&#39;amount: ${outstanding}&#39;); } The code after refactoring reads, function printOwing(invoice) { printBanner(); let outstanding = calculateOutstanding(); printDetails(outstanding); function printDetails(outstanding) { console.log(&#39;name: ${invoice.customer}&#39;); console.log(&#39;amount: ${outstanding}&#39;); } }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec1">Motivation</h4>
+<p class="noindent">Extract Function is one of the most common refactorings I do. (Here, I use the term &#8220;function&#8221; but the same is true for a method in an object-oriented language, or any kind of procedure or subroutine.) I look at a fragment of code, understand what it is doing, then extract it into its own function named after its purpose.</p>
+<p class="indent">During my career, I&#8217;ve heard many arguments about when to enclose code in its own function. Some of these guidelines were based on length: Functions should be no larger than fit on a screen. Some were based on reuse: Any code <span epub:type="pagebreak" id="page_107"/>used more than once should be put in its own function, but code only used once should be left inline. The argument that makes most sense to me, however, is the separation between intention and implementation. If you have to spend effort looking at a fragment of code and figuring out <em>what</em> it&#8217;s doing, then you should extract it into a function and name the function after the &#8220;what.&#8221; Then, when you read it again, the purpose of the function leaps right out at you, and most of the time you won&#8217;t need to care about how the function fulfills its purpose (which is the body of the function).</p>
+<p class="indent">Once I accepted this principle, I developed a habit of writing very small functions&#8212;typically, only a few lines long. To me, any function with more than half-a-dozen lines of code starts to smell, and it&#8217;s not unusual for me to have functions that are a single line of code. The fact that size isn&#8217;t important was brought home to me by an example that Kent Beck showed me from the original Smalltalk system. Smalltalk in those days ran on black-and-white systems. If you wanted to highlight some text or graphics, you would reverse the video. Smalltalk&#8217;s graphics class had a method for this called <code>highlight</code>, whose implementation was just a call to the method <code>reverse</code>. The name of the method was longer than its implementation&#8212;but that didn&#8217;t matter because there was a big distance between the intention of the code and its implementation.</p>
+<p class="indent">Some people are concerned about short functions because they worry about the performance cost of a function call. When I was young, that was occasionally a factor, but that&#8217;s very rare now. Optimizing compilers often work better with shorter functions which can be cached more easily. As always, follow the general guidelines on performance optimization.</p>
+<p class="indent">Small functions like this only work if the names are good, so you need to pay good attention to naming. This takes practice&#8212;but once you get good at it, this approach can make code remarkably self-documenting.</p>
+<p class="indent">Often, I see fragments of code in a larger function that start with a comment to say what they do. The comment is often a good hint for the name of the function when I extract that fragment.</p>
+<h4 class="h4" id="ch06lev2sec2">Mechanics</h4>
+<ul class="square">
+<li><p>Create a new function, and name it after the intent of the function (name it by what it does, not by how it does it).</p>
+<div class="blockquote">
+<p class="noindent">If the code I want to extract is very simple, such as a single function call, I still extract it if the name of the new function will reveal the intent of the code in a better way. If I can&#8217;t come up with a more meaningful name, that&#8217;s a sign that I shouldn&#8217;t extract the code. However, I don&#8217;t have to come up with the best name right away; sometimes a good name only appears as I work with the extraction. It&#8217;s OK to extract a function, try to work with it, realize it isn&#8217;t helping, and then inline it back again. As long as I&#8217;ve learned something, my time wasn&#8217;t wasted.</p>
+<p class="noindent"><span epub:type="pagebreak" id="page_108"/>If the language supports nested functions, nest the extracted function inside the source function. That will reduce the amount of out-of-scope variables to deal with after the next couple of steps. I can always use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> later.</p>
+</div></li>
+<li><p>Copy the extracted code from the source function into the new target function.</p></li>
+<li><p>Scan the extracted code for references to any variables that are local in scope to the source function and will not be in scope for the extracted function. Pass them as parameters.</p>
+<div class="blockquote">
+<p class="noindent">If I extract into a nested function of the source function, I don&#8217;t run into these problems.</p>
+<p class="noindent">Usually, these are local variables and parameters to the function. The most general approach is to pass all such parameters in as arguments. There are usually no difficulties for variables that are used but not assigned to.</p>
+<p class="noindent">If a variable is only used inside the extracted code but is declared outside, move the declaration into the extracted code.</p>
+<p class="noindent">Any variables that are assigned to need more care if they are passed by value. If there&#8217;s only one of them, I try to treat the extracted code as a query and assign the result to the variable concerned.</p>
+<p class="noindent">Sometimes, I find that too many local variables are being assigned by the extracted code. It&#8217;s better to abandon the extraction at this point. When this happens, I consider other refactorings such as <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec1">Split Variable</a> (<a class="pd_maroon" href="ch09.xhtml#page_240">240</a>)</span></em> or <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a> (<a class="pd_maroon" href="ch07.xhtml#page_178">178</a>)</span></em> to simplify variable usage and revisit the extraction later.</p>
+</div></li>
+<li><p>Compile after all variables are dealt with.</p>
+<div class="blockquote">
+<p class="noindent">Once all the variables are dealt with, it can be useful to compile if the language environment does compile-time checks. Often, this will help find any variables that haven&#8217;t been dealt with properly.</p>
+</div></li>
+<li><p>Replace the extracted code in the source function with a call to the target function.</p></li>
+<li><p>Test.</p></li>
+<li><p>Look for other code that&#8217;s the same or similar to the code just extracted, and consider using <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec5">Replace Inline Code with Function Call</a> (<a class="pd_maroon" href="ch08.xhtml#page_222">222</a>)</span></em> to call the new function.</p>
+<div class="blockquote">
+<p class="noindent">Some refactoring tools support this directly. Otherwise, it can be worth doing some quick searches to see if duplicate code exists elsewhere.</p>
+</div></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec3"><span epub:type="pagebreak" id="page_109"/>Example: No Variables Out of Scope</h4>
+<p class="noindent">In the simplest case, Extract Function is trivially easy.</p>
+<p class="codelink"><a id="p0109_01a" href="ch06_images.xhtml#p0109_01">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  let outstanding = 0;
+
+  console.log("***********************");
+  console.log("**** Customer Owes ****");
+  console.log("***********************");
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  // record due date
+  const today = Clock.today;
+  invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+  //print details
+  console.log(`name: ${invoice.customer}`);
+  console.log(`amount: ${outstanding}`);
+  console.log(`due: ${invoice.dueDate.toLocaleDateString()}`);
+}</pre>
+<div class="blockquote">
+<p class="noindent"><span class="pd_brown"><em>You may be wondering what the</em> <code>Clock.today</code> <em>is about. It is a Clock Wrapper [<a href="biblo.xhtml#bib21">mf-cw</a>]&#8212;an object that wraps calls to the system clock. I avoid putting direct calls to things like</em> <code>Date.now()</code> <em>in my code, because it leads to nondeterministic tests and makes it difficult to reproduce error conditions when diagnosing failures.</em></span></p>
+</div>
+<p class="indent">It&#8217;s easy to extract the code that prints the banner. I just cut, paste, and put in a call:</p>
+<p class="codelink"><a id="p0109_02a" href="ch06_images.xhtml#p0109_02">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  let outstanding = 0;
+
+  <span class="pd_maroon1">printBanner();</span>
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  // record due date
+  const today = Clock.today;
+  invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+  <span epub:type="pagebreak" id="page_110"/>//print details
+  console.log(`name: ${invoice.customer}`);
+  console.log(`amount: ${outstanding}`);
+  console.log(`due: ${invoice.dueDate.toLocaleDateString()}`);
+}
+<span class="pd_maroon1">function printBanner() {</span>
+  console.log("***********************");
+  console.log("**** Customer Owes ****");
+  console.log("***********************");
+}</pre>
+<p class="indent">Similarly, I can take the printing of details and extract that too:</p>
+<p class="codelink"><a id="p0110_01a" href="ch06_images.xhtml#p0110_01">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  let outstanding = 0;
+
+  printBanner();
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  // record due date
+  const today = Clock.today;
+  invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+  <span class="pd_maroon1">printDetails();</span>
+
+  <span class="pd_maroon1">function printDetails() {</span>
+    console.log(`name: ${invoice.customer}`);
+    console.log(`amount: ${outstanding}`);
+    console.log(`due: ${invoice.dueDate.toLocaleDateString()}`);
+  }</pre>
+<p class="indent">This makes Extract Function seem like a trivially easy refactoring. But in many situations, it turns out to be rather more tricky.</p>
+<p class="indent">In the case above, I defined <code>printDetails</code> so it was nested inside <code>printOwing</code>. That way it was able to access all the variables defined in <code>printOwing</code>. But that&#8217;s not an option to me if I&#8217;m programming in a language that doesn&#8217;t allow nested functions. Then I&#8217;m faced, essentially, with the problem of extracting the function to the top level, which means I have to pay attention to any variables that exist only in the scope of the source function. These are the arguments to the original function and the temporary variables defined in the function.</p>
+<h4 class="h4" id="ch06lev2sec4">Example: Using Local Variables</h4>
+<p class="noindent">The easiest case with local variables is when they are used but not reassigned. In this case, I can just pass them in as parameters. So if I have the following function:</p>
+<p class="codelink"><a id="p0111_01a" href="ch06_images.xhtml#p0111_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_111"/>function printOwing(invoice) {
+  let outstanding = 0;
+
+  printBanner();
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  // record due date
+  const today = Clock.today;
+  invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+  //print details
+  console.log(`name: ${invoice.customer}`);
+  console.log(`amount: ${outstanding}`);
+  console.log(`due: ${invoice.dueDate.toLocaleDateString()}`);
+}</pre>
+<p class="indent">I can extract the printing of details passing two parameters:</p>
+<p class="codelink"><a id="p0111_02a" href="ch06_images.xhtml#p0111_02">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  let outstanding = 0;
+
+  printBanner();
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  // record due date
+  const today = Clock.today;
+  invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+  <span class="pd_maroon1">printDetails(invoice, outstanding);</span>
+}
+<span class="pd_maroon1">function printDetails(invoice, outstanding) {</span>
+  console.log(`name: ${invoice.customer}`);
+  console.log(`amount: ${outstanding}`);
+  console.log(`due: ${invoice.dueDate.toLocaleDateString()}`);
+}</pre>
+<p class="indent">The same is true if the local variable is a structure (such as an array, record, or object) and I modify that structure. So, I can similarly extract the setting of the due date:</p>
+<p class="codelink"><a id="p0112_01a" href="ch06_images.xhtml#p0112_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_112"/>function printOwing(invoice) {
+  let outstanding = 0;
+
+  printBanner();
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  <span class="pd_maroon1">recordDueDate(invoice);</span>
+  printDetails(invoice, outstanding);
+}
+<span class="pd_maroon1">function recordDueDate(invoice) {</span>
+  const today = Clock.today;
+  invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+}</pre>
+<h4 class="h4" id="ch06lev2sec5">Example: Reassigning a Local Variable</h4>
+<p class="noindent">It&#8217;s the assignment to local variables that becomes complicated. In this case, we&#8217;re only talking about temps. If I see an assignment to a parameter, I immediately use <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec1">Split Variable</a> (<a class="pd_maroon" href="ch09.xhtml#page_240">240</a>)</span></em>, which turns it into a temp.</p>
+<p class="indent">For temps that are assigned to, there are two cases. The simpler case is where the variable is a temporary variable used only within the extracted code. When that happens, the variable just exists within the extracted code. Sometimes, particularly when variables are initialized at some distance before they are used, it&#8217;s handy to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec6">Slide Statements</a> (<a class="pd_maroon" href="ch08.xhtml#page_223">223</a>)</span></em> to get all the variable manipulation together.</p>
+<p class="indent">The more awkward case is where the variable is used outside the extracted function. In that case, I need to return the new value. I can illustrate this with the following familiar-looking function:</p>
+<p class="codelink"><a id="p0112_02a" href="ch06_images.xhtml#p0112_02">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  let outstanding = 0;
+
+  printBanner();
+
+  // calculate outstanding
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  recordDueDate(invoice);
+  printDetails(invoice, outstanding);
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_113"/>I&#8217;ve shown the previous refactorings all in one step, since they were straightforward, but this time I&#8217;ll take it one step at a time from the mechanics.</p>
+<p class="indent">First, I&#8217;ll slide the declaration next to its use.</p>
+<p class="codelink"><a id="p0113_01a" href="ch06_images.xhtml#p0113_01">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  printBanner();
+
+  // calculate outstanding
+  <span class="pd_maroon1">let outstanding = 0;</span>
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  recordDueDate(invoice);
+  printDetails(invoice, outstanding);
+}</pre>
+<p class="indent">I then copy the code I want to extract into a target function.</p>
+<p class="codelink"><a id="p0113_02a" href="ch06_images.xhtml#p0113_02">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  printBanner();
+
+  // calculate outstanding
+  let outstanding = 0;
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+
+  recordDueDate(invoice);
+  printDetails(invoice, outstanding);
+}
+<span class="pd_maroon1">function calculateOutstanding(invoice) {</span>
+  let outstanding = 0;
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+  <span class="pd_maroon1">return outstanding;</span>
+}</pre>
+<p class="indent">Since I moved the declaration of <code>outstanding</code> into the extracted code, I don&#8217;t need to pass it in as a parameter. The <code>outstanding</code> variable is the only one reassigned in the extracted code, so I can return it.</p>
+<p class="indent">My JavaScript environment doesn&#8217;t yield any value by compiling&#8212;indeed less than I&#8217;m getting from the syntax analysis in my editor&#8212;so there&#8217;s no step to do here. My next thing to do is to replace the original code with a call to the new function. Since I&#8217;m returning the value, I need to store it in the original variable.</p>
+<p class="codelink"><a id="p0114_01a" href="ch06_images.xhtml#p0114_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_114"/>function printOwing(invoice) {
+  printBanner();
+  let outstanding = <span class="pd_maroon1">calculateOutstanding(invoice);</span>
+  recordDueDate(invoice);
+  printDetails(invoice, outstanding);
+}
+function calculateOutstanding(invoice) {
+  let outstanding = 0;
+  for (const o of invoice.orders) {
+    outstanding += o.amount;
+  }
+  return outstanding;
+}</pre>
+<p class="indent">Before I consider myself done, I rename the return value to follow my usual coding style.</p>
+<p class="codelink"><a id="p0114_02a" href="ch06_images.xhtml#p0114_02">Click here to view code image</a></p>
+<pre class="pre">function printOwing(invoice) {
+  printBanner();
+  <span class="pd_maroon1">const</span> outstanding = calculateOutstanding(invoice);
+  recordDueDate(invoice);
+  printDetails(invoice, outstanding);
+}
+function calculateOutstanding(invoice) {
+  let <span class="pd_maroon1">result</span> = 0;
+  for (const o of invoice.orders) {
+    <span class="pd_maroon1">result</span> += o.amount;
+  }
+  return <span class="pd_maroon1">result</span>;
+}</pre>
+<div class="blockquote">
+<p class="noindent"><span class="pd_brown"><em>I also take the opportunity to change the original</em> <code>outstanding</code> <em>into a</em> <code>const</code>.</span></p>
+</div>
+<p class="indent">At this point you may be wondering, &#8220;What happens if more than one variable needs to be returned?&#8221;</p>
+<p class="indent">Here, I have several options. Usually I prefer to pick different code to extract. I like a function to return one value, so I would try to arrange for multiple functions for the different values. If I really need to extract with multiple values, I can form a record and return that&#8212;but usually I find it better to rework the temporary variables instead. Here I like using <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a> (<a class="pd_maroon" href="ch07.xhtml#page_178">178</a>)</span></em> and <em><span class="pd_maroon"><a class="pd_maroon" href="ch09.xhtml#ch09lev1sec1">Split Variable</a> (<a class="pd_maroon" href="ch09.xhtml#page_240">240</a>)</span></em>.</p>
+<p class="indent">This raises an interesting question when I&#8217;m extracting functions that I expect to then move to another context, such as top level. I prefer small steps, so my instinct is to extract into a nested function first, then move that nested function to its new context. But the tricky part of this is dealing with variables and I don&#8217;t expose that difficulty until I do the move. This argues that even though I can extract into a nested function, it makes sense to extract to at least the sibling level of the source function first, so I can immediately tell if the extracted code makes sense.</p>
+<h3 class="h3" id="ch06lev1sec2"><span epub:type="pagebreak" id="page_115"/>Inline Function</h3>
+<p class="noindent">formerly: <em>Inline Method</em></p>
+<p class="noindentz">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0115_01.jpg" aria-describedby="alt_p0115_01" alt="A figure shows a representation and a code of an inline function."/>
+<aside class="hidden" id="alt_p0115_01">
+<p>The diagrammatic representation of inline function shows a few lines of code, where the lines at the center are highlighted and a method points to them. The actual code reads, function getRating(driver) { return moreThanFiveLateDeliveries(driver) ? 2 : 1; } function moreThanFiveLateDeliveries(driver) { return driver.number0fLateDeliveries &#62; 5; } The code after refactoring reads, function getRating(driver) { return (driver.number0fLateDeliveries &#62; 5) ? 2 : 1; }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec6">Motivation</h4>
+<p class="noindent">One of the themes of this book is using short functions named to show their intent, because these functions lead to clearer and easier to read code. But sometimes, I do come across a function in which the body is as clear as the name. Or, I refactor the body of the code into something that is just as clear as the name. When this happens, I get rid of the function. Indirection can be helpful, but needless indirection is irritating.</p>
+<p class="indent">I also use Inline Function is when I have a group of functions that seem badly factored. I can inline them all into one big function and then reextract the functions the way I prefer.</p>
+<p class="indent">I commonly use Inline Function when I see code that&#8217;s using too much indirection&#8212;when it seems that every function does simple delegation to another function, and I get lost in all the delegation. Some of this indirection may be worthwhile, but not all of it. By inlining, I can flush out the useful ones and eliminate the rest.</p>
+<h4 class="h4" id="ch06lev2sec7"><span epub:type="pagebreak" id="page_116"/>Mechanics</h4>
+<ul class="square">
+<li><p>Check that this isn&#8217;t a polymorphic method.</p>
+<div class="blockquote">
+<p class="noindent">If this is a method in a class, and has subclasses that override it, then I can&#8217;t inline it.</p>
+</div></li>
+<li><p>Find all the callers of the function.</p></li>
+<li><p>Replace each call with the function&#8217;s body.</p></li>
+<li><p>Test after each replacement.</p>
+<div class="blockquote">
+<p class="noindent">The entire inlining doesn&#8217;t have to be done all at once. If some parts of the inline are tricky, they can be done gradually as opportunity permits.</p>
+</div></li>
+<li><p>Remove the function definition.</p></li>
+</ul>
+<p class="indent">Written this way, Inline Function is simple. In general, it isn&#8217;t. I could write pages on how to handle recursion, multiple return points, inlining a method into another object when you don&#8217;t have accessors, and the like. The reason I don&#8217;t is that if you encounter these complexities, you shouldn&#8217;t do this refactoring.</p>
+<h4 class="h4" id="ch06lev2sec8">Example</h4>
+<p class="noindent">In the simplest case, this refactoring is so easy it&#8217;s trivial. I start with</p>
+<p class="codelink"><a id="p0116_01a" href="ch06_images.xhtml#p0116_01">Click here to view code image</a></p>
+<pre class="pre">function rating(aDriver) {
+  return moreThanFiveLateDeliveries(aDriver) ? 2 : 1;
+}
+function moreThanFiveLateDeliveries(aDriver) {
+  return aDriver.numberOfLateDeliveries &gt; 5;
+}</pre>
+<p class="indent">I can just take the return expression of the called function and paste it into the caller to replace the call.</p>
+<p class="codelink"><a id="p0116_02a" href="ch06_images.xhtml#p0116_02">Click here to view code image</a></p>
+<pre class="pre">function rating(aDriver) {
+  return <span class="pd_maroon1">aDriver.numberOfLateDeliveries &gt; 5</span> ? 2 : 1;
+}</pre>
+<p class="indent">But it can be a little more involved than that, requiring me to do more work to fit the code into its new home. Consider the case where I start with this slight variation on the earlier initial code.</p>
+<p class="codelink"><a id="p0117_01a" href="ch06_images.xhtml#p0117_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_117"/>function rating(aDriver) {
+  return moreThanFiveLateDeliveries(aDriver) ? 2 : 1;
+}
+function moreThanFiveLateDeliveries(<span class="pd_maroon1">dvr</span>) {
+  return <span class="pd_maroon1">dvr</span>.numberOfLateDeliveries &gt; 5;
+}</pre>
+<p class="indent">Almost the same, but now the declared argument on <code>moreThanFiveLateDeliveries</code> is different to the name of the passed-in argument. So I have to fit the code a little when I do the inline.</p>
+<p class="codelink"><a id="p0117_02a" href="ch06_images.xhtml#p0117_02">Click here to view code image</a></p>
+<pre class="pre">function rating(aDriver) {
+  return <span class="pd_maroon1">aDriver</span>.numberOfLateDeliveries &gt; 5 ? 2 : 1;
+}</pre>
+<p class="indent">It can be even more involved than this. Consider this code:</p>
+<p class="codelink"><a id="p0117_03a" href="ch06_images.xhtml#p0117_03">Click here to view code image</a></p>
+<pre class="pre">function reportLines(aCustomer) {
+  const lines = [];
+  gatherCustomerData(lines, aCustomer);
+  return lines;
+}
+function gatherCustomerData(out, aCustomer) {
+  out.push(["name", aCustomer.name]);
+  out.push(["location", aCustomer.location]);
+}</pre>
+<p class="indent">Inlining <code>gatherCustomerData</code> into <code>reportLines</code> isn&#8217;t a simple cut and paste. It&#8217;s not too complicated, and most times I would still do this in one go, with a bit of fitting. But to be cautious, it may make sense to move one line at a time. So I&#8217;d start with using <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec4">Move Statements to Callers</a> (<a class="pd_maroon" href="ch08.xhtml#page_217">217</a>)</span></em> on the first line (I&#8217;d do it the simple way with a cut, paste, and fit).</p>
+<p class="codelink"><a id="p0117_04a" href="ch06_images.xhtml#p0117_04">Click here to view code image</a></p>
+<pre class="pre">function reportLines(aCustomer) {
+  const lines = [];
+  <span class="pd_maroon1">lines.push(["name", aCustomer.name]);</span>
+  gatherCustomerData(lines, aCustomer);
+  return lines;
+}
+function gatherCustomerData(out, aCustomer) {
+  <span class="strike"><span class="pd_maroon1">out.push(["name", aCustomer.name]);</span></span>
+  out.push(["location", aCustomer.location]);
+}</pre>
+<p class="indent">I then continue with the other lines until I&#8217;m done.</p>
+<p class="codelink"><a id="p0118_01a" href="ch06_images.xhtml#p0118_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_118"/>function reportLines(aCustomer) {
+  const lines = [];
+  lines.push(["name", aCustomer.name]);
+  <span class="pd_maroon1">lines.push(["location", aCustomer.location]);</span>
+  return lines;
+}</pre>
+<p class="indent">The point here is to always be ready to take smaller steps. Most of the time, with the small functions I normally write, I can do Inline Function in one go, even if there is a bit of refitting to do. But if I run into complications, I go one line at a time. Even with one line, things can get a bit awkward; then, I&#8217;ll use the more elaborate mechanics for <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec4">Move Statements to Callers</a> (<a class="pd_maroon" href="ch08.xhtml#page_217">217</a>)</span></em> to break things down even more. And if, feeling confident, I do something the quick way and the tests break, I prefer to revert back to my last green code and repeat the refactoring with smaller steps and a touch of chagrin.</p>
+<h3 class="h3" id="ch06lev1sec3"><span epub:type="pagebreak" id="page_119"/>Extract Variable</h3>
+<p class="noindent">formerly: <em>Introduce Explaining Variable</em></p>
+<p class="noindentz">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0119_01.jpg" aria-describedby="alt_p0119_01" alt="A figure shows a representation and a code of an extract variable."/>
+<aside class="hidden" id="alt_p0119_01">
+<p>The diagrammatic representation of the extract variable depicts a part of an expression that is put into a temporary variable. The actual code reads, return order.quantity * order.itemPrice &#150; Math.max(01 order.quantity - 500) * order.itemPrice * 0.05 + Math.min(order.quantity * order.itemPrice * 0.1, 100); The refactored code reads, const basePrice = order.quantity * order.itemPrice; const quantityDiscount = Math.max(0, order.quantity - 500) * order.itemPrice * 0.05; const shipping = Math.min(basePrice * 0.1, 100); return basePrice - quantityDiscount + shipping;</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec9">Motivation</h4>
+<p class="noindent">Expressions can become very complex and hard to read. In such situations, local variables may help break the expression down into something more manageable. In particular, they give me an ability to name a part of a more complex piece of logic. This allows me to better understand the purpose of what&#8217;s happening.</p>
+<p class="indent">Such variables are also handy for debugging, since they provide an easy hook for a debugger or print statement to capture.</p>
+<p class="indent">If I&#8217;m considering Extract Variable, it means I want to add a name to an expression in my code. Once I&#8217;ve decided I want to do that, I also think about the context of that name. If it&#8217;s only meaningful within the function I&#8217;m working on, then Extract Variable is a good choice&#8212;but if it makes sense in a broader context, I&#8217;ll consider making the name available in that broader context, usually as a function. If the name is available more widely, then other code can use that expression without having to repeat the expression, leading to less duplication and a better statement of my intent.</p>
+<p class="indent">The downside of promoting the name to a broader context is extra effort. If it&#8217;s significantly more effort, I&#8217;m likely to leave it till later when I can use <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a> (<a class="pd_maroon" href="ch07.xhtml#page_178">178</a>)</span></em>. But if it&#8217;s easy, I like to do it now so the name is immediately available in the code. As a good example of this, if I&#8217;m working in a class, then <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> is very easy to do.</p>
+<h4 class="h4" id="ch06lev2sec10"><span epub:type="pagebreak" id="page_120"/>Mechanics</h4>
+<ul class="square">
+<li><p>Ensure that the expression you want to extract does not have side effects.</p></li>
+<li><p>Declare an immutable variable. Set it to a copy of the expression you want to name.</p></li>
+<li><p>Replace the original expression with the new variable.</p></li>
+<li><p>Test.</p></li>
+</ul>
+<p class="indent">If the expression appears more than once, replace each occurrence with the variable, testing after each replacement.</p>
+<h4 class="h4" id="ch06lev2sec11">Example</h4>
+<p class="noindent">I start with a simple calculation</p>
+<p class="codelink"><a id="p0120_01a" href="ch06_images.xhtml#p0120_01">Click here to view code image</a></p>
+<pre class="pre">function price(order) {
+  //price is base price - quantity discount + shipping
+  return order.quantity * order.itemPrice -
+    Math.max(0, order.quantity - 500) * order.itemPrice * 0.05 +
+    Math.min(order.quantity * order.itemPrice * 0.1, 100);
+}</pre>
+<p class="indent">Simple as it may be, I can make it still easier to follow. First, I recognize that the base price is the multiple of the quantity and the item price.</p>
+<p class="codelink"><a id="p0120_02a" href="ch06_images.xhtml#p0120_02">Click here to view code image</a></p>
+<pre class="pre">function price(order) {
+  //price is base price - quantity discount + shipping
+  return <span class="pd_maroon1">order.quantity * order.itemPrice</span> -
+    Math.max(0, order.quantity - 500) * order.itemPrice * 0.05 +
+    Math.min(order.quantity * order.itemPrice * 0.1, 100);
+}</pre>
+<p class="indent">Once that understanding is in my head, I put it in the code by creating and naming a variable for it.</p>
+<p class="codelink"><a id="p0120_03a" href="ch06_images.xhtml#p0120_03">Click here to view code image</a></p>
+<pre class="pre">function price(order) {
+  //price is base price - quantity discount + shipping
+  <span class="pd_maroon1">const basePrice = order.quantity * order.itemPrice;</span>
+  return order.quantity * order.itemPrice -
+    Math.max(0, order.quantity - 500) * order.itemPrice * 0.05 +
+    Math.min(order.quantity * order.itemPrice * 0.1, 100);
+}</pre>
+<p class="indent">Of course, just declaring and initializing a variable doesn&#8217;t do anything; I also have to use it, so I replace the expression that I used as its source.</p>
+<p class="codelink"><a id="p0121_01a" href="ch06_images.xhtml#p0121_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_121"/>function price(order) {
+  //price is base price - quantity discount + shipping
+  const basePrice = order.quantity * order.itemPrice;
+  return <span class="pd_maroon1">basePrice</span> -
+    Math.max(0, order.quantity - 500) * order.itemPrice * 0.05 +
+    Math.min(order.quantity * order.itemPrice * 0.1, 100);
+}</pre>
+<p class="indent">That same expression is used later on, so I can replace it with the variable there too.</p>
+<p class="codelink"><a id="p0121_02a" href="ch06_images.xhtml#p0121_02">Click here to view code image</a></p>
+<pre class="pre">function price(order) {
+  //price is base price - quantity discount + shipping
+  const basePrice = order.quantity * order.itemPrice;
+  return basePrice -
+    Math.max(0, order.quantity - 500) * order.itemPrice * 0.05 +
+    Math.min(<span class="pd_maroon1">basePrice</span> * 0.1, 100);
+}</pre>
+<p class="indent">The next line is the quantity discount, so I can extract that too.</p>
+<p class="codelink"><a id="p0121_03a" href="ch06_images.xhtml#p0121_03">Click here to view code image</a></p>
+<pre class="pre">function price(order) {
+  //price is base price - quantity discount + shipping
+  const basePrice = order.quantity * order.itemPrice;
+  <span class="pd_maroon1">const quantityDiscount = Math.max(0, order.quantity - 500) * order.itemPrice * 0.05;</span>
+  return basePrice -
+    <span class="pd_maroon1">quantityDiscount</span> +
+    Math.min(basePrice * 0.1, 100);
+}</pre>
+<p class="indent">Finally, I finish with the shipping. As I do that, I can remove the comment, too, because it no longer says anything the code doesn&#8217;t say.</p>
+<p class="codelink"><a id="p0121_04a" href="ch06_images.xhtml#p0121_04">Click here to view code image</a></p>
+<pre class="pre">function price(order) {
+  const basePrice = order.quantity * order.itemPrice;
+  const quantityDiscount = Math.max(0, order.quantity - 500) * order.itemPrice * 0.05;
+  <span class="pd_maroon1">const shipping = Math.min(basePrice * 0.1, 100);</span>
+  return basePrice - quantityDiscount + <span class="pd_maroon1">shipping</span>;
+}</pre>
+<h4 class="h4" id="ch06lev2sec12">Example: With a Class</h4>
+<p class="noindent">Here&#8217;s the same code, but this time in the context of a class:</p>
+<p class="codelink"><a id="p0121_05a" href="ch06_images.xhtml#p0121_05">Click here to view code image</a></p>
+<pre class="pre">class Order {
+  constructor(aRecord) {
+    this._data = aRecord;
+  }
+  <span epub:type="pagebreak" id="page_122"/>get quantity()  {return this._data.quantity;}
+  get itemPrice() {return this._data.itemPrice;}
+
+  get price() {
+    return this.quantity * this.itemPrice -
+      Math.max(0, this.quantity - 500) * this.itemPrice * 0.05 +
+      Math.min(this.quantity * this.itemPrice * 0.1, 100);
+  }
+}</pre>
+<p class="indent">In this case, I want to extract the same names, but I realize that the names apply to the <code>Order</code> as a whole, not just the calculation of the price. Since they apply to the whole order, I&#8217;m inclined to extract the names as methods rather than variables.</p>
+<p class="codelink"><a id="p0122_01a" href="ch06_images.xhtml#p0122_01">Click here to view code image</a></p>
+<pre class="pre">class Order {
+  constructor(aRecord) {
+    this._data = aRecord;
+  }
+  get quantity()  {return this._data.quantity;}
+  get itemPrice() {return this._data.itemPrice;}
+
+  get price() {
+    return this.basePrice - this.quantityDiscount + this.shipping;
+  }
+  get basePrice()        {return this.quantity * this.itemPrice;}
+  get quantityDiscount() {return Math.max(0, this.quantity - 500) * this.itemPrice * 0.05;}
+  get shipping()         {return Math.min(this.basePrice * 0.1, 100);}
+}</pre>
+<p class="indent">This is one of the great benefits of objects&#8212;they give you a reasonable amount of context for logic to share other bits of logic and data. For something as simple as this, it doesn&#8217;t matter so much, but with a larger class it becomes very useful to call out common hunks of behavior as their own abstractions with their own names to refer to them whenever I&#8217;m working with the object.</p>
+<h3 class="h3" id="ch06lev1sec4"><span epub:type="pagebreak" id="page_123"/>Inline Variable</h3>
+<p class="noindent">formerly: <em>Inline Temp</em></p>
+<p class="noindentz">inverse of: <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec3">Extract Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_119">119</a>)</span></em></p>
+<figure class="fig-group">
+<img src="graphics/p0123_01.jpg" aria-describedby="alt_p0123_01" alt="A figure shows a representation and a code of an inline variable."/>
+<aside class="hidden" id="alt_p0123_01">
+<p>A diagrammatic representation of an inline variable depicts an expression part that is retrieved from the temporary variable to the expression. The actual code reads, let basePrice = anOrder.basePrice; return (basePrice &#62; 1000); The refactored code of the inline variable reads, return anOrder.basePrice &#62; 1000;</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec13">Motivation</h4>
+<p class="noindent">Variables provide names for expressions within a function, and as such they are usually a Good Thing. But sometimes, the name doesn&#8217;t really communicate more than the expression itself. At other times, you may find that a variable gets in the way of refactoring the neighboring code. In these cases, it can be useful to inline the variable.</p>
+<h4 class="h4" id="ch06lev2sec14">Mechanics</h4>
+<ul class="square">
+<li><p>Check that the right-hand side of the assignment is free of side effects.</p></li>
+<li><p>If the variable isn&#8217;t already declared immutable, do so and test.</p>
+<div class="blockquote">
+<p class="noindent">This checks that it&#8217;s only assigned to once.</p>
+</div></li>
+<li><p>Find the first reference to the variable and replace it with the right-hand side of the assignment.</p></li>
+<li><p>Test.</p></li>
+<li><p>Repeat replacing references to the variable until you&#8217;ve replaced all of them.</p></li>
+<li><p>Remove the declaration and assignment of the variable.</p></li>
+<li><p>Test.</p></li>
+</ul>
+<h3 class="h3" id="ch06lev1sec5"><span epub:type="pagebreak" id="page_124"/>Change Function Declaration</h3>
+<p class="noindent">aka: <em>Rename Function</em></p>
+<p class="noindentz">formerly: <em>Rename Method</em></p>
+<p class="noindentz">formerly: <em>Add Parameter</em></p>
+<p class="noindentz">formerly: <em>Remove Parameter</em></p>
+<p class="noindentz">aka: <em>Change Signature</em></p>
+<figure class="fig-group">
+<img src="graphics/p0124_01.jpg" aria-describedby="alt_p0124_01" alt="A figure shows a representation and a code for the change function declaration."/>
+<aside class="hidden" id="alt_p0124_01">
+<p>A diagrammatic representation depicts a parameter being used by different methods. The actual code reads, function circum(radius) {&#133;}. The refactored code reads, function circumference(radius) {&#133;}.</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec15">Motivation</h4>
+<p class="noindent">Functions represent the primary way we break a program down into parts. Function declarations represent how these parts fit together&#8212;effectively, they represent the joints in our software systems. And, as with any construction, much depends on those joints. Good joints allow me to add new parts to the system easily, but bad ones are a constant source of difficulty, making it harder to figure out what the software does and how to modify it as my needs change. Fortunately, software, being soft, allows me to change these joints, providing I do it carefully.</p>
+<p class="indent">The most important element of such a joint is the name of the function. A good name allows me to understand what the function does when I see it called, without seeing the code that defines its implementation. However, coming up with good names is hard, and I rarely get my names right the first time. When I find a name that&#8217;s confused me, I&#8217;m tempted to leave it&#8212;after all, it&#8217;s only a name. This is the work of the evil demon <em>Obfuscatis</em>; for the sake of my program&#8217;s soul I must never listen to him. If I see a function with the wrong name, it is imperative that I change it as soon as I understand what a better name could be. That way, <span epub:type="pagebreak" id="page_125"/>the next time I&#8217;m looking at this code, I don&#8217;t have to figure out <em>again</em> what&#8217;s going on. (Often, a good way to improve a name is to write a comment to describe the function&#8217;s purpose, then turn that comment into a name.)</p>
+<p class="indent">Similar logic applies to a function&#8217;s parameters. The parameters of a function dictate how a function fits in with the rest of its world. Parameters set the context in which I can use a function. If I have a function to format a person&#8217;s telephone number, and that function takes a person as its argument, then I can&#8217;t use it to format a company&#8217;s telephone number. If I replace the person parameter with the telephone number itself, then the formatting code is more widely useful.</p>
+<p class="indent">Apart from increasing a function&#8217;s range of applicability, I can also remove some coupling, changing what modules need to connect to others. Telephone formatting logic may sit in a module that has no knowledge about people. Reducing how much modules need to know about each other helps reduce how much I need to put into my brain when I change something&#8212;and my brain isn&#8217;t as big as it used to be (that doesn&#8217;t say anything about the size of its container, though).</p>
+<p class="indent">Choosing the right parameters isn&#8217;t something that adheres to simple rules. I may have a simple function for determining if a payment is overdue, by looking at if it&#8217;s older than 30 days. Should the parameter to this function be the payment object, or the due date of the payment? Using the payment couples the function to the interface of the payment object. But if I use the payment, I can easily access other properties of the payment, should the logic evolve, without having to change every bit of code that calls this function&#8212;essentially, increasing the encapsulation of the function.</p>
+<p class="indent">The only right answer to this puzzle is that there is no right answer, especially over time. So I find it&#8217;s essential to be familiar with Change Function Declaration so the code can evolve with my understanding of what the best joints in the code need to be.</p>
+<p class="indent">Usually, I only use the main name of a refactoring when I refer to it from elsewhere in this book. However, since renaming is such a significant use case for Change Function Declaration, if I&#8217;m just renaming something, I&#8217;ll refer to this refactoring as <em><span class="pd_maroon">Rename Function</span></em> to make it clearer what I&#8217;m doing. Whether I&#8217;m merely renaming or manipulating the parameters, I use the same mechanics.</p>
+<h4 class="h4" id="ch06lev2sec16">Mechanics</h4>
+<p class="noindent">In most of the refactorings in this book, I present only a single set of mechanics. This isn&#8217;t because there is only one set that will do the job but because, usually, one set of mechanics will work reasonably well for most cases. Change Function Declaration, however, is an exception. The simple mechanics are often effective, but there are plenty of cases when a more gradual migration makes more sense. So, with this refactoring, I look at the change and ask myself if I think I can change the declaration and all its callers easily in one go. If so, I follow the simple mechanics. The migration-style mechanics allow me to change the callers more gradually&#8212;which is important if I have lots of them, they are awkward to get <span epub:type="pagebreak" id="page_126"/>to, the function is a polymorphic method, or I have a more complicated change to the declaration.</p>
+<h5 class="h5" id="ch06lev3sec1"><em>Simple Mechanics</em></h5>
+<ul class="square">
+<li><p>If you&#8217;re removing a parameter, ensure it isn&#8217;t referenced in the body of the function.</p></li>
+<li><p>Change the method declaration to the desired declaration.</p></li>
+<li><p>Find all references to the old method declaration, update them to the new one.</p></li>
+<li><p>Test.</p></li>
+</ul>
+<p class="indent">It&#8217;s often best to separate changes, so if you want to both change the name and add a parameter, do these as separate steps. (In any case, if you run into trouble, revert and use the migration mechanics instead.)</p>
+<h5 class="h5" id="ch06lev3sec2"><em>Migration Mechanics</em></h5>
+<ul class="square">
+<li><p>If necessary, refactor the body of the function to make it easy to do the following extraction step.</p></li>
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on the function body to create the new function.</p>
+<div class="blockquote">
+<p class="noindent">If the new function will have the same name as the old one, give the new function a temporary name that&#8217;s easy to search for.</p>
+</div></li>
+<li><p>If the extracted function needs additional parameters, use the simple mechanics to add them.</p></li>
+<li><p>Test.</p></li>
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> to the old function.</p></li>
+<li><p>If you used a temporary name, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> again to restore it to the original name.</p></li>
+<li><p>Test.</p></li>
+</ul>
+<p class="indent">If you&#8217;re changing a method on a class with polymorphism, you&#8217;ll need to add indirection for each binding. If the method is polymorphic within a single class hierarchy, you only need the forwarding method on the superclass. If the polymorphism has no superclass link, then you&#8217;ll need forwarding methods on each implementation class.</p>
+<p class="indent">If you are refactoring a published API, you can pause the refactoring once you&#8217;ve created the new function. During this pause, deprecate the original function and wait for clients to change to the new function. The original function declaration <span epub:type="pagebreak" id="page_127"/>can be removed when (and if) you&#8217;re confident all the clients of the old function have migrated to the new one.</p>
+<h4 class="h4" id="ch06lev2sec17">Example: Renaming a Function (Simple Mechanics)</h4>
+<p class="noindent">Consider this function with an overly abbreved name:</p>
+<p class="codelink"><a id="p0127_01a" href="ch06_images.xhtml#p0127_01">Click here to view code image</a></p>
+<pre class="pre">function circum(radius) {
+  return 2 * Math.PI * radius;
+}</pre>
+<p class="indent">I want to change that to something more sensible. I begin by changing the declaration:</p>
+<p class="codelink"><a id="p0127_02a" href="ch06_images.xhtml#p0127_02">Click here to view code image</a></p>
+<pre class="pre">function <span class="pd_maroon1">circumference</span>(radius) {
+  return 2 * Math.PI * radius;
+}</pre>
+<p class="indent">I then find all the callers of <code>circum</code> and change the name to <code>circumference</code>.</p>
+<p class="indent">Different language environments have an impact on how easy it is to find all the references to the old function. Static typing and a good IDE provide the best experience, usually allowing me to rename functions automatically with little chance of error. Without static typing, this can be more involved; even good searching tools will then have a lot of false positives.</p>
+<p class="indent">I use the same approach for adding or removing parameters: find all the callers, change the declaration, and change the callers. It&#8217;s often better to do these as separate steps&#8212;so, if I&#8217;m both renaming the function and adding a parameter, I first do the rename, test, then add the parameter, and test again.</p>
+<p class="indent">A disadvantage of this simple way of doing the refactoring is that I have to do all the callers and the declaration (or all of them, if polymorphic) at once. If there are only a few of them, or if I have decent automated refactoring tools, this is reasonable. But if there&#8217;s a lot, it can get tricky. Another problem is when the names aren&#8217;t unique&#8212;e.g., I want to rename the a <code>changeAddress</code> method on a person class but the same method, which I don&#8217;t want to change, exists on an insurance agreement class. The more complex the change is, the less I want to do it in one go like this. When this kind of problem arises, I use the migration mechanics instead. Similarly, if I use simple mechanics and something goes wrong, I&#8217;ll revert the code to the last known good state and try again using migration mechanics.</p>
+<h4 class="h4" id="ch06lev2sec18">Example: Renaming a Function (Migration Mechanics)</h4>
+<p class="noindent">Again, I have this function with its overly abbreved name:</p>
+<p class="codelink"><a id="p0127_03a" href="ch06_images.xhtml#p0127_03">Click here to view code image</a></p>
+<pre class="pre">function circum(radius) {
+  return 2 * Math.PI * radius;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_128"/>To do this refactoring with migration mechanics, I begin by applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> to the entire function body.</p>
+<p class="codelink"><a id="p0128_01a" href="ch06_images.xhtml#p0128_01">Click here to view code image</a></p>
+<pre class="pre">function circum(radius) {
+  return <span class="pd_maroon1">circumference</span>(radius);
+}
+function circumference(radius) {
+  return 2 * Math.PI * radius;
+}</pre>
+<p class="indent">I test that, then apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> to the old functions. I find all the calls of the old function and replace each one with a call of the new one. I can test after each change, which allows me to do them one at a time. Once I&#8217;ve got them all, I remove the old function.</p>
+<p class="indent">With most refactorings, I&#8217;m changing code that I can modify, but this refactoring can be handy with a published API&#8212;that is, one used by code that I&#8217;m unable to change myself. I can pause the refactoring after creating <code>circumference</code> and, if possible, mark <code>circum</code> as deprecated. I will then wait for callers to change to use <code>circumference</code>; once they do, I can delete <code>circum</code>. Even if I&#8217;m never able to reach the happy point of deleting <code>circum</code>, at least I have a better name for new code.</p>
+<h4 class="h4" id="ch06lev2sec19">Example: Adding a Parameter</h4>
+<p class="noindent">In some software, to manage a library of books, I have a book class which has the ability to take a reservation for a customer.</p>
+<p class="pro-title"><em>class Book&#8230;</em></p>
+<p class="codelink"><a id="p0128_02a" href="ch06_images.xhtml#p0128_02">Click here to view code image</a></p>
+<pre class="pre">addReservation(customer) {
+  this._reservations.push(customer);
+}</pre>
+<p class="indent">I need to support a priority queue for reservations. Thus, I need an extra parameter on <code>addReservation</code> to indicate whether the reservation should go in the usual queue or the high-priority queue. If I can easily find and change all the callers, then I can just go ahead with the change&#8212;but if not, I can use the migration approach, which I&#8217;ll show here.</p>
+<p class="indent">I begin by using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on the body of <code>addReservation</code> to create the new function. Although it will eventually be called <code>addReservation</code>, the new and old functions can&#8217;t coexist with the same name. So I use a temporary name that will be easy to search for later.</p>
+<p class="pro-title"><em>class Book&#8230;</em></p>
+<p class="codelink"><a id="p0128_03a" href="ch06_images.xhtml#p0128_03">Click here to view code image</a></p>
+<pre class="pre">addReservation(customer) {
+  <span class="pd_maroon1">this.zz_addReservation(customer);</span>
+}
+
+<span epub:type="pagebreak" id="page_129"/><span class="pd_maroon1">zz_addReservation(</span>customer) {
+  this._reservations.push(customer);
+}</pre>
+<p class="indent">I then add the parameter to the new declaration and its call (in effect, using the simple mechanics).</p>
+<p class="pro-title"><em>class Book&#8230;</em></p>
+<p class="codelink"><a id="p0129_01a" href="ch06_images.xhtml#p0129_01">Click here to view code image</a></p>
+<pre class="pre">addReservation(customer) {
+  this.zz_addReservation(customer<span class="pd_maroon1">, false</span>);
+}
+
+zz_addReservation(customer, <span class="pd_maroon1">isPriority</span>) {
+  this._reservations.push(customer);
+}</pre>
+<p class="indent">When I use JavaScript, before I change any of the callers, I like to apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec6">Introduce Assertion</a> (<a class="pd_maroon" href="ch10.xhtml#page_302">302</a>)</span></em> to check the new parameter is used by the caller.</p>
+<p class="pro-title"><em>class Book&#8230;</em></p>
+<p class="codelink"><a id="p0129_02a" href="ch06_images.xhtml#p0129_02">Click here to view code image</a></p>
+<pre class="pre">zz_addReservation(customer, isPriority) {
+  <span class="pd_maroon1">assert(isPriority === true || isPriority === false);</span>
+  this._reservations.push(customer);
+}</pre>
+<p class="indent">Now, when I change the callers, if I make a mistake and leave off the new parameter, this assertion will help me catch the mistake. And I know from long experience there are few more mistake-prone programmers than myself.</p>
+<p class="indent">Now, I can start changing the callers by using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> on the original function. This allows me to change one caller at a time.</p>
+<p class="indent">I then rename the new function back to the original. Usually, the simple mechanics work fine for this, but I can also use the migration approach if I need to.</p>
+<h4 class="h4" id="ch06lev2sec20">Example: Changing a Parameter to One of Its Properties</h4>
+<p class="noindent">The examples so far are simple changes of a name and adding a new parameter, but with the migration mechanics, this refactoring can handle more complicated cases quite neatly. Here&#8217;s an example that is a bit more involved.</p>
+<p class="indent">I have a function which determines if a customer is based in New England.</p>
+<p class="codelink"><a id="p0129_03a" href="ch06_images.xhtml#p0129_03">Click here to view code image</a></p>
+<pre class="pre">function inNewEngland(aCustomer) {
+  return ["MA", "CT", "ME", "VT", "NH", "RI"].includes(aCustomer.address.state);
+}</pre>
+<p class="indent">Here is one of its callers:</p>
+<p class="pro-title"><em>caller&#8230;</em></p>
+<p class="codelink"><a id="p0129_04a" href="ch06_images.xhtml#p0129_04">Click here to view code image</a></p>
+<pre class="pre">const newEnglanders = someCustomers.filter(c =&gt; inNewEngland(c));</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_130"/><code>inNewEngland</code> only uses the customer&#8217;s home state to determine if it&#8217;s in New England. I&#8217;d prefer to refactor <code>inNewEngland</code> so that it takes a state code as a parameter, making it usable in more contexts by removing the dependency on the customer.</p>
+<p class="indent">With Change Function Declaration, my usual first move is to apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>, but in this case I can make it easier by first refactoring the function body a little. I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec3">Extract Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_119">119</a>)</span></em> on my desired new parameter.</p>
+<p class="codelink"><a id="p0130_01a" href="ch06_images.xhtml#p0130_01">Click here to view code image</a></p>
+<pre class="pre">function inNewEngland(aCustomer) {
+  const <span class="pd_maroon1">stateCode</span> = aCustomer.address.state;
+  return ["MA", "CT", "ME", "VT", "NH", "RI"].includes(<span class="pd_maroon1">stateCode</span>);
+}</pre>
+<p class="indent">Now I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> to create that new function.</p>
+<p class="codelink"><a id="p0130_02a" href="ch06_images.xhtml#p0130_02">Click here to view code image</a></p>
+<pre class="pre">function inNewEngland(aCustomer) {
+  const stateCode = aCustomer.address.state;
+  return <span class="pd_maroon1">xxNEWinNewEngland(</span>stateCode);
+}
+
+function <span class="pd_maroon1">xxNEWinNewEngland(</span>stateCode) {
+  return ["MA", "CT", "ME", "VT", "NH", "RI"].includes(stateCode);
+}</pre>
+<p class="indent">I give the function a name that&#8217;s easy to automatically replace to turn into the original name later. (You can tell I don&#8217;t have a standard for these temporary names.)</p>
+<p class="indent">I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em> on the input parameter in the original function.</p>
+<p class="codelink"><a id="p0130_03a" href="ch06_images.xhtml#p0130_03">Click here to view code image</a></p>
+<pre class="pre">function inNewEngland(<span class="pd_maroon1">aCustomer)</span> {
+  return xxNEWinNewEngland(<span class="pd_maroon1">aCustomer.address.state)</span>;
+}</pre>
+<p class="indent">I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> to fold the old function into its callers, effectively replacing the call to the old function with a call to the new one. I can do these one at a time.</p>
+<p class="pro-title"><em>caller&#8230;</em></p>
+<p class="codelink"><a id="p0130_04a" href="ch06_images.xhtml#p0130_04">Click here to view code image</a></p>
+<pre class="pre">const newEnglanders = someCustomers.filter(c =&gt; <span class="pd_maroon1">xxNEWinNewEngland(c.address.state))</span>;</pre>
+<p class="indent">Once I&#8217;ve inlined the old function into every caller, I use Change Function Declaration again to change the name of the new function to that of the original.</p>
+<p class="pro-title"><em>caller&#8230;</em></p>
+<p class="codelink"><a id="p0130_05a" href="ch06_images.xhtml#p0130_05">Click here to view code image</a></p>
+<pre class="pre">const newEnglanders = someCustomers.filter(c =&gt; <span class="pd_maroon1">inNewEngland</span>(c.address.state));</pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0130_06a" href="ch06_images.xhtml#p0130_06">Click here to view code image</a></p>
+<pre class="pre">function <span class="pd_maroon1">inNewEngland</span>(stateCode) {
+  return ["MA", "CT", "ME", "VT", "NH", "RI"].includes(stateCode);
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_131"/>Automated refactoring tools make the migration mechanics both less useful and more effective. They make it less useful because they handle even complicated renames and parameter changes safer, so I don&#8217;t have to use the migration approach as often as I do without that support. However, in cases like this example, where the tools can&#8217;t do the whole refactoring, they still make it much easier as the key moves of extract and inline can be done more quickly and safely with the tool.</p>
+<h3 class="h3" id="ch06lev1sec6"><span epub:type="pagebreak" id="page_132"/>Encapsulate Variable</h3>
+<p class="noindent">formerly: <em>Self-Encapsulate Field</em></p>
+<p class="noindentz">formerly: <em>Encapsulate Field</em></p>
+<figure class="fig-group">
+<img src="graphics/p0132_01.jpg" aria-describedby="alt_p0132_01" alt="A figure shows a representation and a code to encapsulate a variable."/>
+<aside class="hidden" id="alt_p0132_01">
+<p>A diagrammatic representation of the process to encapsulate a variable depicts the variables and the methods that are wrapped into a single unit shown at the top and the actual code reads, let defaultOwner = (firstName: &#34;Martin&#34;, lastName: &#34;Fowler&#34;}; The refactored code reads, let defaultOwnerData = (firstName: &#34;Martin&#34;, lastName: &#34;Fowler&#34;}; export function defaultOwner() {return defaultOwnerData;) export function setDefaultOwner(arg) (defaultOwnerData = arg;}</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec21">Motivation</h4>
+<p class="noindent">Refactoring is all about manipulating the elements of our programs. Data is more awkward to manipulate than functions. Since using a function usually means calling it, I can easily rename or move a function while keeping the old function intact as a forwarding function (so my old code calls the old function, which calls the new function). I&#8217;ll usually not keep this forwarding function around for long, but it does simplify the refactoring.</p>
+<p class="indent">Data is more awkward because I can&#8217;t do that. If I move data around, I have to change all the references to the data in a single cycle to keep the code working. For data with a very small scope of access, such as a temporary variable in a small function, this isn&#8217;t a problem. But as the scope grows, so does the difficulty, which is why global data is such a pain.</p>
+<p class="indent">So if I want to move widely accessed data, often the best approach is to first encapsulate it by routing all its access through functions. That way, I turn the difficult task of reorganizing data into the simpler task of reorganizing functions.</p>
+<p class="indent">Encapsulating data is valuable for other things too. It provides a clear point to monitor changes and use of the data; I can easily add validation or consequential logic on the updates. It is my habit to make all mutable data encapsulated like this and only accessed through functions if its scope is greater than a single function. The greater the scope of the data, the more important it is to encapsulate. <span epub:type="pagebreak" id="page_133"/>My approach with legacy code is that whenever I need to change or add a new reference to such a variable, I should take the opportunity to encapsulate it. That way I prevent the increase of coupling to commonly used data.</p>
+<p class="indent">This principle is why the object-oriented approach puts so much emphasis on keeping an object&#8217;s data private. Whenever I see a public field, I consider using Encapsulate Variable (in that case often called <em><span class="pd_maroon">Encapsulate Field</span></em>) to reduce its visibility. Some go further and argue that even internal references to fields within a class should go through accessor functions&#8212;an approach known as self-encapsulation. On the whole, I find self-encapsulation excessive&#8212;if a class is so big that I need to self-encapsulate its fields, it needs to be broken up anyway. But self-encapsulating a field is a useful step before splitting a class.</p>
+<p class="indent">Keeping data encapsulated is much less important for immutable data. When the data doesn&#8217;t change, I don&#8217;t need a place to put in validation or other logic hooks before updates. I can also freely copy the data rather than move it&#8212;so I don&#8217;t have to change references from old locations, nor do I worry about sections of code getting stale data. Immutability is a powerful preservative.</p>
+<h4 class="h4" id="ch06lev2sec22">Mechanics</h4>
+<ul class="square">
+<li><p>Create encapsulating functions to access and update the variable.</p></li>
+<li><p>Run static checks.</p></li>
+<li><p>For each reference to the variable, replace with a call to the appropriate encapsulating function. Test after each replacement.</p></li>
+<li><p>Restrict the visibility of the variable.</p>
+<div class="blockquote">
+<p class="noindent">Sometimes it&#8217;s not possible to prevent access to the variable. If so, it may be useful to detect any remaining references by renaming the variable and testing.</p>
+</div></li>
+<li><p>Test.</p></li>
+<li><p>If the value of the variable is a record, consider <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em>.</p></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec23">Example</h4>
+<p class="noindent">Consider some useful data held in a global variable.</p>
+<p class="codelink"><a id="p0133_01a" href="ch06_images.xhtml#p0133_01">Click here to view code image</a></p>
+<pre class="pre">let defaultOwner = {firstName: "Martin", lastName: "Fowler"};</pre>
+<p class="indent">Like any data, it&#8217;s referenced with code like this:</p>
+<p class="codelink"><a id="p0133_02a" href="ch06_images.xhtml#p0133_02">Click here to view code image</a></p>
+<pre class="pre">spaceship.owner = defaultOwner;</pre>
+<p class="noindent">and updated like this:</p>
+<p class="codelink"><a id="p0133_03a" href="ch06_images.xhtml#p0133_03">Click here to view code image</a></p>
+<pre class="pre">defaultOwner = {firstName: "Rebecca", lastName: "Parsons"};</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_134"/>To do a basic encapsulation on this, I start by defining functions to read and write the data.</p>
+<p class="codelink"><a id="p0134_01a" href="ch06_images.xhtml#p0134_01">Click here to view code image</a></p>
+<pre class="pre">function getDefaultOwner()    {return defaultOwner;}
+function setDefaultOwner(arg) {defaultOwner = arg;}</pre>
+<p class="indent">I then start working on references to <code>defaultOwner</code>. When I see a reference, I replace it with a call to the getting function.</p>
+<p class="codelink"><a id="p0134_02a" href="ch06_images.xhtml#p0134_02">Click here to view code image</a></p>
+<pre class="pre">spaceship.owner = <span class="pd_maroon1">getDefaultOwner()</span>;</pre>
+<p class="indent">When I see an assignment, I replace it with the setting function.</p>
+<p class="codelink"><a id="p0134_03a" href="ch06_images.xhtml#p0134_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">setDefaultOwner(</span>{firstName: "Rebecca", lastName: "Parsons"}<span class="pd_maroon1">)</span>;</pre>
+<p class="indent">I test after each replacement.</p>
+<p class="indent">Once I&#8217;m done with all the references, I restrict the visibility of the variable. This both checks that there aren&#8217;t any references that I&#8217;ve missed, and ensures that future changes to the code won&#8217;t access the variable directly. I can do that in JavaScript by moving both the variable and the accessor methods to their own file and only exporting the accessor methods.</p>
+<p class="pro-title"><em>defaultOwner.js&#8230;</em></p>
+<p class="codelink"><a id="p0134_04a" href="ch06_images.xhtml#p0134_04">Click here to view code image</a></p>
+<pre class="pre">let defaultOwner = {firstName: "Martin", lastName: "Fowler"};
+export function getDefaultOwner()    {return defaultOwner;}
+export function setDefaultOwner(arg) {defaultOwner = arg;}</pre>
+<p class="indent">If I&#8217;m in a situation where I cannot restrict the access to a variable, it may be useful to rename the variable and retest. That won&#8217;t prevent future direct access, but naming the variable something meaningful and awkward such as <code>__privateOnly_defaultOwner</code> may help.</p>
+<p class="indent">I don&#8217;t like the use of <code>get</code> prefixes on getters, so I&#8217;ll rename to remove it.</p>
+<p class="pro-title"><em>defaultOwner.js&#8230;</em></p>
+<p class="codelink"><a id="p0134_05a" href="ch06_images.xhtml#p0134_05">Click here to view code image</a></p>
+<pre class="pre">let defaultOwner<span class="pd_maroon1">Data</span> = {firstName: "Martin", lastName: "Fowler"};
+export function <span class="strike"><span class="pd_maroon1">get</span></span>defaultOwner()       {return defaultOwner<span class="pd_maroon1">Data</span>;}
+export function setDefaultOwner(arg) {defaultOwner<span class="pd_maroon1">Data</span> = arg;}</pre>
+<div class="blockquote">
+<p class="noindent">A common convention in JavaScript is to name a getting function and setting function the same and differentiate them due the presence of an argument. I call this practice Overloaded Getter Setter <span class="pd_maroon">[<a href="biblo.xhtml#bib28">mf-ogs</a>]</span> and strongly dislike it. So, even though I don&#8217;t like the <code>get</code> prefix, I will keep the <code>set</code> prefix.</p>
+</div>
+<h5 class="h5" id="ch06lev3sec3"><em>Encapsulating the Value</em></h5>
+<p class="noindent">The basic refactoring I&#8217;ve outlined here encapsulates a reference to some data structure, allowing me to control its access and reassignment. But it doesn&#8217;t control changes to that structure.</p>
+<p class="codelink"><a id="p0135_01a" href="ch06_images.xhtml#p0135_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_135"/>const owner1 = defaultOwner();
+assert.equal("Fowler", owner1.lastName, "when set");
+const owner2 = defaultOwner();
+owner2.lastName = "Parsons";
+assert.equal("Parsons", owner1.lastName, "after change owner2"); // is this ok?</pre>
+<p class="indent">The basic refactoring encapsulates the reference to the data item. In many cases, this is all I want to do for the moment. But I often want to take the encapsulation deeper to control not just changes to the variable but also to its contents.</p>
+<p class="indent">For this, I have a couple of options. The simplest one is to prevent any changes to the value. My favorite way to handle this is by modifying the getting function to return a copy of the data.</p>
+<p class="pro-title"><em>defaultOwner.js&#8230;</em></p>
+<p class="codelink"><a id="p0135_02a" href="ch06_images.xhtml#p0135_02">Click here to view code image</a></p>
+<pre class="pre">let defaultOwnerData = {firstName: "Martin", lastName: "Fowler"};
+export function defaultOwner()       {return <span class="pd_maroon1">Object.assign({}</span>, defaultOwnerData);}
+export function setDefaultOwner(arg) {defaultOwnerData = arg;}</pre>
+<p class="indent">I use this approach particularly often with lists. If I return a copy of the data, any clients using it can change it, but that change isn&#8217;t reflected in the shared data. I have to be careful with using copies, however: Some code may expect to change shared data. If that&#8217;s the case, I&#8217;m relying on my tests to detect a problem. An alternative is to prevent changes&#8212;and a good way of doing that is <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em>.</p>
+<p class="codelink"><a id="p0135_03a" href="ch06_images.xhtml#p0135_03">Click here to view code image</a></p>
+<pre class="pre">let defaultOwnerData = {firstName: "Martin", lastName: "Fowler"};
+export function defaultOwner()       {return <span class="pd_maroon1">new Person</span>(defaultOwnerData);}
+export function setDefaultOwner(arg) {defaultOwnerData = arg;}
+
+  <span class="pd_maroon1">class Person {</span>
+    <span class="pd_maroon1">constructor(data) {</span>
+      <span class="pd_maroon1">this._lastName = data.lastName;</span>
+      <span class="pd_maroon1">this._firstName = data.firstName</span>
+    <span class="pd_maroon1">}</span>
+    <span class="pd_maroon1">get lastName() {return this._lastName;}</span>
+    get firstName() {return this._firstName;}
+    // and so on for other properties</pre>
+<p class="indent">Now, any attempt to reassign the properties of the default owner will cause an error. Different languages have different techniques to detect or prevent changes like this, so depending on the language I&#8217;d consider other options.</p>
+<p class="indent">Detecting and preventing changes like this is often worthwhile as a temporary measure. I can either remove the changes, or provide suitable mutating functions. Then, once they are all dealt with, I can modify the getting method to return a copy.</p>
+<p class="indent">So far I&#8217;ve talked about copying on getting data, but it may be worthwhile to make a copy in the setter too. That will depend on where the data comes from and whether I need to maintain a link to reflect any changes in that original data. <span epub:type="pagebreak" id="page_136"/>If I don&#8217;t need such a link, a copy prevents accidents due to changes on that source data. Taking a copy may be superfluous most of the time, but copies in these cases usually have a negligible effect on performance; on the other hand, if I don&#8217;t do them, there is a risk of a long and difficult bout of debugging in the future.</p>
+<p class="indent">Remember that the copying above, and the class wrapper, both only work one level deep in the record structure. Going deeper requires more levels of copies or object wrapping.</p>
+<p class="indent">As you can see, encapsulating data is valuable, but often not straightforward. Exactly what to encapsulate&#8212;and how to do it&#8212;depends on the way the data is being used and the changes I have in mind. But the more widely it&#8217;s used, the more it&#8217;s worth my attention to encapsulate properly.</p>
+<h3 class="h3" id="ch06lev1sec7"><span epub:type="pagebreak" id="page_137"/>Rename Variable</h3>
+<figure class="fig-group">
+<img src="graphics/p0137_01.jpg" aria-describedby="alt_p0137_01" alt="A figure shows a simple representation and a code to rename a variable."/>
+<aside class="hidden" id="alt_p0137_01">
+<p>A diagrammatic representation of the process to rename a variable shows a variable being named at the top, followed by the code reads, let a = height * width; And the code after refactoring reads, let area = height * width;</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec24">Motivation</h4>
+<p class="noindent">Naming things well is the heart of clear programming. Variables can do a lot to explain what I&#8217;m up to&#8212;if I name them well. But I frequently get my names wrong&#8212;sometimes because I&#8217;m not thinking carefully enough, sometimes because my understanding of the problem improves as I learn more, and sometimes because the program&#8217;s purpose changes as my users&#8217; needs change.</p>
+<p class="indent">Even more than most program elements, the importance of a name depends on how widely it&#8217;s used. A variable used in a one-line lambda expression is usually easy to follow&#8212;I often use a single letter in that case since the variable&#8217;s purpose is clear from its context. Parameters for short functions can often be terse for the same reason, although in a dynamically typed language like JavaScript, I do like to put the type into the name (hence parameter names like <code>aCustomer</code>).</p>
+<p class="indent">Persistent fields that last beyond a single function invocation require more careful naming. This is where I&#8217;m likely to put most of my attention.</p>
+<h4 class="h4" id="ch06lev2sec25">Mechanics</h4>
+<ul class="square">
+<li><p>If the variable is used widely, consider <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em>.</p></li>
+<li><p>Find all references to the variable, and change every one.</p>
+<div class="blockquote">
+<p class="noindent">If there are references from another code base, the variable is a published variable, and you cannot do this refactoring.</p>
+<p class="noindent">If the variable does not change, you can copy it to one with the new name, then change gradually, testing after each change.</p>
+</div></li>
+<li><p>Test.</p></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec26"><span epub:type="pagebreak" id="page_138"/>Example</h4>
+<p class="noindent">The simplest case for renaming a variable is when it&#8217;s local to a single function: a temp or argument. It&#8217;s too trivial for even an example: I just find each reference and change it. After I&#8217;m done, I test to ensure I didn&#8217;t mess up.</p>
+<p class="indent">Problems occur when the variable has a wider scope than just a single function. There may be a lot of references all over the code base:</p>
+<pre class="pre">let tpHd = "untitled";</pre>
+<p class="noindent">Some references access the variable:</p>
+<pre class="pre">result += `&lt;h1&gt;${tpHd}&lt;/h1&gt;`;</pre>
+<p class="noindent">Others update it:</p>
+<pre class="pre">tpHd = obj['articleTitle'];</pre>
+<p class="indent">My usual response to this is apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec6">Encapsulate Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_132">132</a>)</span></em>.</p>
+<p class="codelink"><a id="p0138_01a" href="ch06_images.xhtml#p0138_01">Click here to view code image</a></p>
+<pre class="pre">result += `&lt;h1&gt;${<span class="pd_maroon1">title()</span>}&lt;/h1&gt;`;
+
+<span class="pd_maroon1">setTitle</span>(obj['articleTitle']);
+
+  <span class="pd_maroon1">function title()       {return tpHd;}</span>
+  <span class="pd_maroon1">function setTitle(arg) {tpHd = arg;}</span></pre>
+<p class="indent">At this point, I can rename the variable.</p>
+<p class="codelink"><a id="p0138_02a" href="ch06_images.xhtml#p0138_02">Click here to view code image</a></p>
+<pre class="pre">let <span class="pd_maroon1">_title</span> = "untitled";
+
+function title()       {return <span class="pd_maroon1">_title</span>;}
+function setTitle(arg) {<span class="pd_maroon1">_title</span> = arg;}</pre>
+<p class="indent">I could continue by inlining the wrapping functions so all callers are using the variable directly. But I&#8217;d rarely want to do this. If the variable is used widely enough that I feel the need to encapsulate it in order to change its name, it&#8217;s worth keeping it encapsulated behind functions for the future.</p>
+<div class="blockquote">
+<p class="noindent">In cases where I was going to inline, I&#8217;d call the getting function <code>getTitle</code> and not use an underscore for the variable name when I rename it.</p>
+</div>
+<h5 class="h5" id="ch06lev3sec4"><em>Renaming a Constant</em></h5>
+<p class="noindent">If I&#8217;m renaming a constant (or something that acts like a constant to clients) I can avoid encapsulation, and still do the rename gradually, by copying. If the original declaration looks like this:</p>
+<p class="codelink"><a id="p0138_03a" href="ch06_images.xhtml#p0138_03">Click here to view code image</a></p>
+<pre class="pre">const cpyNm = "Acme Gooseberries";</pre>
+<p class="noindent">I can begin the renaming by making a copy:</p>
+<p class="codelink"><a id="p0139_01a" href="ch06_images.xhtml#p0139_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_139"/>const <span class="pd_maroon1">companyName</span> = "Acme Gooseberries";
+const cpyNm = <span class="pd_maroon1">companyName</span>;</pre>
+<p class="indent">With the copy, I can gradually change references from the old name to the new name. When I&#8217;m done, I remove the copy. I prefer to declare the new name and copy to the old name if it makes it a tad easier to remove the old name and put it back again should a test fail.</p>
+<p class="indent">This works for constants as well as for variables that are read-only to clients (such as an exported variable in JavaScript).</p>
+<h3 class="h3" id="ch06lev1sec8"><span epub:type="pagebreak" id="page_140"/>Introduce Parameter Object</h3>
+<figure class="fig-group">
+<img src="graphics/p0140_01.jpg" aria-describedby="alt_p0140_01" alt="A figure shows a simple representation and a code for introducing a parameter object."/>
+<aside class="hidden" id="alt_p0140_01">
+<p>A diagrammatic representation of how to introduce a parameter object, at the top shows various parameters being are grouped under a single data structure. The actual code reads, function amountInvoiced(startDate, endDate) {...} function amountReceived(startDate, endDate) {...} function amountOverdue(startDate, endDate) {...} The refactored code reads, function amountInvoiced(aDateRange) {...} function amountReceived(aDateRange) {...} function amountOverdue(aDateRange) {...}</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec27">Motivation</h4>
+<p class="noindent">I often see groups of data items that regularly travel together, appearing in function after function. Such a group is a data clump, and I like to replace it with a single data structure.</p>
+<p class="indent">Grouping data into a structure is valuable because it makes explicit the relationship between the data items. It reduces the size of parameter lists for any function that uses the new structure. It helps consistency since all functions that use the structure will use the same names to get at its elements.</p>
+<p class="indent">But the real power of this refactoring is how it enables deeper changes to the code. When I identify these new structures, I can reorient the behavior of the program to use these structures. I will create functions that capture the common behavior over this data&#8212;either as a set of common functions or as a class that combines the data structure with these functions. This process can change the conceptual picture of the code, raising these structures as new abstractions that can greatly simplify my understanding of the domain. When this works, it can have surprisingly powerful effects&#8212;but none of this is possible unless I use Introduce Parameter Object to begin the process.</p>
+<h4 class="h4" id="ch06lev2sec28"><span epub:type="pagebreak" id="page_141"/>Mechanics</h4>
+<ul class="square">
+<li><p>If there isn&#8217;t a suitable structure already, create one.</p>
+<div class="blockquote">
+<p class="noindent">I prefer to use a class, as that makes it easier to group behavior later on. I usually like to ensure these structures are value objects <span class="pd_maroon">[<a href="biblo.xhtml#bib39">mf-vo</a>]</span>.</p>
+</div></li>
+<li><p>Test.</p></li>
+<li><p>Use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to add a parameter for the new structure.</p></li>
+<li><p>Test.</p></li>
+<li><p>Adjust each caller to pass in the correct instance of the new structure. Test after each one.</p></li>
+<li><p>For each element of the new structure, replace the use of the original parameter with the element of the structure. Remove the parameter. Test.</p></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec29">Example</h4>
+<p class="noindent">I&#8217;ll begin with some code that looks at a set of temperature readings and determines whether any of them fall outside of an operating range. Here&#8217;s what the data looks like for the readings:</p>
+<p class="codelink"><a id="p0141_01a" href="ch06_images.xhtml#p0141_01">Click here to view code image</a></p>
+<pre class="pre">const station = { name: "ZB1",
+                  readings: [
+                    {temp: 47, time: "2016-11-10 09:10"},
+                    {temp: 53, time: "2016-11-10 09:20"},
+                    {temp: 58, time: "2016-11-10 09:30"},
+                    {temp: 53, time: "2016-11-10 09:40"},
+                    {temp: 51, time: "2016-11-10 09:50"},
+                  ]
+                };</pre>
+<p class="indent">I have a function to find the readings that are outside a temperature range.</p>
+<p class="codelink"><a id="p0141_02a" href="ch06_images.xhtml#p0141_02">Click here to view code image</a></p>
+<pre class="pre">function readingsOutsideRange(station, min, max) {
+  return station.readings
+    .filter(r =&gt; r.temp &lt; min || r.temp &gt; max);
+}</pre>
+<p class="indent">It might be called from some code like this:</p>
+<p class="pro-title"><em>caller</em></p>
+<p class="codelink"><a id="p0141_03a" href="ch06_images.xhtml#p0141_03">Click here to view code image</a></p>
+<pre class="pre">alerts = readingsOutsideRange(station,
+                              operatingPlan.temperatureFloor,
+                              operatingPlan.temperatureCeiling);</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_142"/>Notice how the calling code pulls the two data items as a pair from another object and passes the pair into <code>readingsOutsideRange</code>. The operating plan uses different names to indicate the start and end of the range compared to <code>readingsOutsideRange</code>. A range like this is a common case where two separate data items are better combined into a single object. I&#8217;ll begin by declaring a class for the combined data.</p>
+<p class="codelink"><a id="p0142_01a" href="ch06_images.xhtml#p0142_01">Click here to view code image</a></p>
+<pre class="pre">class NumberRange {
+  constructor(min, max) {
+    this._data = {min: min, max: max};
+  }
+  get min() {return this._data.min;}
+  get max() {return this._data.max;}
+}</pre>
+<p class="indent">I declare a class, rather than just using a basic JavaScript object, because I usually find this refactoring to be a first step to moving behavior into the newly created object. Since a class makes sense for this, I go right ahead and use one directly. I also don&#8217;t provide any update methods for the new class, as I&#8217;ll probably make this a Value Object [<a href="biblo.xhtml#bib39">mf-vo</a>]. Most times I do this refactoring, I create value objects.</p>
+<p class="indent">I then use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to add the new object as a parameter to <code>readingsOutsideRange</code>.</p>
+<p class="codelink"><a id="p0142_02a" href="ch06_images.xhtml#p0142_02">Click here to view code image</a></p>
+<pre class="pre">function readingsOutsideRange(station, min, max, <span class="pd_maroon1">range</span>) {
+  return station.readings
+    .filter(r =&gt; r.temp &lt; min || r.temp &gt; max);
+}</pre>
+<p class="indent">In JavaScript, I can leave the caller as is, but in other languages I&#8217;d have to add a null for the new parameter which would look something like this:</p>
+<p class="pro-title"><em>caller</em></p>
+<p class="codelink"><a id="p0142_03a" href="ch06_images.xhtml#p0142_03">Click here to view code image</a></p>
+<pre class="pre">alerts = readingsOutsideRange(station,
+                              operatingPlan.temperatureFloor,
+                              operatingPlan.temperatureCeiling,
+                              <span class="pd_maroon1">null</span>);</pre>
+<p class="indent">At this point I haven&#8217;t changed any behavior, and tests should still pass. I then go to each caller and adjust it to pass in the correct date range.</p>
+<p class="pro-title"><em>caller</em></p>
+<p class="codelink"><a id="p0142_04a" href="ch06_images.xhtml#p0142_04">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">const range = new NumberRange(operatingPlan.temperatureFloor, operatingPlan.temperatureCeiling);</span>
+alerts = readingsOutsideRange(station,
+                              operatingPlan.temperatureFloor,
+                              operatingPlan.temperatureCeiling,
+                              <span class="pd_maroon1">range</span>);</pre>
+<p class="indent">I still haven&#8217;t altered any behavior yet, as the parameter isn&#8217;t used. All tests should still work.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_143"/>Now I can start replacing the usage of the parameters. I&#8217;ll start with the maximum.</p>
+<p class="codelink"><a id="p0143_01a" href="ch06_images.xhtml#p0143_01">Click here to view code image</a></p>
+<pre class="pre">function readingsOutsideRange(station, min, <span class="strike"><span class="pd_maroon1">max,</span></span> range) {
+  return station.readings
+    .filter(r =&gt; r.temp &lt; min || r.temp &gt; <span class="pd_maroon1">range.max</span>);
+}</pre>
+<p class="pro-title"><em>caller</em></p>
+<p class="codelink"><a id="p0143_02a" href="ch06_images.xhtml#p0143_02">Click here to view code image</a></p>
+<pre class="pre">const range = new NumberRange(operatingPlan.temperatureFloor, operatingPlan.temperatureCeiling);
+alerts = readingsOutsideRange(station,
+                              operatingPlan.temperatureFloor,
+                              <span class="strike"><span class="pd_maroon1">operatingPlan.temperatureCeiling,</span></span>
+                              range);</pre>
+<p class="indent">I can test at this point, then remove the other parameter.</p>
+<p class="codelink"><a id="p0143_03a" href="ch06_images.xhtml#p0143_03">Click here to view code image</a></p>
+<pre class="pre">function readingsOutsideRange(station, <span class="strike"><span class="pd_maroon1">min,</span></span> range) {
+  return station.readings
+    .filter(r =&gt; r.temp &lt; <span class="pd_maroon1">range.min</span> || r.temp &gt; range.max);
+}</pre>
+<p class="pro-title"><em>caller</em></p>
+<p class="codelink"><a id="p0143_04a" href="ch06_images.xhtml#p0143_04">Click here to view code image</a></p>
+<pre class="pre">const range = new NumberRange(operatingPlan.temperatureFloor, operatingPlan.temperatureCeiling);
+alerts = readingsOutsideRange(station,
+                              <span class="strike"><span class="pd_maroon1">operatingPlan.temperatureFloor,</span></span>
+                              range);</pre>
+<p class="indent">That completes this refactoring. However, replacing a clump of parameters with a real object is just the setup for the really good stuff. The great benefits of making a class like this is that I can then move behavior into the new class. In this case, I&#8217;d add a method for range that tests if a value falls within the range.</p>
+<p class="codelink"><a id="p0143_05a" href="ch06_images.xhtml#p0143_05">Click here to view code image</a></p>
+<pre class="pre">function readingsOutsideRange(station, range) {
+  return station.readings
+    .filter(r =&gt; <span class="pd_maroon1">!range.contains(r.temp</span>));
+}</pre>
+<p class="pro-title"><em>class NumberRange&#8230;</em></p>
+<p class="codelink"><a id="p0143_06a" href="ch06_images.xhtml#p0143_06">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">contains(arg) {return (arg &gt;= this.min &amp;&amp; arg &lt;= this.max);}</span></pre>
+<p class="indent">This is a first step to creating a range <span class="pd_maroon">[<a href="biblo.xhtml#bib30">mf-range</a>]</span> that can take on a lot of useful behavior. Once I&#8217;ve identified the need for a range in my code, I can be constantly on the lookout for other cases where I see a max/min pair of numbers and replace them with a range. (One immediate possibility is the operating plan, replacing <code>temperatureFloor</code> and <code>temperatureCeiling</code> with a <code>temperatureRange</code>.) As I look at how these pairs are used, I can move more useful behavior into the range class, simplifying its usage across the code base. One of the first things I may add is a value-based equality method to make it a true value object.</p>
+<h3 class="h3" id="ch06lev1sec9"><span epub:type="pagebreak" id="page_144"/>Combine Functions into Class</h3>
+<figure class="fig-group">
+<img src="graphics/p0144_01.jpg" aria-describedby="alt_p0144_01" alt="A figure shows a simple representation and a code for combining the functions into a class."/>
+<aside class="hidden" id="alt_p0144_01">
+<p>A diagrammatic representation of combining functions into class shows the data and function are bound together at the top and the actual code below reads, function base(aReading) {...} function taxableCharge(aReading) {...} function calculateBaseCharge(aReading) {...} The refactored code reads, class Reading { base() {...} taxableCharge() {...} calculateBaseCharge() {...} }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec30">Motivation</h4>
+<p class="noindent">Classes are a fundamental construct in most modern programming languages. They bind together data and functions into a shared environment, exposing some of that data and function to other program elements for collaboration. They are the primary construct in object-oriented languages, but are also useful with other approaches too.</p>
+<p class="indent">When I see a group of functions that operate closely together on a common body of data (usually passed as arguments to the function call), I see an opportunity to form a class. Using a class makes the common environment that these functions share more explicit, allows me to simplify function calls inside the object by removing many of the arguments, and provides a reference to pass such an object to other parts of the system.</p>
+<p class="indent">In addition to organizing already formed functions, this refactoring also provides a good opportunity to identify other bits of computation and refactor them into methods on the new class.</p>
+<p class="indent">Another way of organizing functions together is <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec10">Combine Functions into Transform</a> (<a class="pd_maroon" href="ch06.xhtml#page_149">149</a>)</span></em>. Which one to use depends more on the broader context of the program. One significant advantage of using a class is that it allows clients to mutate the core data of the object, and the derivations remain consistent.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_145"/>As well as a class, functions like this can also be combined into a nested function. Usually I prefer a class to a nested function, as it can be difficult to test functions nested within another. Classes are also necessary when there is more than one function in the group that I want to expose to collaborators.</p>
+<p class="indent">Languages that don&#8217;t have classes as a first-class element, but do have first-class functions, often use the Function As Object [<a href="biblo.xhtml#bib24">mf-fao</a>] to provide this capability.</p>
+<h4 class="h4" id="ch06lev2sec31">Mechanics</h4>
+<ul class="square">
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em> to the common data record that the functions share.</p>
+<div class="blockquote">
+<p class="noindent">If the data that is common between the functions isn&#8217;t already grouped into a record structure, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec8">Introduce Parameter Object</a> (<a class="pd_maroon" href="ch06.xhtml#page_140">140</a>)</span></em> to create a record to group it together.</p>
+</div></li>
+<li><p>Take each function that uses the common record and use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> to move it into the new class.</p>
+<div class="blockquote">
+<p class="noindent">Any arguments to the function call that are members can be removed from the argument list.</p>
+</div></li>
+<li><p>Each bit of logic that manipulates the data can be extracted with <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> and then moved into the new class.</p></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec32">Example</h4>
+<p class="noindent">I grew up in England, a country renowned for its love of Tea. (Personally, I don&#8217;t like most tea they serve in England, but have since acquired a taste for Chinese and Japanese teas.) So my author&#8217;s fantasy conjures up a state utility for providing tea to the population. Every month they read the tea meters, to get a record like this:</p>
+<p class="codelink"><a id="p0145_01a" href="ch06_images.xhtml#p0145_01">Click here to view code image</a></p>
+<pre class="pre">reading = {customer: "ivan", quantity: 10, month: 5, year: 2017};</pre>
+<p class="indent">I look through the code that processes these records, and I see lots of places where similar calculations are done on the data. So I find a spot that calculates the base charge:</p>
+<p class="pro-title"><em>client 1&#8230;</em></p>
+<p class="codelink"><a id="p0145_02a" href="ch06_images.xhtml#p0145_02">Click here to view code image</a></p>
+<pre class="pre">const aReading = acquireReading();
+const baseCharge = baseRate(aReading.month, aReading.year) * aReading.quantity;</pre>
+<p class="indent">Being England, everything essential must be taxed, so it is with tea. But the rules allow at least an essential level of tea to be free of taxation.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_146"/><em>client 2&#8230;</em></p>
+<p class="codelink"><a id="p0146_01a" href="ch06_images.xhtml#p0146_01">Click here to view code image</a></p>
+<pre class="pre">const aReading = acquireReading();
+const base = (baseRate(aReading.month, aReading.year) * aReading.quantity);
+const taxableCharge = Math.max(0, base - taxThreshold(aReading.year));</pre>
+<p class="indent">I&#8217;m sure that, like me, you noticed that the formula for the base charge is duplicated between these two fragments. If you&#8217;re like me, you&#8217;re already reaching for <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>. Interestingly, it seems our work has been done for us elsewhere.</p>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0146_02a" href="ch06_images.xhtml#p0146_02">Click here to view code image</a></p>
+<pre class="pre">const aReading = acquireReading();
+const basicChargeAmount = calculateBaseCharge(aReading);
+
+function calculateBaseCharge(aReading) {
+  return baseRate(aReading.month, aReading.year) * aReading.quantity;
+}</pre>
+<p class="indent">Given this, I have a natural impulse to change the two earlier bits of client code to use this function. But the trouble with top-level functions like this is that they are often easy to miss. I&#8217;d rather change the code to give the function a closer connection to the data it processes. A good way to do this is to turn the data into a class.</p>
+<p class="indent">To turn the record into a class, I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec1">Encapsulate Record</a> (<a class="pd_maroon" href="ch07.xhtml#page_162">162</a>)</span></em>.</p>
+<p class="codelink"><a id="p0146_03a" href="ch06_images.xhtml#p0146_03">Click here to view code image</a></p>
+<pre class="pre">class Reading {
+  constructor(data) {
+    this._customer = data.customer;
+    this._quantity = data.quantity;
+    this._month = data.month;
+    this._year = data.year;
+  }
+  get customer() {return this._customer;}
+  get quantity() {return this._quantity;}
+  get month()    {return this._month;}
+  get year()     {return this._year;}
+}</pre>
+<p class="indent">To move the behavior, I&#8217;ll start with the function I already have: <code>calculateBaseCharge</code>. To use the new class, I need to apply it to the data as soon as I&#8217;ve acquired it.</p>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0146_04a" href="ch06_images.xhtml#p0146_04">Click here to view code image</a></p>
+<pre class="pre">const <span class="pd_maroon1">rawReading</span> = acquireReading();
+const aReading = <span class="pd_maroon1">new Reading(rawReading);</span>
+const basicChargeAmount = calculateBaseCharge(aReading);</pre>
+<p class="indent">I then use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> to move <code>calculateBaseCharge</code> into the new class.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_147"/><em>class Reading&#8230;</em></p>
+<p class="codelink"><a id="p0147_01a" href="ch06_images.xhtml#p0147_01">Click here to view code image</a></p>
+<pre class="pre">get <span class="pd_maroon1">calculateBaseCharge()</span> {
+  return baseRate(this.month, this.year) * this.quantity;
+}</pre>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0147_02a" href="ch06_images.xhtml#p0147_02">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = new Reading(rawReading);
+const basicChargeAmount = <span class="pd_maroon1">aReading.calculateBaseCharge;</span></pre>
+<p class="indent">While I&#8217;m at it, I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Rename Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to make it something more to my liking.</p>
+<p class="codelink"><a id="p0147_03a" href="ch06_images.xhtml#p0147_03">Click here to view code image</a></p>
+<pre class="pre">get <span class="pd_maroon1">baseCharge()</span> {
+  return baseRate(this.month, this.year) * this.quantity;
+}</pre>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0147_04a" href="ch06_images.xhtml#p0147_04">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = new Reading(rawReading);
+const basicChargeAmount = aReading.<span class="pd_maroon1">baseCharge;</span></pre>
+<p class="indent">With this naming, the client of the reading class can&#8217;t tell whether the base charge is a field or a derived value. This is a Good Thing&#8212;the Uniform Access Principle <span class="pd_maroon">[<a href="biblo.xhtml#bib38">mf-ua</a>]</span>.</p>
+<p class="indent">I now alter the first client to call the method rather than repeat the calculation.</p>
+<p class="pro-title"><em>client 1&#8230;</em></p>
+<p class="codelink"><a id="p0147_05a" href="ch06_images.xhtml#p0147_05">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = new Reading(rawReading);
+const baseCharge = <span class="pd_maroon1">aReading.baseCharge;</span></pre>
+<p class="indent">There&#8217;s a strong chance I&#8217;ll use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em> on the <code>baseCharge</code> variable before the day is out. But more relevant to this refactoring is the client that calculates the taxable amount. My first step here is to use the new base charge property.</p>
+<p class="pro-title"><em>client 2&#8230;</em></p>
+<p class="codelink"><a id="p0147_06a" href="ch06_images.xhtml#p0147_06">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = new Reading(rawReading);
+const taxableCharge = Math.max(0, <span class="pd_maroon1">aReading.baseCharge</span> - taxThreshold(aReading.year));</pre>
+<p class="indent">I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on the calculation for the taxable charge.</p>
+<p class="codelink"><a id="p0147_07a" href="ch06_images.xhtml#p0147_07">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function taxableChargeFn(aReading) {</span>
+  return Math.max(0, aReading.baseCharge - taxThreshold(aReading.year));
+}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_148"/><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0148_01a" href="ch06_images.xhtml#p0148_01">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = new Reading(rawReading);
+const taxableCharge = <span class="pd_maroon1">taxableChargeFn(aReading);</span></pre>
+<p class="indent">Then I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em>.</p>
+<p class="pro-title"><em>class Reading&#8230;</em></p>
+<p class="codelink"><a id="p0148_02a" href="ch06_images.xhtml#p0148_02">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">get taxableCharge() {</span>
+  return  Math.max(0, this.baseCharge - taxThreshold(this.year));
+}</pre>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0148_03a" href="ch06_images.xhtml#p0148_03">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = new Reading(rawReading);
+const taxableCharge = <span class="pd_maroon1">aReading.taxableCharge;</span></pre>
+<p class="indent">Since all the derived data is calculated on demand, I have no problem should I need to update the stored data. In general, I prefer immutable data, but many circumstances force us to work with mutable data (such as JavaScript, a language ecosystem that wasn&#8217;t designed with immutability in mind). When there is a reasonable chance the data will be updated somewhere in the program, then a class is very helpful.</p>
+<h3 class="h3" id="ch06lev1sec10"><span epub:type="pagebreak" id="page_149"/>Combine Functions into Transform</h3>
+<figure class="fig-group">
+<img src="graphics/p0149_01.jpg" aria-describedby="alt_p0149_01" alt="A figure shows a simple representation and a code for combining the functions into a transform."/>
+<aside class="hidden" id="alt_p0149_01">
+<p>A diagrammatic representation of combining functions into transform at the top, shows a function taking the data, calculating and then putting all the derived values as a field in the output. The actual code reads, function base(aReading) {...} function taxableCharge(aReading) {...} The refactored code reads, function enrichReading(argReading) { const aReading = _.cloneDeep(argReading); aReading.baseCharge = base(aReading); aReading.taxableCharge = taxableCharge(aReading); return aReading; }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec33">Motivation</h4>
+<p class="noindent">Software often involves feeding data into programs that calculate various derived information from it. These derived values may be needed in several places, and those calculations are often repeated wherever the derived data is used. I prefer to bring all of these derivations together, so I have a consistent place to find and update them and avoid any duplicate logic.</p>
+<p class="indent">One way to do this is to use a data transformation function that takes the source data as input and calculates all the derivations, putting each derived value as a field in the output data. Then, to examine the derivations, all I need do is look at the transform function.</p>
+<p class="indent">An alternative to Combine Functions into Transform is <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec9">Combine Functions into Class</a> (<a class="pd_maroon" href="ch06.xhtml#page_144">144</a>)</span></em> that moves the logic into methods on a class formed from the source data. Either of these refactorings are helpful, and my choice will often depend on the style of programming already in the software. But there is one important difference: Using a class is much better if the source data gets updated within the code. Using a transform stores derived data in the new record, so if the source data changes, I will run into inconsistencies.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_150"/>One of the reasons I like to do combine functions is to avoid duplication of the derivation logic. I can do that just by using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on the logic, but it&#8217;s often difficult to find the functions unless they are kept close to the data structures they operate on. Using a transform (or a class) makes it easy to find and use them.</p>
+<h4 class="h4" id="ch06lev2sec34">Mechanics</h4>
+<ul class="square">
+<li><p>Create a transformation function that takes the record to be transformed and returns the same values.</p>
+<div class="blockquote">
+<p class="noindent">This will usually involve a deep copy of the record. It is often worthwhile to write a test to ensure the transform does not alter the original record.</p>
+</div></li>
+<li><p>Pick some logic and move its body into the transform to create a new field in the record. Change the client code to access the new field.</p>
+<div class="blockquote">
+<p class="noindent">If the logic is complex, use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> first.</p>
+</div></li>
+<li><p>Test.</p></li>
+<li><p>Repeat for the other relevant functions.</p></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec35">Example</h4>
+<p class="noindent">Where I grew up, tea is an important part of life&#8212;so much that I can imagine a special utility that provides tea to the populace that&#8217;s regulated like a utility. Every month, the utility gets a reading of how much tea a customer has acquired.</p>
+<p class="codelink"><a id="p0150_01a" href="ch06_images.xhtml#p0150_01">Click here to view code image</a></p>
+<pre class="pre">reading = {customer: "ivan", quantity: 10, month: 5, year: 2017};</pre>
+<p class="indent">Code in various places calculates various consequences of this tea usage. One such calculation is the base monetary amount that&#8217;s used to calculate the charge for the customer.</p>
+<p class="pro-title"><em>client 1&#8230;</em></p>
+<p class="codelink"><a id="p0150_02a" href="ch06_images.xhtml#p0150_02">Click here to view code image</a></p>
+<pre class="pre">const aReading = acquireReading();
+const baseCharge = baseRate(aReading.month, aReading.year) * aReading.quantity;</pre>
+<p class="indent">Another is the amount that should be taxed&#8212;which is less than the base amount since the government wisely considers that every citizen should get some tea tax free.</p>
+<p class="pro-title"><em>client 2&#8230;</em></p>
+<p class="codelink"><a id="p0150_03a" href="ch06_images.xhtml#p0150_03">Click here to view code image</a></p>
+<pre class="pre">const aReading = acquireReading();
+const base = (baseRate(aReading.month, aReading.year) * aReading.quantity);
+const taxableCharge = Math.max(0, base - taxThreshold(aReading.year));</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_151"/>Looking through this code, I see these calculations repeated in several places. Such duplication is asking for trouble when they need to change (and I&#8217;d bet it&#8217;s &#8220;when&#8221; not &#8220;if&#8221;). I can deal with this repetition by using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on these calculations, but such functions often end up scattered around the program making it hard for future developers to realize they are there. Indeed, looking around I discover such a function, used in another area of the code.</p>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0151_01a" href="ch06_images.xhtml#p0151_01">Click here to view code image</a></p>
+<pre class="pre">const aReading = acquireReading();
+const basicChargeAmount = calculateBaseCharge(aReading);
+
+function calculateBaseCharge(aReading) {
+  return  baseRate(aReading.month, aReading.year) * aReading.quantity;
+}</pre>
+<p class="indent">One way of dealing with this is to move all of these derivations into a transformation step that takes the raw reading and emits a reading enriched with all the common derived results.</p>
+<p class="indent">I begin by creating a transformation function that merely copies the input object.</p>
+<p class="codelink"><a id="p0151_02a" href="ch06_images.xhtml#p0151_02">Click here to view code image</a></p>
+<pre class="pre">function enrichReading(original) {
+  const result = _.cloneDeep(original);
+  return result;
+}</pre>
+<div class="blockquote">
+<p class="noindent"><span class="pd_brown"><em>I&#8217;m using the</em> <code>cloneDeep</code> <em>from lodash to create a deep copy.</em></span></p>
+</div>
+<p class="indent">When I&#8217;m applying a transformation that produces essentially the same thing but with additional information, I like to name it using &#8220;enrich&#8221;. If it were producing something I felt was different, I would name it using &#8220;transform&#8221;.</p>
+<p class="indent">I then pick one of the calculations I want to change. First, I enrich the reading it uses with the current one that does nothing yet.</p>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0151_03a" href="ch06_images.xhtml#p0151_03">Click here to view code image</a></p>
+<pre class="pre">const <span class="pd_maroon1">rawReading</span> = acquireReading();
+const aReading = <span class="pd_maroon1">enrichReading(rawReading);</span>
+const basicChargeAmount = calculateBaseCharge(aReading);</pre>
+<p class="indent">I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> on <code>calculateBaseCharge</code> to move it into the enrichment calculation.</p>
+<p class="codelink"><a id="p0151_04a" href="ch06_images.xhtml#p0151_04">Click here to view code image</a></p>
+<pre class="pre">function enrichReading(original) {
+  const result = _.cloneDeep(original);
+  <span class="pd_maroon1">result.baseCharge = calculateBaseCharge(result);</span>
+  return result;
+}</pre>
+<p class="indent">Within the transformation function, I&#8217;m happy to mutate a result object, instead of copying each time. I like immutability, but most common languages make it difficult to work with. I&#8217;m prepared to go through the extra effort to support <span epub:type="pagebreak" id="page_152"/>it at boundaries, but will mutate within smaller scopes. I also pick my names (using <code>aReading</code> as the accumulating variable) to make it easier to move the code into the transformer function.</p>
+<p class="indent">I change the client that uses that function to use the enriched field instead.</p>
+<p class="pro-title"><em>client 3&#8230;</em></p>
+<p class="codelink"><a id="p0152_01a" href="ch06_images.xhtml#p0152_01">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = enrichReading(rawReading);
+const basicChargeAmount = aReading.baseCharge;</pre>
+<p class="indent">Once I&#8217;ve moved all calls to <code>calculateBaseCharge</code>, I can nest it inside <code>enrichReading</code>. That would make it clear that clients that need the calculated base charge should use the enriched record.</p>
+<p class="indent">One trap to beware of here. When I write <code>enrichReading</code> like this, to return the enriched reading, I&#8217;m implying that the original reading record isn&#8217;t changed. So it&#8217;s wise for me to add a test.</p>
+<p class="codelink"><a id="p0152_02a" href="ch06_images.xhtml#p0152_02">Click here to view code image</a></p>
+<pre class="pre">it('check reading unchanged', function() {
+  const baseReading = {customer: "ivan", quantity: 15, month: 5, year: 2017};
+  const oracle = _.cloneDeep(baseReading);
+  enrichReading(baseReading);
+  assert.deepEqual(baseReading, oracle);
+});</pre>
+<p class="indent">I can then change client 1 to also use the same field.</p>
+<p class="pro-title"><em>client 1&#8230;</em></p>
+<p class="codelink"><a id="p0152_03a" href="ch06_images.xhtml#p0152_03">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = enrichReading(rawReading);
+<span class="pd_maroon1">const baseCharge = aReading.baseCharge;</span></pre>
+<p class="indent">There is a good chance I can then use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em> on <code>baseCharge</code> too.</p>
+<p class="indent">Now I turn to the taxable amount calculation. My first step is to add in the transformation function.</p>
+<p class="codelink"><a id="p0152_04a" href="ch06_images.xhtml#p0152_04">Click here to view code image</a></p>
+<pre class="pre">const <span class="pd_maroon1">rawReading</span> = acquireReading();
+const aReading = <span class="pd_maroon1">enrichReading(rawReading);</span>
+const base = (baseRate(aReading.month, aReading.year) * aReading.quantity);
+const taxableCharge = Math.max(0, base - taxThreshold(aReading.year));</pre>
+<p class="indent">I can immediately replace the calculation of the base charge with the new field. If the calculation was complex, I could <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> first, but here it&#8217;s simple enough to do in one step.</p>
+<p class="codelink"><a id="p0152_05a" href="ch06_images.xhtml#p0152_05">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = enrichReading(rawReading);
+const base = <span class="pd_maroon1">aReading.baseCharge;</span>
+const taxableCharge = Math.max(0, base - taxThreshold(aReading.year));</pre>
+<p class="indent">Once I&#8217;ve tested that that works, I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>:</p>
+<p class="codelink"><a id="p0153_01a" href="ch06_images.xhtml#p0153_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_153"/>const rawReading = acquireReading();
+const aReading = enrichReading(rawReading);
+const taxableCharge = Math.max(0, <span class="pd_maroon1">aReading.baseCharge</span> - taxThreshold(aReading.year));</pre>
+<p class="noindent">and move that computation into the transformer:</p>
+<p class="codelink"><a id="p0153_02a" href="ch06_images.xhtml#p0153_02">Click here to view code image</a></p>
+<pre class="pre">function enrichReading(original) {
+  const result = _.cloneDeep(original);
+  result.baseCharge = calculateBaseCharge(result);
+  <span class="pd_maroon1">result.taxableCharge = Math.max(0, result.baseCharge - taxThreshold(result.year));</span>
+  return result;
+}</pre>
+<p class="indent">I modify the original code to use the new field.</p>
+<p class="codelink"><a id="p0153_03a" href="ch06_images.xhtml#p0153_03">Click here to view code image</a></p>
+<pre class="pre">const rawReading = acquireReading();
+const aReading = enrichReading(rawReading);
+const taxableCharge = <span class="pd_maroon1">aReading.taxableCharge;</span></pre>
+<p class="indent">Once I&#8217;ve tested that, it&#8217;s likely I would be able to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em> on <code>taxableCharge</code>.</p>
+<p class="indent">One big problem with an enriched reading like this is: What happens should a client change a data value? Changing, say, the quantity field would result in data that&#8217;s inconsistent. To avoid this in JavaScript, my best option is to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec9">Combine Functions into Class</a> (<a class="pd_maroon" href="ch06.xhtml#page_144">144</a>)</span></em> instead. If I&#8217;m in a language with immutable data structures, I don&#8217;t have this problem, so its more common to see transforms in those languages. But even in languages without immutability, I can use transforms if the data appears in a read-only context, such as deriving data to display on a web page.</p>
+<h3 class="h3" id="ch06lev1sec11"><span epub:type="pagebreak" id="page_154"/>Split Phase</h3>
+<figure class="fig-group">
+<img src="graphics/p0154_01.jpg" aria-describedby="alt_p0154_01" alt="A figure shows a simple representation and a code for the split phase."/>
+<aside class="hidden" id="alt_p0154_01">
+<p>A diagrammatic representation of the split phase shows a few lines of code for two different operations that are split into two separate modules. The actual code reads, const orderData = orderString.split(/\s+/); const productPrice = priceList[orderData[0].split(&#34;-&#34;)[1]]; const orderPrice = parseInt(orderData[1]) * productPrice; The refactored code reads, const orderRecord = parseOrder(order); const orderPrice = price(orderRecord, priceList); function parseOrder(aString) { const values = aString.split(/\s+/); return ({ productID: values[0].split(&#34;-&#34;)[1], quantity: parseInt(values[1]), }); } function price(order, priceList) { return order.quantity * priceList[order.productID]; }</p>
+</aside>
+</figure>
+<h4 class="h4" id="ch06lev2sec36">Motivation</h4>
+<p class="noindent">When I run into code that&#8217;s dealing with two different things, I look for a way to split it into separate modules. I endeavor to make this split because, if I need to make a change, I can deal with each topic separately and not have to hold both in my head together. If I&#8217;m lucky, I may only have to change one module without having to remember the details of the other one at all.</p>
+<p class="indent">One of the neatest ways to do a split like this is to divide the behavior into two sequential phases. A good example of this is when you have some processing whose inputs don&#8217;t reflect the model you need to carry out the logic. Before you begin, you can massage the input into a convenient form for your main processing. <span epub:type="pagebreak" id="page_155"/>Or, you can take the logic you need to do and break it down into sequential steps, where each step is significantly different in what it does.</p>
+<p class="indent">The most obvious example of this is a compiler. It&#8217;s a basic task is to take some text (code in a programming language) and turn it into some executable form (e.g., object code for a specific hardware). Over time, we&#8217;ve found this can be usefully split into a chain of phases: tokenizing the text, parsing the tokens into a syntax tree, then various steps of transforming the syntax tree (e.g., for optimization), and finally generating the object code. Each step has a limited scope and I can think of one step without understanding the details of others.</p>
+<p class="indent">Splitting phases like this is common in large software; the various phases in a compiler can each contain many functions and classes. But I can carry out the basic split-phase refactoring on any fragment of code&#8212;whenever I see an opportunity to usefully separate the code into different phases. The best clue is when different stages of the fragment use different sets of data and functions. By turning them into separate modules I can make this difference explicit, revealing the difference in the code.</p>
+<h4 class="h4" id="ch06lev2sec37">Mechanics</h4>
+<ul class="square">
+<li><p>Extract the second phase code into its own function.</p></li>
+<li><p>Test.</p></li>
+<li><p>Introduce an intermediate data structure as an additional argument to the extracted function.</p></li>
+<li><p>Test.</p></li>
+<li><p>Examine each parameter of the extracted second phase. If it is used by first phase, move it to the intermediate data structure. Test after each move.</p>
+<div class="blockquote">
+<p class="noindent">Sometimes, a parameter should not be used by the second phase. In this case, extract the results of each usage of the parameter into a field of the intermediate data structure and use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec4">Move Statements to Callers</a> (<a class="pd_maroon" href="ch08.xhtml#page_217">217</a>)</span></em> on the line that populates it.</p>
+</div></li>
+<li><p>Apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> on the first-phase code, returning the intermediate data structure.</p>
+<div class="blockquote">
+<p class="noindent">It&#8217;s also reasonable to extract the first phase into a transformer object.</p>
+</div></li>
+</ul>
+<h4 class="h4" id="ch06lev2sec38">Example</h4>
+<p class="noindent">I&#8217;ll start with code to price an order for some vague and unimportant kind of goods:</p>
+<p class="codelink"><a id="p0156_01a" href="ch06_images.xhtml#p0156_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_156"/>function priceOrder(product, quantity, shippingMethod) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  const shippingPerCase = (basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = quantity * shippingPerCase;
+  const price =  basePrice - discount + shippingCost;
+  return price;
+}</pre>
+<p class="indent">Although this is the usual kind of trivial example, there is a sense of two phases going on here. The first couple of lines of code use the product information to calculate the product-oriented price of the order, while the later code uses shipping information to determine the shipping cost. If I have changes coming up that complicate the pricing and shipping calculations, but they work relatively independently, then splitting this code into two phases is valuable.</p>
+<p class="indent">I begin by applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> to the shipping calculation.</p>
+<p class="codelink"><a id="p0156_02a" href="ch06_images.xhtml#p0156_02">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  const price =  <span class="pd_maroon1">applyShipping(basePrice, shippingMethod, quantity, discount);</span>
+  return price;
+}
+<span class="pd_maroon1">function applyShipping(basePrice, shippingMethod, quantity, discount) {</span>
+  const shippingPerCase = (basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = quantity * shippingPerCase;
+  const price =  basePrice - discount + shippingCost;
+  return price;
+}</pre>
+<p class="indent">I pass in all the data that this second phase needs as individual parameters. In a more realistic case, there can be a lot of these, but I don&#8217;t worry about it as I&#8217;ll whittle them down later.</p>
+<p class="indent">Next, I introduce the intermediate data structure that will communicate between the two phases.</p>
+<p class="codelink"><a id="p0156_03a" href="ch06_images.xhtml#p0156_03">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  <span class="pd_maroon1">const priceData = {};</span>
+  const price =  applyShipping(<span class="pd_maroon1">priceData</span>, basePrice, shippingMethod, quantity, discount);
+  return price;
+}
+<span epub:type="pagebreak" id="page_157"/>function applyShipping(<span class="pd_maroon1">priceData</span>, basePrice, shippingMethod, quantity, discount) {
+  const shippingPerCase = (basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = quantity * shippingPerCase;
+  const price =  basePrice - discount + shippingCost;
+  return price;
+}</pre>
+<p class="indent">Now, I look at the various parameters to <code>applyShipping</code>. The first one is <code>basePrice</code> which is created by the first-phase code. So I move this into the intermediate data structure, removing it from the parameter list.</p>
+<p class="codelink"><a id="p0157_01a" href="ch06_images.xhtml#p0157_01">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  const priceData = {<span class="pd_maroon1">basePrice: basePrice</span>};
+  const price =  applyShipping(priceData, <span class="strike"><span class="pd_maroon1">basePrice,</span></span> shippingMethod, quantity, discount);
+  return price;
+}
+function applyShipping(priceData, <span class="strike"><span class="pd_maroon1">basePrice,</span></span> shippingMethod, quantity, discount) {
+  const shippingPerCase = (<span class="pd_maroon1">priceData.basePrice</span> &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = quantity * shippingPerCase;
+  const price =  <span class="pd_maroon1">priceData.basePrice</span> - discount + shippingCost;
+  return price;
+}</pre>
+<p class="indent">The next parameter in the list is <code>shippingMethod</code>. This one I leave as is, since it isn&#8217;t used by the first-phase code.</p>
+<p class="indent">After this, I have <code>quantity</code>. This is used by the first phase but not created by it, so I could actually leave this in the parameter list. My usual preference, however, is to move as much as I can to the intermediate data structure.</p>
+<p class="codelink"><a id="p0157_02a" href="ch06_images.xhtml#p0157_02">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  const priceData = {basePrice: basePrice, <span class="pd_maroon1">quantity: quantity</span>};
+  const price =  applyShipping(priceData, shippingMethod, <span class="strike"><span class="pd_maroon1">quantity,</span></span> discount);
+  return price;
+}
+function applyShipping(priceData, shippingMethod, <span class="strike"><span class="pd_maroon1">quantity,</span></span> discount) {
+  const shippingPerCase = (priceData.basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = <span class="pd_maroon1">priceData.quantity</span> * shippingPerCase;
+  const price =  priceData.basePrice - discount + shippingCost;
+  return price;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_158"/>I do the same with <code>discount</code>.</p>
+<p class="codelink"><a id="p0158_01a" href="ch06_images.xhtml#p0158_01">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  const priceData = {basePrice: basePrice, quantity: quantity, discount:discount};
+  const price =  applyShipping(priceData, shippingMethod, <span class="strike"><span class="pd_maroon1">discount</span></span>);
+  return price;
+}
+function applyShipping(priceData, shippingMethod<span class="strike"><span class="pd_maroon1">, discount</span></span>) {
+  const shippingPerCase = (priceData.basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = priceData.quantity * shippingPerCase;
+  const price =  priceData.basePrice - <span class="pd_maroon1">priceData.discount</span> + shippingCost;
+  return price;
+}</pre>
+<p class="indent">Once I&#8217;ve gone through all the function parameters, I have the intermediate data structure fully formed. So I can extract the first-phase code into its own function, returning this data.</p>
+<p class="codelink"><a id="p0158_02a" href="ch06_images.xhtml#p0158_02">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const priceData = <span class="pd_maroon1">calculatePricingData(product, quantity);</span>
+  const price =  applyShipping(priceData, shippingMethod);
+  return price;
+}
+<span class="pd_maroon1">function calculatePricingData(product, quantity) {</span>
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  return {basePrice: basePrice, quantity: quantity, discount:discount};
+}
+function applyShipping(priceData, shippingMethod) {
+  const shippingPerCase = (priceData.basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = priceData.quantity * shippingPerCase;
+  const price =  priceData.basePrice - priceData.discount + shippingCost;
+  return price;
+}</pre>
+<p class="indent">I can&#8217;t resist tidying out those final constants.</p>
+<p class="codelink"><a id="p0158_03a" href="ch06_images.xhtml#p0158_03">Click here to view code image</a></p>
+<pre class="pre">function priceOrder(product, quantity, shippingMethod) {
+  const priceData = calculatePricingData(product, quantity);
+  <span class="pd_maroon1">return</span> applyShipping(priceData, shippingMethod);
+}
+<span epub:type="pagebreak" id="page_159"/>function calculatePricingData(product, quantity) {
+  const basePrice = product.basePrice * quantity;
+  const discount = Math.max(quantity - product.discountThreshold, 0)
+          * product.basePrice * product.discountRate;
+  return {basePrice: basePrice, quantity: quantity, discount:discount};
+}
+function applyShipping(priceData, shippingMethod) {
+  const shippingPerCase = (priceData.basePrice &gt; shippingMethod.discountThreshold)
+          ? shippingMethod.discountedFee : shippingMethod.feePerCase;
+  const shippingCost = priceData.quantity * shippingPerCase;
+  <span class="pd_maroon1">return</span> priceData.basePrice - priceData.discount + shippingCost;
+}</pre>
+</section>
+</body>
+</html>

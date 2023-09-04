@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis" xml:lang="en-us" lang="en-us">
+  <head>
+    <title>Chapter 10 ISP: The Interface Segregation Principle</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+<h2 class="h2f" id="ch10"><a id="page_83" class="calibre3"></a><span class="gray">10</span><br class="calibre12"/>ISP: T<small class="calibre7">HE</small> I<small class="calibre7">NTERFACE</small> S<small class="calibre7">EGREGATION</small> P<small class="calibre7">RINCIPLE</small></h2>
+<div class="image1"><img src="../images/00035.jpeg" alt="Image" class="calibre2"/></div>
+<p class="noindent1"><a id="page_84"></a>The Interface Segregation Principle (ISP) derives its name from the diagram shown in <a href="part0022.html#ch10fig1">Figure 10.1</a>.</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00036.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch10fig1"></a><strong class="calibre8">Figure 10.1</strong> The Interface Segregation Principle</p>
+</div>
+<p class="noindent1">In the situation illustrated in <a href="part0022.html#ch10fig1">Figure 10.1</a>, there are several users who use the operations of the <code class="calibre11">OPS</code> class. Let’s assume that <code class="calibre11">User1</code> uses only <code class="calibre11">op1</code>, <code class="calibre11">User2</code> uses only <code class="calibre11">op2</code>, and <code class="calibre11">User3</code> uses only <code class="calibre11">op3</code>.</p>
+<p class="noindent1">Now imagine that <code class="calibre11">OPS</code> is a class written in a language like Java. Clearly, in that case, the source code of <code class="calibre11">User1</code> will inadvertently depend on <code class="calibre11">op2</code> and <code class="calibre11">op3</code>, even though it doesn’t call them. This dependence means that a change to the source code of <code class="calibre11">op2</code> in <code class="calibre11">OPS</code> will force <code class="calibre11">User1</code> to be recompiled and redeployed, even though nothing that it cared about has actually changed.</p>
+<p class="noindent1">This problem can be resolved by segregating the operations into interfaces as shown in <a href="part0022.html#ch10fig2">Figure 10.2</a>.</p>
+<p class="noindent1">Again, if we imagine that this is implemented in a statically typed language like Java, then the source code of <code class="calibre11">User1</code> will depend on <code class="calibre11">U1Ops</code>, and <code class="calibre11">op1</code>, but will not depend on <code class="calibre11">OPS</code>. Thus a change to <code class="calibre11">OPS</code> that <code class="calibre11">User1</code> does not care about will not cause <code class="calibre11">User1</code> to be recompiled and redeployed.</p>
+<div class="fig-heading">
+<div class="image1"><a id="page_85"></a><img src="../images/00037.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch10fig2"></a><strong class="calibre8">Figure 10.2</strong> Segregated operations</p>
+</div>
+<h3 class="h1" id="toclev_44">ISP <small class="calibre13">AND</small> L<small class="calibre13">ANGUAGE</small></h3>
+<p class="noindent1">Clearly, the previously given description depends critically on language type. Statically typed languages like Java force programmers to create declarations that users must <code class="calibre11">import</code>, or <code class="calibre11">use</code>, or otherwise <code class="calibre11">include</code>. It is these <code class="calibre11">included</code> declarations in source code that create the source code dependencies that force recompilation and redeployment.</p>
+<p class="noindent1">In dynamically typed languages like Ruby and Python, such declarations don’t exist in source code. Instead, they are inferred at runtime. Thus there are no source code dependencies to force recompilation and redeployment. This is the primary reason that dynamically typed languages create systems that are more flexible and less tightly coupled than statically typed languages.</p>
+<p class="noindent1">This fact could lead you to conclude that the ISP is a language issue, rather than an architecture issue.</p>
+<h3 class="h1" id="toclev_45"><a id="page_86" class="calibre3"></a>ISP <small class="calibre13">AND</small> A<small class="calibre13">RCHITECTURE</small></h3>
+<p class="noindent1">If you take a step back and look at the root motivations of the ISP, you can see a deeper concern lurking there. In general, it is harmful to depend on modules that contain more than you need. This is obviously true for source code dependencies that can force unnecessary recompilation and redeployment—but it is also true at a much higher, architectural level.</p>
+<p class="noindent1">Consider, for example, an architect working on a system, S. He wants to include a certain framework, F, into the system. Now suppose that the authors of F have bound it to a particular database, D. So S depends on F. which depends on D (<a href="part0022.html#ch10fig3">Figure 10.3</a>).</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00038.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch10fig3"></a><strong class="calibre8">Figure 10.3</strong> A problematic architecture</p>
+</div>
+<p class="noindent1">Now suppose that D contains features that F does not use and, therefore, that S does not care about. Changes to those features within D may well force the redeployment of F and, therefore, the redeployment of S. Even worse, a failure of one of the features within D may cause failures in F and S.</p>
+<h3 class="h1" id="toclev_46">C<small class="calibre13">ONCLUSION</small></h3>
+<p class="noindent1">The lesson here is that depending on something that carries baggage that you don’t need can cause you troubles that you didn’t expect.</p>
+<p class="noindent1">We’ll explore this idea in more detail when we discuss the Common Reuse Principle in <a href="part0026.html#ch13">Chapter 13</a>, “Component Cohesion.”</p>
+</body></html>

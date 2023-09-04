@@ -1,0 +1,1541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xml:lang="en-us" lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis">
+<head>
+<title>Refactoring: Improving the Design of Existing Code</title>
+<link rel="stylesheet" type="text/css" href="9780134757704.css"/>
+</head>
+<body>
+<section epub:type="bodymatter">
+<h2 class="h2" id="ch01"><span epub:type="pagebreak" id="page_1"/>Chapter 1<br/>Refactoring: A First Example</h2>
+<p class="noindent">How do I begin to talk about refactoring? The traditional way is by introducing the history of the subject, broad principles, and the like. When somebody does that at a conference, I get slightly sleepy. My mind starts wandering, with a low-priority background process polling the speaker until they give an example.</p>
+<p class="indent">The examples wake me up because I can see what is going on. With principles, it is too easy to make broad generalizations&#8212;and too hard to figure out how to apply things. An example helps make things clear.</p>
+<p class="indent">So I&#8217;m going to start this book with an example of refactoring. I&#8217;ll talk about how refactoring works and will give you a sense of the refactoring process. I can then do the usual principles-style introduction in the next chapter.</p>
+<p class="indent">With any introductory example, however, I run into a problem. If I pick a large program, describing it and how it is refactored is too complicated for a mortal reader to work through. (I tried this with the original book&#8212;and ended up throwing away two examples, which were still pretty small but took over a hundred pages each to describe.) However, if I pick a program that is small enough to be comprehensible, refactoring does not look like it is worthwhile.</p>
+<p class="indent">I&#8217;m thus in the classic bind of anyone who wants to describe techniques that are useful for real-world programs. Frankly, it is not worth the effort to do all the refactoring that I&#8217;m going to show you on the small program I will be using. But if the code I&#8217;m showing you is part of a larger system, then the refactoring becomes important. Just look at my example and imagine it in the context of a much larger system.</p>
+<h3 class="h3" id="ch01lev1sec1">The Starting Point</h3>
+<p class="noindent">In the first edition of this book, my starting program printed a bill from a video rental store, which may now lead many of you to ask: &#8220;What&#8217;s a video rental store?&#8221; Rather than answer that question, I&#8217;ve reskinned the example to something that is both older and still current.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_2"/>Image a company of theatrical players who go out to various events performing plays. Typically, a customer will request a few plays and the company charges them based on the size of the audience and the kind of play they perform. There are currently two kinds of plays that the company performs: tragedies and comedies. As well as providing a bill for the performance, the company gives its customers &#8220;volume credits&#8221; which they can use for discounts on future performances&#8212;think of it as a customer loyalty mechanism.</p>
+<p class="indent">The performers store data about their plays in a simple JSON file that looks something like this:</p>
+<p class="pro-title"><em>plays.json&#8230;</em></p>
+<p class="codelink"><a id="p0002_01a" href="ch01_images.xhtml#p0002_01">Click here to view code image</a></p>
+<pre class="pre">{
+  "hamlet": {"name": "Hamlet", "type": "tragedy"},
+  "as-like": {"name": "As You Like It", "type": "comedy"},
+  "othello": {"name": "Othello", "type": "tragedy"}
+}</pre>
+<p class="indent">The data for their bills also comes in a JSON file:</p>
+<p class="pro-title"><em>invoices.json&#8230;</em></p>
+<p class="codelink"><a id="p0002_02a" href="ch01_images.xhtml#p0002_02">Click here to view code image</a></p>
+<pre class="pre">[
+  {
+    "customer": "BigCo",
+    "performances": [
+      {
+        "playID": "hamlet",
+        "audience": 55
+      },
+      {
+        "playID": "as-like",
+        "audience": 35
+      },
+      {
+        "playID": "othello",
+        "audience": 40
+      }
+    ]
+  }
+]</pre>
+<p class="indent">The code that prints the bill is this simple function:</p>
+<p class="codelink"><a id="p0002_03a" href="ch01_images.xhtml#p0002_03">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  <span epub:type="pagebreak" id="page_3"/>for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    let thisAmount = 0;
+
+    switch (play.type) {
+    case "tragedy":
+      thisAmount = 40000;
+      if (perf.audience &gt; 30) {
+        thisAmount += 1000 * (perf.audience - 30);
+      }
+      break;
+    case "comedy":
+      thisAmount = 30000;
+      if (perf.audience &gt; 20) {
+        thisAmount += 10000 + 500 * (perf.audience - 20);
+      }
+      thisAmount += 300 * perf.audience;
+      break;
+    default:
+        throw new Error(`unknown type: ${play.type}`);
+    }
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${play.name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;
+}</pre>
+<p class="indent">Running that code on the test data files above results in the following output:</p>
+<p class="codelink"><a id="p0003_01a" href="ch01_images.xhtml#p0003_01">Click here to view code image</a></p>
+<pre class="pre">Statement for BigCo
+  Hamlet: $650.00 (55 seats)
+  As You Like It: $580.00 (35 seats)
+  Othello: $500.00 (40 seats)
+Amount owed is $1,730.00
+You earned 47 credits</pre>
+<h3 class="h3" id="ch01lev1sec2">Comments on the Starting Program</h3>
+<p class="noindent">What are your thoughts on the design of this program? The first thing I&#8217;d say is that it&#8217;s tolerable as it is&#8212;a program so short doesn&#8217;t require any deep structure to be comprehensible. But remember my earlier point that I have to keep examples <span epub:type="pagebreak" id="page_4"/>small. Imagine this program on a larger scale&#8212;perhaps hundreds of lines long. At that size, a single inline function is hard to understand.</p>
+<p class="indent">Given that the program works, isn&#8217;t any statement about its structure merely an aesthetic judgment, a dislike of &#8220;ugly&#8221; code? After all, the compiler doesn&#8217;t care whether the code is ugly or clean. But when I change the system, there is a human involved, and humans do care. A poorly designed system is hard to change&#8212;because it is difficult to figure out what to change and how these changes will interact with the existing code to get the behavior I want. And if it is hard to figure out what to change, there is a good chance that I will make mistakes and introduce bugs.</p>
+<p class="indent">Thus, if I&#8217;m faced with modifying a program with hundreds of lines of code, I&#8217;d rather it be structured into a set of functions and other program elements that allow me to understand more easily what the program is doing. If the program lacks structure, it&#8217;s usually easier for me to add structure to the program first, and then make the change I need.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>When you have to add a feature to a program but the code is not structured in a convenient way, first refactor the program to make it easy to add the feature, then add the feature.</em></p>
+</div>
+<p class="indent">In this case, I have a couple of changes that the users would like to make. First, they want a statement printed in HTML. Consider what impact this change would have. I&#8217;m faced with adding conditional statements around every statement that adds a string to the result. That will add a host of complexity to the function. Faced with that, most people prefer to copy the method and change it to emit HTML. Making a copy may not seem too onerous a task, but it sets up all sorts of problems for the future. Any changes to the charging logic would force me to update both methods&#8212;and to ensure they are updated consistently. If I&#8217;m writing a program that will never change again, this kind of copy-and-paste is fine. But if it&#8217;s a long-lived program, then duplication is a menace.</p>
+<p class="indent">This brings me to a second change. The players are looking to perform more kinds of plays: they hope to add history, pastoral, pastoral-comical, historical-pastoral, tragical-historical, tragical-comical-historical-pastoral, scene individable, and poem unlimited to their repertoire. They haven&#8217;t exactly decided yet what they want to do and when. This change will affect both the way their plays are charged for and the way volume credits are calculated. As an experienced developer I can be sure that whatever scheme they come up with, they will change it again within six months. After all, when feature requests come, they come not as single spies but in battalions.</p>
+<p class="indent">Again, that <code>statement</code> method is where the changes need to be made to deal with changes in classification and charging rules. But if I copy <code>statement</code> to <code>htmlStatement</code>, I&#8217;d need to ensure that any changes are consistent. Furthermore, as the rules <span epub:type="pagebreak" id="page_5"/>grow in complexity, it&#8217;s going to be harder to figure out where to make the changes and harder to do them without making a mistake.</p>
+<p class="indent">Let me stress that it&#8217;s these changes that drive the need to perform refactoring. If the code works and doesn&#8217;t ever need to change, it&#8217;s perfectly fine to leave it alone. It would be nice to improve it, but unless someone needs to understand it, it isn&#8217;t causing any real harm. Yet as soon as someone does need to understand how that code works, and struggles to follow it, then you have to do something about it.</p>
+<h3 class="h3" id="ch01lev1sec3">The First Step in Refactoring</h3>
+<p class="noindent">Whenever I do refactoring, the first step is always the same. I need to ensure I have a solid set of tests for that section of code. The tests are essential because even though I will follow refactorings structured to avoid most of the opportunities for introducing bugs, I&#8217;m still human and still make mistakes. The larger a program, the more likely it is that my changes will cause something to break inadvertently&#8212;in the digital age, frailty&#8217;s name is software.</p>
+<p class="indent">Since the <code>statement</code> returns a string, what I do is create a few invoices, give each invoice a few performances of various kinds of plays, and generate the statement strings. I then do a string comparison between the new string and some reference strings that I have hand-checked. I set up all of these tests using a testing framework so I can run them with just a simple keystroke in my development environment. The tests take only a few seconds to run, and as you will see, I run them often.</p>
+<p class="indent">An important part of the tests is the way they report their results. They either go green, meaning that all the strings are identical to the reference strings, or red, showing a list of failures&#8212;the lines that turned out differently. The tests are thus self-checking. It is vital to make tests self-checking. If I don&#8217;t, I&#8217;d end up spending time hand-checking values from the test against values on a desk pad, and that would slow me down. Modern testing frameworks provide all the features needed to write and run self-checking tests.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Before you start refactoring, make sure you have a solid suite of tests. These tests must be self-checking.</em></p>
+</div>
+<p class="indent">As I do the refactoring, I&#8217;ll lean on the tests. I think of them as a bug detector to protect me against my own mistakes. By writing what I want twice, in the code and in the test, I have to make the mistake consistently in both places to fool the detector. By double-checking my work, I reduce the chance of doing something wrong. Although it takes time to build the tests, I end up saving that time, with considerable interest, by spending less time debugging. This is such an important part of refactoring that I devote a full chapter to it (<em><span class="pd_maroon"><a class="pd_maroon" href="ch04.xhtml#ch04">Building Tests</a> (<a class="pd_maroon" href="ch04.xhtml#page_85">85</a>)</span></em>).</p>
+<h3 class="h3" id="ch01lev1sec4"><span epub:type="pagebreak" id="page_6"/>Decomposing the <code>statement</code> Function</h3>
+<p class="noindent">When refactoring a long function like this, I mentally try to identify points that separate different parts of the overall behavior. The first chunk that leaps to my eye is the switch statement in the middle.</p>
+<p class="codelink"><a id="p0006_01a" href="ch01_images.xhtml#p0006_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    let thisAmount = 0;
+
+    <span class="pd_blue">switch (play.type) {</span>
+    <span class="pd_blue">case "tragedy":</span>
+      <span class="pd_blue">thisAmount = 40000;</span>
+      <span class="pd_blue">if (perf.audience &gt; 30) {</span>
+        <span class="pd_blue">thisAmount += 1000 * (perf.audience - 30);</span>
+      <span class="pd_blue">}</span>
+      <span class="pd_blue">break;</span>
+    <span class="pd_blue">case "comedy":</span>
+      <span class="pd_blue">thisAmount = 30000;</span>
+      <span class="pd_blue">if (perf.audience &gt; 20) {</span>
+        <span class="pd_blue">thisAmount += 10000 + 500 * (perf.audience - 20);</span>
+      <span class="pd_blue">}</span>
+      <span class="pd_blue">thisAmount += 300 * perf.audience;</span>
+      <span class="pd_blue">break;</span>
+    <span class="pd_blue">default:</span>
+        <span class="pd_blue">throw new Error(`unknown type: ${play.type}`);</span>
+    <span class="pd_blue">}</span>
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${play.name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_7"/>As I look at this chunk, I conclude that it&#8217;s calculating the charge for one performance. That conclusion is a piece of insight about the code. But as Ward Cunningham puts it, this understanding is in my head&#8212;a notoriously volatile form of storage. I need to persist it by moving it from my head back into the code itself. That way, should I come back to it later, the code will tell me what it&#8217;s doing&#8212;I don&#8217;t have to figure it out again.</p>
+<p class="indent">The way to put that understanding into code is to turn that chunk of code into its own function, naming it after what it does&#8212;something like <code>amountFor(aPerformance)</code>. When I want to turn a chunk of code into a function like this, I have a procedure for doing it that minimizes my chances of getting it wrong. I wrote down this procedure and, to make it easy to reference, named it <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>.</p>
+<p class="indent">First, I need to look in the fragment for any variables that will no longer be in scope once I&#8217;ve extracted the code into its own function. In this case, I have three: <code>perf</code>, <code>play</code>, and <code>thisAmount</code>. The first two are used by the extracted code, but not modified, so I can pass them in as parameters. Modified variables need more care. Here, there is only one, so I can return it. I can also bring its initialization inside the extracted code. All of which yields this:</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0007_01a" href="ch01_images.xhtml#p0007_01">Click here to view code image</a></p>
+<pre class="pre">function amountFor(perf, play) {
+  <span class="pd_maroon1">let thisAmount = 0;</span>
+  switch (play.type) {
+  case "tragedy":
+    thisAmount = 40000;
+    if (perf.audience &gt; 30) {
+      thisAmount += 1000 * (perf.audience - 30);
+    }
+    break;
+  case "comedy":
+    thisAmount = 30000;
+    if (perf.audience &gt; 20) {
+      thisAmount += 10000 + 500 * (perf.audience - 20);
+    }
+    thisAmount += 300 * perf.audience;
+    break;
+  default:
+      throw new Error(`unknown type: ${play.type}`);
+  }
+  <span class="pd_maroon1">return thisAmount;</span>
+}</pre>
+<div class="blockquote">
+<p class="noindent">When I use a header like &#8220;<em>function someName&#8230;</em>&#8221; in italics for some code, that means that the following code is within the scope of the function, file, or class named in the header. There is usually other code within that scope that I won&#8217;t show, as I&#8217;m not discussing it at the moment.</p>
+</div>
+<p class="noindent">The original <code>statement</code> code now calls this function to populate <code>thisAmount</code>:</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_8"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0008_01a" href="ch01_images.xhtml#p0008_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    let thisAmount = <span class="pd_maroon1">amountFor(perf, play)</span>;
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${play.name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">Once I&#8217;ve made this change, I immediately compile and test to see if I&#8217;ve broken anything. It&#8217;s an important habit to test after every refactoring, however simple. Mistakes are easy to make&#8212;at least, I find them easy to make. Testing after each change means that when I make a mistake, I only have a small change to consider in order to spot the error, which makes it far easier to find and fix. This is the essence of the refactoring process: small changes and testing after each change. If I try to do too much, making a mistake will force me into a tricky debugging episode that can take a long time. Small changes, enabling a tight feedback loop, are the key to avoiding that mess.</p>
+<div class="blockquote">
+<p class="noindent">I use <em>compile</em> here to mean doing whatever is needed to make the JavaScript executable. Since JavaScript is directly executable, that may mean nothing, but in other cases it may mean moving code to an output directory and/or using a processor such as Babel <span class="pd_maroon">[<a href="biblo.xhtml#bib2">babel</a>]</span>.</p>
+</div>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Refactoring changes the programs in small steps, so if you make a mistake, it is easy to find where the bug is.</em></p>
+</div>
+<p class="indent">This being JavaScript, I can extract <code>amountFor</code> into a nested function of <code>statement</code>. This is helpful as it means I don&#8217;t have to pass data that&#8217;s inside the scope of the containing function to the newly extracted function. That doesn&#8217;t make a difference in this case, but it&#8217;s one less issue to deal with.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_9"/>In this case the tests passed, so my next step is to commit the change to my local version control system. I use a version control system, such as git or mercurial, that allows me to make private commits. I commit after each successful refactoring, so I can easily get back to a working state should I mess up later. I then squash changes into more significant commits before I push the changes to a shared repository.</p>
+<p class="indent"><em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> is a common refactoring to automate. If I was programming in Java, I would have instinctively reached for the key sequence for my IDE to perform this refactoring. As I write this, there is no such robust support for this refactoring in JavaScript tools, so I have to do this manually. It&#8217;s not hard, although I have to be careful with those locally scoped variables.</p>
+<p class="indent">Once I&#8217;ve used <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>, I take a look at what I&#8217;ve extracted to see if there are any quick and easy things I can do to clarify the extracted function. The first thing I do is rename some of the variables to make them clearer, such as changing <code>thisAmount</code> to <code>result</code>.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0009_01a" href="ch01_images.xhtml#p0009_01">Click here to view code image</a></p>
+<pre class="pre">function amountFor(perf, play) {
+  let <span class="pd_maroon1">result</span> = 0;
+  switch (play.type) {
+  case "tragedy":
+    <span class="pd_maroon1">result</span> = 40000;
+    if (perf.audience &gt; 30) {
+      <span class="pd_maroon1">result</span> += 1000 * (perf.audience - 30);
+    }
+    break;
+  case "comedy":
+    <span class="pd_maroon1">result</span> = 30000;
+    if (perf.audience &gt; 20) {
+      <span class="pd_maroon1">result</span> += 10000 + 500 * (perf.audience - 20);
+    }
+    <span class="pd_maroon1">result</span> += 300 * perf.audience;
+    break;
+  default:
+      throw new Error(`unknown type: ${play.type}`);
+  }
+  return <span class="pd_maroon1">result</span>;
+}</pre>
+<p class="indent">It&#8217;s my coding standard to always call the return value from a function &#8220;result&#8221;. That way I always know its role. Again, I compile, test, and commit. Then I move onto the first argument.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_10"/><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0010_01a" href="ch01_images.xhtml#p0010_01">Click here to view code image</a></p>
+<pre class="pre">function amountFor(<span class="pd_maroon1">aPerformance</span>, play) {
+  let result = 0;
+  switch (play.type) {
+  case "tragedy":
+    result = 40000;
+    if (<span class="pd_maroon1">aPerformance</span>.audience &gt; 30) {
+      result += 1000 * (<span class="pd_maroon1">aPerformance</span>.audience - 30);
+    }
+    break;
+  case "comedy":
+    result = 30000;
+    if (<span class="pd_maroon1">aPerformance</span>.audience &gt; 20) {
+      result += 10000 + 500 * (<span class="pd_maroon1">aPerformance</span>.audience - 20);
+    }
+    result += 300 * <span class="pd_maroon1">aPerformance</span>.audience;
+    break;
+  default:
+      throw new Error(`unknown type: ${play.type}`);
+  }
+  return result;
+}</pre>
+<p class="indent">Again, this is following my coding style. With a dynamically typed language such as JavaScript, it&#8217;s useful to keep track of types&#8212;hence, my default name for a parameter includes the type name. I use an indefinite article with it unless there is some specific role information to capture in the name. I learned this convention from Kent Beck <span class="pd_maroon">[<a href="biblo.xhtml#bib4">Beck SBPP</a>]</span> and continue to find it helpful.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>Any fool can write code that a computer can understand. Good programmers write code that humans can understand.</em></p>
+</div>
+<p class="indent">Is this renaming worth the effort? Absolutely. Good code should clearly communicate what it is doing, and variable names are a key to clear code. Never be afraid to change names to improve clarity. With good find-and-replace tools, it is usually not difficult; testing, and static typing in a language that supports it, will highlight any occurrences you miss. And with automated refactoring tools, it&#8217;s trivial to rename even widely used functions.</p>
+<p class="indent">The next item to consider for renaming is the <code>play</code> parameter, but I have a different fate for that.</p>
+<h4 class="h4" id="ch01lev2sec1">Removing the <code>play</code> Variable</h4>
+<p class="noindent">As I consider the parameters to <code>amountFor</code>, I look to see where they come from. <code>aPerformance</code> comes from the loop variable, so naturally changes with each iteration <span epub:type="pagebreak" id="page_11"/>through the loop. But <code>play</code> is computed from the performance, so there&#8217;s no need to pass it in as a parameter at all&#8212;I can just recalculate it within <code>amountFor</code>. When I&#8217;m breaking down a long function, I like to get rid of variables like <code>play</code>, because temporary variables create a lot of locally scoped names that complicate extractions. The refactoring I will use here is <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a> (<a class="pd_maroon" href="ch07.xhtml#page_178">178</a>)</span></em>.</p>
+<p class="indent">I begin by extracting the right-hand side of the assignment into a function.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0011_01a" href="ch01_images.xhtml#p0011_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function playFor(aPerformance) {</span>
+  <span class="pd_maroon1">return plays[aPerformance.playID];</span>
+<span class="pd_maroon1">}</span></pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0011_02a" href="ch01_images.xhtml#p0011_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  for (let perf of invoice.performances) {
+    const play = <span class="pd_maroon1">playFor(perf)</span>;
+    let thisAmount = amountFor(perf, play);
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${play.name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">I compile-test-commit, and then use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>.</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0011_03a" href="ch01_images.xhtml#p0011_03">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  <span epub:type="pagebreak" id="page_12"/>for (let perf of invoice.performances) {
+    <span class="strike"><span class="pd_maroon1">const play = playFor(perf);</span></span>
+    let thisAmount = amountFor(perf, <span class="pd_maroon1">playFor(perf)</span>);
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === <span class="pd_maroon1">playFor(perf)</span>.type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${<span class="pd_maroon1">playFor(perf)</span>.name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">I compile-test-commit. With that inlined, I can then apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to <code>amountFor</code> to remove the <code>play</code> parameter. I do this in two steps. First, I use the new function inside <code>amountFor</code>.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0012_01a" href="ch01_images.xhtml#p0012_01">Click here to view code image</a></p>
+<pre class="pre">function amountFor(aPerformance, play) {
+  let result = 0;
+  switch (<span class="pd_maroon1">playFor(aPerformance)</span>.type) {
+  case "tragedy":
+    result = 40000;
+    if (aPerformance.audience &gt; 30) {
+      result += 1000 * (aPerformance.audience - 30);
+    }
+    break;
+  case "comedy":
+    result = 30000;
+    if (aPerformance.audience &gt; 20) {
+      result += 10000 + 500 * (aPerformance.audience - 20);
+    }
+    result += 300 * aPerformance.audience;
+    break;
+  default:
+      throw new Error(`unknown type: ${<span class="pd_maroon1">playFor(aPerformance)</span>.type}`);
+  }
+  return result;
+}</pre>
+<p class="indent">I compile-test-commit, and then delete the parameter.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_13"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0013_01a" href="ch01_images.xhtml#p0013_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  for (let perf of invoice.performances) {
+    let thisAmount = amountFor(perf<span class="strike"><span class="pd_maroon1">, playFor(perf)</span></span>);
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0013_02a" href="ch01_images.xhtml#p0013_02">Click here to view code image</a></p>
+<pre class="pre">function amountFor(aPerformance<span class="strike"><span class="pd_maroon1">, play</span></span>) {
+  let result = 0;
+  switch (playFor(aPerformance).type) {
+  case "tragedy":
+    result = 40000;
+    if (aPerformance.audience &gt; 30) {
+      result += 1000 * (aPerformance.audience - 30);
+    }
+    break;
+  case "comedy":
+    result = 30000;
+    if (aPerformance.audience &gt; 20) {
+      result += 10000 + 500 * (aPerformance.audience - 20);
+    }
+    result += 300 * aPerformance.audience;
+    break;
+  default:
+      throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+  }
+  return result;
+}</pre>
+<p class="indent">And compile-test-commit again.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_14"/>This refactoring alarms some programmers. Previously, the code to look up the play was executed once in each loop iteration; now, it&#8217;s executed thrice. I&#8217;ll talk about the interplay of refactoring and performance later, but for the moment I&#8217;ll just observe that this change is unlikely to significantly affect performance, and even if it were, it is much easier to improve the performance of a well-factored code base.</p>
+<p class="indent">The great benefit of removing local variables is that it makes it much easier to do extractions, since there is less local scope to deal with. Indeed, usually I&#8217;ll take out local variables before I do any extractions.</p>
+<p class="indent">Now that I&#8217;m done with the arguments to <code>amountFor</code>, I look back at where it&#8217;s called. It&#8217;s being used to set a temporary variable that&#8217;s not updated again, so I apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>.</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0014_01a" href="ch01_images.xhtml#p0014_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+    for (let perf of invoice.performances) {
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${format(<span class="pd_maroon1">amountFor</span>(perf)/100)} (${perf.audience} seats)\n`;
+    totalAmount += <span class="pd_maroon1">amountFor</span>(perf);
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<h4 class="h4" id="ch01lev2sec2">Extracting Volume Credits</h4>
+<p class="noindent">Here&#8217;s the current state of the <code>statement</code> function body:</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0014_02a" href="ch01_images.xhtml#p0014_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  <span epub:type="pagebreak" id="page_15"/>for (let perf of invoice.performances) {
+
+    // add volume credits
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${format(amountFor(perf)/100)} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">Now I get the benefit from removing the <code>play</code> variable as it makes it easier to extract the volume credits calculation by removing one of the locally scoped variables.</p>
+<p class="indent">I still have to deal with the other two. Again, <code>perf</code> is easy to pass in, but <code>volumeCredits</code> is a bit more tricky as it is an accumulator updated in each pass of the loop. So my best bet is to initialize a shadow of it inside the extracted function and return it.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0015_01a" href="ch01_images.xhtml#p0015_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function volumeCreditsFor(perf) {</span>
+  let volumeCredits = 0;
+  volumeCredits += Math.max(perf.audience - 30, 0);
+  if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+  return volumeCredits;
+}</pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0015_02a" href="ch01_images.xhtml#p0015_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  for (let perf of invoice.performances) {
+    <span class="pd_maroon1">volumeCredits += volumeCreditsFor(perf);</span>
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${format(amountFor(perf)/100)} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">I remove the unnecessary (and, in this case, downright misleading) comment.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_16"/>I compile-test-commit that, and then rename the variables inside the new function.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0016_01a" href="ch01_images.xhtml#p0016_01">Click here to view code image</a></p>
+<pre class="pre">function volumeCreditsFor(<span class="pd_maroon1">aPerformance</span>) {
+  let <span class="pd_maroon1">result</span> = 0;
+  <span class="pd_maroon1">result</span> += Math.max(<span class="pd_maroon1">aPerformance</span>.audience - 30, 0);
+  if ("comedy" === playFor(<span class="pd_maroon1">aPerformance</span>).type) <span class="pd_maroon1">result</span> += Math.floor(aPerformance.audience / 5);
+  return <span class="pd_maroon1">result</span>;
+}</pre>
+<p class="indent">I&#8217;ve shown it in one step, but as before I did the renames one at a time, with a compile-test-commit after each.</p>
+<h4 class="h4" id="ch01lev2sec3">Removing the <code>format</code> Variable</h4>
+<p class="noindent">Let&#8217;s look at the main <code>statement</code> method again:</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0016_02a" href="ch01_images.xhtml#p0016_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  const format = new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format;
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${format(amountFor(perf)/100)} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">As I suggested before, temporary variables can be a problem. They are only useful within their own routine, and therefore they encourage long, complex routines. My next move, then, is to replace some of them. The easiest one is <code>format</code>. This is a case of assigning a function to a temp, which I prefer to replace with a declared function.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0016_03a" href="ch01_images.xhtml#p0016_03">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function format(aNumber) {</span>
+  return new Intl.NumberFormat("en-US",
+                      { style: "currency", currency: "USD",
+                        minimumFractionDigits: 2 }).format(aNumber);
+}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_17"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0017_01a" href="ch01_images.xhtml#p0017_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${<span class="pd_maroon1">format</span>(amountFor(perf)/100)} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  result += `Amount owed is ${<span class="pd_maroon1">format</span>(totalAmount/100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<div class="blockquote">
+<p class="noindent">Although changing a function variable to a declared function is a refactoring, I haven&#8217;t named it and included it in the catalog. There are many refactorings that I didn&#8217;t feel important enough for that. This one is both simple to do and relatively rare, so I didn&#8217;t think it was worthwhile.</p>
+</div>
+<p class="indent">I&#8217;m not keen on the name&#8212;&#8220;format&#8221; doesn&#8217;t really convey enough of what it&#8217;s doing. &#8220;formatAsUSD&#8221; would be a bit too long-winded since it&#8217;s being used in a string template, particularly within this small scope. I think the fact that it&#8217;s formatting a currency amount is the thing to highlight here, so I pick a name that suggests that and apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em>.</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0017_02a" href="ch01_images.xhtml#p0017_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${<span class="pd_maroon1">usd</span>(amountFor(perf))} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  result += `Amount owed is ${<span class="pd_maroon1">usd</span>(totalAmount)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0017_03a" href="ch01_images.xhtml#p0017_03">Click here to view code image</a></p>
+<pre class="pre">function <span class="pd_maroon1">usd</span>(aNumber) {
+  return new Intl.NumberFormat("en-US",
+                      { style: "currency", currency: "USD",
+                        minimumFractionDigits: 2 }).format(aNumber<span class="pd_maroon1">/100</span>);
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_18"/>Naming is both important and tricky. Breaking a large function into smaller ones only adds value if the names are good. With good names, I don&#8217;t have to read the body of the function to see what it does. But it&#8217;s hard to get names right the first time, so I use the best name I can think of for the moment, and don&#8217;t hesitate to rename it later. Often, it takes a second pass through some code to realize what the best name really is.</p>
+<p class="indent">As I&#8217;m changing the name, I also move the duplicated division by 100 into the function. Storing money as integer cents is a common approach&#8212;it avoids the dangers of storing fractional monetary values as floats but allows me to use arithmetic operators. Whenever I want to display such a penny-integer number, however, I need a decimal, so my formatting function should take care of the division.</p>
+<h4 class="h4" id="ch01lev2sec4">Removing Total Volume Credits</h4>
+<p class="noindent">My next target variable is <code>volumeCredits</code>. This is a trickier case, as it&#8217;s built up during the iterations of the loop. My first move, then, is to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec7">Split Loop</a> (<a class="pd_maroon" href="ch08.xhtml#page_227">227</a>)</span></em> to separate the accumulation of <code>volumeCredits</code>.</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0018_01a" href="ch01_images.xhtml#p0018_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+
+  <span class="pd_maroon1">for (let perf of invoice.performances) {</span>
+
+    <span class="pd_maroon1">// print line for this order</span>
+    <span class="pd_maroon1">result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;</span>
+    <span class="pd_maroon1">totalAmount += amountFor(perf);</span>
+  <span class="pd_maroon1">}</span>
+  <span class="pd_maroon1">for (let perf of invoice.performances) {</span>
+    <span class="pd_maroon1">volumeCredits += volumeCreditsFor(perf);</span>
+  <span class="pd_maroon1">}</span>
+
+  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">With that done, I can use <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec6">Slide Statements</a> (<a class="pd_maroon" href="ch08.xhtml#page_223">223</a>)</span></em> to move the declaration of the variable next to the loop.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_19"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0019_01a" href="ch01_images.xhtml#p0019_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  <span class="pd_maroon1">let volumeCredits = 0;</span>
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+  }
+  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">Gathering together everything that updates the <code>volumeCredits</code> variable makes it easier to do <em><span class="pd_maroon"><a class="pd_maroon" href="ch07.xhtml#ch07lev1sec4">Replace Temp with Query</a> (<a class="pd_maroon" href="ch07.xhtml#page_178">178</a>)</span></em>. As before, the first step is to apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> to the overall calculation of the variable.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0019_02a" href="ch01_images.xhtml#p0019_02">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function totalVolumeCredits() {</span>
+  let volumeCredits = 0;
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+  }
+  return volumeCredits;
+}</pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0019_03a" href="ch01_images.xhtml#p0019_03">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+  let volumeCredits = <span class="pd_maroon1">totalVolumeCredits()</span>;
+  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;</pre>
+<p class="indent">Once everything is extracted, I can apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>:</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_20"/><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0020_01a" href="ch01_images.xhtml#p0020_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let totalAmount = 0;
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+
+    // print line for this order
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
+  }
+
+  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `You earned ${<span class="pd_maroon1">totalVolumeCredits()</span>} credits\n`;
+  return result;</pre>
+<p class="indent">Let me pause for a bit to talk about what I&#8217;ve just done here. Firstly, I know readers will again be worrying about performance with this change, as many people are wary of repeating a loop. But most of the time, rerunning a loop like this has a negligible effect on performance. If you timed the code before and after this refactoring, you would probably not notice any significant change in speed&#8212;and that&#8217;s usually the case. Most programmers, even experienced ones, are poor judges of how code actually performs. Many of our intuitions are broken by clever compilers, modern caching techniques, and the like. The performance of software usually depends on just a few parts of the code, and changes anywhere else don&#8217;t make an appreciable difference.</p>
+<p class="indent">But &#8220;mostly&#8221; isn&#8217;t the same as &#8220;alwaysly.&#8221; Sometimes a refactoring will have a significant performance implication. Even then, I usually go ahead and do it, because it&#8217;s much easier to tune the performance of well-factored code. If I introduce a significant performance issue during refactoring, I spend time on performance tuning afterwards. It may be that this leads to reversing some of the refactoring I did earlier&#8212;but most of the time, due to the refactoring, I can apply a more effective performance-tuning enhancement instead. I end up with code that&#8217;s both clearer and faster.</p>
+<p class="indent">So, my overall advice on performance with refactoring is: Most of the time you should ignore it. If your refactoring introduces performance slow-downs, finish refactoring first and do performance tuning afterwards.</p>
+<p class="indent">The second aspect I want to call your attention to is how small the steps were to remove <code>volumeCredits</code>. Here are the four steps, each followed by compiling, testing, and committing to my local source code repository:</p>
+<ul class="square">
+<li><p><em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec7">Split Loop</a> (<a class="pd_maroon" href="ch08.xhtml#page_227">227</a>)</span></em> to isolate the accumulation</p></li>
+<li><p><em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec6">Slide Statements</a> (<a class="pd_maroon" href="ch08.xhtml#page_223">223</a>)</span></em> to bring the initializing code next to the accumulation</p></li>
+<li><p><em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> to create a function for calculating the total</p></li>
+<li><p><em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em> to remove the variable completely</p></li>
+</ul>
+<p class="indent"><span epub:type="pagebreak" id="page_21"/>I confess I don&#8217;t always take quite as short steps as these&#8212;but whenever things get difficult, my first reaction is to take shorter steps. In particular, should a test fail during a refactoring, if I can&#8217;t immediately see and fix the problem, I&#8217;ll revert to my last good commit and redo what I just did with smaller steps. That works because I commit so frequently and because small steps are the key to moving quickly, particularly when working with difficult code.</p>
+<p class="indent">I then repeat that sequence to remove <code>totalAmount</code>. I start by splitting the loop (compile-test-commit), then I slide the variable initialization (compile-test-commit), and then I extract the function. There is a wrinkle here: The best name for the function is &#8220;totalAmount&#8221;, but that&#8217;s the name of the variable, and I can&#8217;t have both at the same time. So I give the new function a random name when I extract it (and compile-test-commit).</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0021_01a" href="ch01_images.xhtml#p0021_01">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function appleSauce() {</span>
+  let totalAmount = 0;
+  for (let perf of invoice.performances) {
+    totalAmount += amountFor(perf);
+  }
+  return totalAmount;
+}</pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0021_02a" href="ch01_images.xhtml#p0021_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  let totalAmount = <span class="pd_maroon1">appleSauce()</span>;
+
+  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;</pre>
+<p class="indent">Then I inline the variable (compile-test-commit) and rename the function to something more sensible (compile-test-commit).</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0021_03a" href="ch01_images.xhtml#p0021_03">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(<span class="pd_maroon1">totalAmount()</span>)}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_22"/><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0022_01a" href="ch01_images.xhtml#p0022_01">Click here to view code image</a></p>
+<pre class="pre">function <span class="pd_maroon1">totalAmount</span>() {
+  let totalAmount = 0;
+  for (let perf of invoice.performances) {
+    totalAmount += amountFor(perf);
+  }
+  return totalAmount;
+}</pre>
+<p class="indent">I also take the opportunity to change the names inside my extracted functions to adhere to my convention.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0022_02a" href="ch01_images.xhtml#p0022_02">Click here to view code image</a></p>
+<pre class="pre">function totalAmount() {
+  let <span class="pd_maroon1">result</span> = 0;
+  for (let perf of invoice.performances) {
+    <span class="pd_maroon1">result</span> += amountFor(perf);
+  }
+  return <span class="pd_maroon1">result</span>;
+}
+function totalVolumeCredits() {
+  let <span class="pd_maroon1">result</span> = 0;
+  for (let perf of invoice.performances) {
+    <span class="pd_maroon1">result</span> += volumeCreditsFor(perf);
+  }
+  return <span class="pd_maroon1">result</span>;
+}</pre>
+<h3 class="h3" id="ch01lev1sec5">Status: Lots of Nested Functions</h3>
+<p class="noindent">Now is a good time to pause and take a look at the overall state of the code:</p>
+<p class="codelink"><a id="p0022_03a" href="ch01_images.xhtml#p0022_03">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="pd_green">function statement</span></strong> (invoice, plays) {
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(totalAmount())}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;
+
+  <strong><span class="pd_green">function totalAmount</span></strong>() {
+    let result = 0;
+    for (let perf of invoice.performances) {
+      result += amountFor(perf);
+    }
+    return result;
+  }
+
+  <span epub:type="pagebreak" id="page_23"/><strong><span class="pd_green">function totalVolumeCredits</span></strong>() {
+    let result = 0;
+    for (let perf of invoice.performances) {
+      result += volumeCreditsFor(perf);
+    }
+    return result;
+  }
+  <strong><span class="pd_green">function usd</span></strong>(aNumber) {
+    return new Intl.NumberFormat("en-US",
+                        { style: "currency", currency: "USD",
+                          minimumFractionDigits: 2 }).format(aNumber/100);
+  }
+  <strong><span class="pd_green">function volumeCreditsFor</span></strong>(aPerformance) {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
+  <strong><span class="pd_green">function playFor</span></strong>(aPerformance) {
+    return plays[aPerformance.playID];
+  }
+  <strong><span class="pd_green">function amountFor</span></strong>(aPerformance) {
+    let result = 0;
+    switch (playFor(aPerformance).type) {
+    case "tragedy":
+      result = 40000;
+      if (aPerformance.audience &gt; 30) {
+        result += 1000 * (aPerformance.audience - 30);
+      }
+      break;
+    case "comedy":
+      result = 30000;
+      if (aPerformance.audience &gt; 20) {
+        result += 10000 + 500 * (aPerformance.audience - 20);
+      }
+      result += 300 * aPerformance.audience;
+      break;
+    default:
+        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+    }
+    return result;
+  }
+}</pre>
+<p class="indent">The structure of the code is much better now. The top-level <code>statement</code> function is now just seven lines of code, and all it does is laying out the printing of the statement. All the calculation logic has been moved out to a handful of supporting functions. This makes it easier to understand each individual calculation as well as the overall flow of the report.</p>
+<h3 class="h3" id="ch01lev1sec6"><span epub:type="pagebreak" id="page_24"/>Splitting the Phases of Calculation and Formatting</h3>
+<p class="noindent">So far, my refactoring has focused on adding enough structure to the function so that I can understand it and see it in terms of its logical parts. This is often the case early in refactoring. Breaking down complicated chunks into small pieces is important, as is naming things well. Now, I can begin to focus more on the functionality change I want to make&#8212;specifically, providing an HTML version of this statement. In many ways, it&#8217;s now much easier to do. With all the calculation code split out, all I have to do is write an HTML version of the seven lines of code at the top. The problem is that these broken-out functions are nested within the textual statement method, and I don&#8217;t want to copy and paste them into a new function, however well organized. I want the same calculation functions to be used by the text and HTML versions of the statement.</p>
+<p class="indent">There are various ways to do this, but one of my favorite techniques is <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec11">Split Phase</a> (<a class="pd_maroon" href="ch06.xhtml#page_154">154</a>)</span></em>. My aim here is to divide the logic into two parts: one that calculates the data required for the statement, the other that renders it into text or HTML. The first phase creates an intermediate data structure that it passes to the second.</p>
+<p class="indent">I start a <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec11">Split Phase</a> (<a class="pd_maroon" href="ch06.xhtml#page_154">154</a>)</span></em> by applying <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em> to the code that makes up the second phase. In this case, that&#8217;s the statement printing code, which is in fact the entire content of <code>statement</code>. This, together with all the nested functions, goes into its own top-level function which I call <code>renderPlainText</code>.</p>
+<p class="codelink"><a id="p0024_01a" href="ch01_images.xhtml#p0024_01">Click here to view code image</a></p>
+<pre class="pre"><strong><span class="pd_green">function statement</span></strong> (invoice, plays) {
+  return renderPlainText(invoice, plays);
+}
+
+<strong><span class="pd_green">function renderPlainText</span></strong>(invoice, plays) {
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(totalAmount())}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;
+
+function totalAmount() {...}
+  function totalVolumeCredits() {...}
+  function usd(aNumber) {...}
+  function volumeCreditsFor(aPerformance) {...}
+  function playFor(aPerformance) {...}
+  function amountFor(aPerformance) {...}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_25"/>I do my usual compile-test-commit, then create an object that will act as my intermediate data structure between the two phases. I pass this data object in as an argument to <code>renderPlainText</code> (compile-test-commit).</p>
+<p class="codelink"><a id="p0025_01a" href="ch01_images.xhtml#p0025_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  <span class="pd_maroon1">const statementData = {};</span>
+  return renderPlainText(<span class="pd_maroon1">statementData</span>, invoice, plays);
+}
+
+function renderPlainText(<span class="pd_maroon1">data</span>, invoice, plays) {
+  let result = `Statement for ${invoice.customer}\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(totalAmount())}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;
+
+function totalAmount() {...}
+  function totalVolumeCredits() {...}
+  function usd(aNumber) {...}
+  function volumeCreditsFor(aPerformance) {...}
+  function playFor(aPerformance) {...}
+  function amountFor(aPerformance) {...}</pre>
+<p class="indent">I now examine the other arguments used by <code>renderPlainText</code>. I want to move the data that comes from them into the intermediate data structure, so that all the calculation code moves into the <code>statement</code> function and <code>renderPlainText</code> operates solely on data passed to it through the <code>data</code> parameter.</p>
+<p class="indent">My first move is to take the customer and add it to the intermediate object (compile-test-commit).</p>
+<p class="codelink"><a id="p0025_02a" href="ch01_images.xhtml#p0025_02">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  const statementData = {};
+  <span class="pd_maroon1">statementData.customer = invoice.customer;</span>
+  return renderPlainText(statementData, invoice, plays);
+}
+
+function renderPlainText(data, invoice, plays) {
+  let result = `Statement for ${<span class="pd_maroon1">data</span>.customer}\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(totalAmount())}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_26"/>Similarly, I add the performances, which allows me to delete the <code>invoice</code> parameter to <code>renderPlainText</code> (compile-test-commit).</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0026_01a" href="ch01_images.xhtml#p0026_01">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  const statementData = {};
+  statementData.customer = invoice.customer;
+  <span class="pd_maroon1">statementData.performances = invoice.performances;</span>
+  return renderPlainText(statementData, <span class="strike"><span class="pd_maroon1">invoice,</span></span> plays);
+}
+
+function renderPlainText(data, plays) {
+  let result = `Statement for ${data.customer}\n`;
+  for (let perf of <span class="pd_maroon1">data</span>.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(totalAmount())}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;</pre>
+<p class="pro-title"><em>function renderPlainText&#8230;</em></p>
+<p class="codelink"><a id="p0026_02a" href="ch01_images.xhtml#p0026_02">Click here to view code image</a></p>
+<pre class="pre">function totalAmount() {
+  let result = 0;
+  for (let perf of <span class="pd_maroon1">data</span>.performances) {
+    result += amountFor(perf);
+  }
+  return result;
+}
+function totalVolumeCredits() {
+  let result = 0;
+  for (let perf of <span class="pd_maroon1">data</span>.performances) {
+    result += volumeCreditsFor(perf);
+  }
+  return result;
+}</pre>
+<p class="indent">Now I&#8217;d like the play name to come from the intermediate data. To do this, I need to enrich the performance record with data from the play (compile-test-commit).</p>
+<p class="codelink"><a id="p0027_01a" href="ch01_images.xhtml#p0027_01">Click here to view code image</a></p>
+<pre class="pre"><span epub:type="pagebreak" id="page_27"/>function statement (invoice, plays) {
+  const statementData = {};
+  statementData.customer = invoice.customer;
+  statementData.performances = invoice.performances<span class="pd_maroon1">.map(enrichPerformance);</span>
+  return renderPlainText(statementData, plays);
+
+  <span class="pd_maroon1">function enrichPerformance(aPerformance) {</span>
+    <span class="pd_maroon1">const result = Object.assign({}, aPerformance);</span>
+    <span class="pd_maroon1">return result;</span>
+  <span class="pd_maroon1">}</span></pre>
+<p class="indent">At the moment, I&#8217;m just making a copy of the performance object, but I&#8217;ll shortly add data to this new record. I take a copy because I don&#8217;t want to modify the data passed into the function. I prefer to treat data as immutable as much as I can&#8212;mutable state quickly becomes something rotten.</p>
+<div class="blockquote">
+<p class="noindent">The idiom <code>result = Object.assign({}, aPerformance)</code> looks very odd to people unfamiliar to JavaScript. It performs a shallow copy. I&#8217;d prefer to have a function for this, but it&#8217;s one of those cases where the idiom is so baked into JavaScript usage that writing my own function would look out of place for JavaScript programmers.</p>
+</div>
+<p class="indent">Now I have a spot for the play, I need to add it. To do that, I need to apply <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> to <code>playFor</code> and <code>statement</code> (compile-test-commit).</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0027_02a" href="ch01_images.xhtml#p0027_02">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const result = Object.assign({}, aPerformance);
+  <span class="pd_maroon1">result.play = playFor(result);</span>
+  return result;
+}
+
+<span class="pd_maroon1">function playFor</span>(aPerformance) {
+  return plays[aPerformance.playID];
+}</pre>
+<p class="indent">I then replace all the references to <code>playFor</code> in <code>renderPlainText</code> to use the data instead (compile-test-commit).</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_28"/><em>function renderPlainText&#8230;</em></p>
+<p class="codelink"><a id="p0028_01a" href="ch01_images.xhtml#p0028_01">Click here to view code image</a></p>
+<pre class="pre"> let result = `Statement for ${data.customer}\n`;
+ for (let perf of data.performances) {
+   result += `  ${<span class="pd_maroon1">perf.play</span>.name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+ }
+ result += `Amount owed is ${usd(totalAmount())}\n`;
+ result += `You earned ${totalVolumeCredits()} credits\n`;
+ return result;
+
+function volumeCreditsFor(aPerformance) {
+  let result = 0;
+  result += Math.max(aPerformance.audience - 30, 0);
+  if ("comedy" === aPerformance<span class="pd_maroon1">.play</span>.type) result += Math.floor(aPerformance.audience / 5);
+  return result;
+}
+
+function amountFor(aPerformance) {
+  let result = 0;
+  switch (aPerformance<span class="pd_maroon1">.play</span>.type) {
+  case "tragedy":
+    result = 40000;
+    if (aPerformance.audience &gt; 30) {
+      result += 1000 * (aPerformance.audience - 30);
+    }
+    break;
+  case "comedy":
+    result = 30000;
+    if (aPerformance.audience &gt; 20) {
+      result += 10000 + 500 * (aPerformance.audience - 20);
+    }
+    result += 300 * aPerformance.audience;
+    break;
+  default:
+      throw new Error(`unknown type: ${aPerformance<span class="pd_maroon1">.play</span>.type}`);
+  }
+  return result;
+}</pre>
+<p class="indent">I then move <code>amountFor</code> in a similar way (compile-test-commit).</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0028_02a" href="ch01_images.xhtml#p0028_02">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const result = Object.assign({}, aPerformance);
+  result.play = playFor(result);
+  <span class="pd_maroon1">result.amount = amountFor(result);</span>
+  return result;
+}
+
+<span class="pd_maroon1">function amountFor</span>(aPerformance) {...}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_29"/><em>function renderPlainText&#8230;</em></p>
+<p class="codelink"><a id="p0029_01a" href="ch01_images.xhtml#p0029_01">Click here to view code image</a></p>
+<pre class="pre"> let result = `Statement for ${data.customer}\n`;
+ for (let perf of data.performances) {
+   result += `  ${perf.play.name}: ${usd(<span class="pd_maroon1">perf.amount</span>)} (${perf.audience} seats)\n`;
+ }
+ result += `Amount owed is ${usd(totalAmount())}\n`;
+ result += `You earned ${totalVolumeCredits()} credits\n`;
+ return result;
+
+function totalAmount() {
+  let result = 0;
+  for (let perf of data.performances) {
+    result += perf<span class="pd_maroon1">.amount</span>;
+  }
+  return result;
+}</pre>
+<p class="indent">Next, I move the volume credits calculation (compile-test-commit).</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0029_02a" href="ch01_images.xhtml#p0029_02">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const result = Object.assign({}, aPerformance);
+  result.play = playFor(result);
+  result.amount = amountFor(result);
+  <span class="pd_maroon1">result.volumeCredits = volumeCreditsFor(result);</span>
+  return result;
+}
+
+<span class="pd_maroon1">function volumeCreditsFor</span>(aPerformance) {...}</pre>
+<p class="pro-title"><em>function renderPlainText&#8230;</em></p>
+<p class="codelink"><a id="p0029_03a" href="ch01_images.xhtml#p0029_03">Click here to view code image</a></p>
+<pre class="pre">function totalVolumeCredits() {
+  let result = 0;
+  for (let perf of data.performances) {
+    result += perf<span class="pd_maroon1">.volumeCredits</span>;
+  }
+  return result;
+}</pre>
+<p class="indent">Finally, I move the two calculations of the totals.</p>
+<p class="pro-title"><em>function statement&#8230;</em></p>
+<p class="codelink"><a id="p0029_04a" href="ch01_images.xhtml#p0029_04">Click here to view code image</a></p>
+<pre class="pre">const statementData = {};
+statementData.customer = invoice.customer;
+statementData.performances = invoice.performances.map(enrichPerformance);
+<span class="pd_maroon1">statementData.totalAmount = totalAmount(statementData);</span>
+<span class="pd_maroon1">statementData.totalVolumeCredits = totalVolumeCredits(statementData);</span>
+return renderPlainText(statementData, plays);
+
+function totalAmount(<span class="pd_maroon1">data</span>) {...}
+  function totalVolumeCredits(<span class="pd_maroon1">data</span>) {...}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_30"/><em>function renderPlainText&#8230;</em></p>
+<p class="codelink"><a id="p0030_01a" href="ch01_images.xhtml#p0030_01">Click here to view code image</a></p>
+<pre class="pre">let result = `Statement for ${data.customer}\n`;
+for (let perf of data.performances) {
+  result += `  ${perf.play.name}: ${usd(perf.amount)} (${perf.audience} seats)\n`;
+}
+result += `Amount owed is ${usd(<span class="pd_maroon1">data.totalAmount</span>)}\n`;
+result += `You earned ${<span class="pd_maroon1">data.totalVolumeCredits</span>} credits\n`;
+return result;</pre>
+<p class="indent">Although I could have modified the bodies of these totals functions to use the <code>statementData</code> variable (as it&#8217;s within scope), I prefer to pass the explicit parameter.</p>
+<p class="indent">And, once I&#8217;m done with compile-test-commit after the move, I can&#8217;t resist a couple quick shots of <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec8">Replace Loop with Pipeline</a> (<a class="pd_maroon" href="ch08.xhtml#page_231">231</a>)</span></em>.</p>
+<p class="pro-title"><em>function renderPlainText&#8230;</em></p>
+<p class="codelink"><a id="p0030_02a" href="ch01_images.xhtml#p0030_02">Click here to view code image</a></p>
+<pre class="pre">function totalAmount(data) {
+  return data.performances
+    .reduce((total, p) =&gt; total + p.amount, 0);
+}
+function totalVolumeCredits(data) {
+  return data.performances
+    .reduce((total, p) =&gt; total + p.volumeCredits, 0);
+}</pre>
+<p class="indent">I now extract all the first-phase code into its own function (compile-test-commit).</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0030_03a" href="ch01_images.xhtml#p0030_03">Click here to view code image</a></p>
+<pre class="pre">function statement (invoice, plays) {
+  <span class="pd_maroon1">return renderPlainText(createStatementData(invoice, plays));</span>
+}
+
+function createStatementData(invoice, plays) {
+  const statementData = {};
+  statementData.customer = invoice.customer;
+  statementData.performances = invoice.performances.map(enrichPerformance);
+  statementData.totalAmount = totalAmount(statementData);
+  statementData.totalVolumeCredits = totalVolumeCredits(statementData);
+  <span class="pd_maroon1">return statementData;</span></pre>
+<p class="indent">Since it&#8217;s clearly separate now, I move it to its own file (and alter the name of the returned result to match my usual convention).</p>
+<p class="pro-title"><em>statement.js&#8230;</em></p>
+<p class="codelink"><a id="p0030_04a" href="ch01_images.xhtml#p0030_04">Click here to view code image</a></p>
+<pre class="pre">import createStatementData from './createStatementData.js';</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_31"/><em>createStatementData.js&#8230;</em></p>
+<p class="codelink"><a id="p0031_01a" href="ch01_images.xhtml#p0031_01">Click here to view code image</a></p>
+<pre class="pre">export default function createStatementData(invoice, plays) {
+  const result = {};
+  result.customer = invoice.customer;
+  result.performances = invoice.performances.map(enrichPerformance);
+  result.totalAmount = totalAmount(result);
+  result.totalVolumeCredits = totalVolumeCredits(result);
+  return result;
+
+  function enrichPerformance(aPerformance) {...}
+    function playFor(aPerformance) {...}
+    function amountFor(aPerformance) {...}
+    function volumeCreditsFor(aPerformance) {...}
+    function totalAmount(data) {...}
+    function totalVolumeCredits(data) {...}</pre>
+<p class="indent">One final swing of compile-test-commit&#8212;and now it&#8217;s easy to write an HTML version.</p>
+<p class="pro-title"><em>statement.js&#8230;</em></p>
+<p class="codelink"><a id="p0031_02a" href="ch01_images.xhtml#p0031_02">Click here to view code image</a></p>
+<pre class="pre">function htmlStatement (invoice, plays) {
+  return renderHtml(createStatementData(invoice, plays));
+}
+function renderHtml (data) {
+  let result = `&lt;h1&gt;Statement for ${data.customer}&lt;/h1&gt;\n`;
+  result += "&lt;table&gt;\n";
+  result += "&lt;tr&gt;&lt;th&gt;play&lt;/th&gt;&lt;th&gt;seats&lt;/th&gt;&lt;th&gt;cost&lt;/th&gt;&lt;/tr&gt;";
+  for (let perf of data.performances) {
+    result += `  &lt;tr&gt;&lt;td&gt;${perf.play.name}&lt;/td&gt;&lt;td&gt;${perf.audience}&lt;/td&gt;`;
+    result += `&lt;td&gt;${usd(perf.amount)}&lt;/td&gt;&lt;/tr&gt;\n`;
+  }
+  result += "&lt;/table&gt;\n";
+  result += `&lt;p&gt;Amount owed is &lt;em&gt;${usd(data.totalAmount)}&lt;/em&gt;&lt;/p&gt;\n`;
+  result += `&lt;p&gt;You earned &lt;em&gt;${data.totalVolumeCredits}&lt;/em&gt; credits&lt;/p&gt;\n`;
+  return result;
+}
+
+function usd(aNumber) {...}</pre>
+<p class="indent">(I moved <code>usd</code> to the top level, so that <code>renderHtml</code> could use it.)</p>
+<h3 class="h3" id="ch01lev1sec7">Status: Separated into Two Files (and Phases)</h3>
+<p class="noindent">This is a good moment to take stock again and think about where the code is now. I have two files of code.</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_32"/><em>statement.js</em></p>
+<p class="codelink"><a id="p0032_01a" href="ch01_images.xhtml#p0032_01">Click here to view code image</a></p>
+<pre class="pre">import createStatementData from './createStatementData.js';
+<strong><span class="pd_green">function statement</span></strong> (invoice, plays) {
+  return renderPlainText(createStatementData(invoice, plays));
+}
+<strong><span class="pd_green">function renderPlainText</span></strong>(data, plays) {
+  let result = `Statement for ${data.customer}\n`;
+  for (let perf of data.performances) {
+    result += `  ${perf.play.name}: ${usd(perf.amount)} (${perf.audience} seats)\n`;
+  }
+  result += `Amount owed is ${usd(data.totalAmount)}\n`;
+  result += `You earned ${data.totalVolumeCredits} credits\n`;
+  return result;
+}
+<strong><span class="pd_green">function htmlStatement</span></strong> (invoice, plays) {
+  return renderHtml(createStatementData(invoice, plays));
+}
+<strong><span class="pd_green">function renderHtml</span></strong> (data) {
+  let result = `&lt;h1&gt;Statement for ${data.customer}&lt;/h1&gt;\n`;
+  result += "&lt;table&gt;\n";
+  result += "&lt;tr&gt;&lt;th&gt;play&lt;/th&gt;&lt;th&gt;seats&lt;/th&gt;&lt;th&gt;cost&lt;/th&gt;&lt;/tr&gt;";
+  for (let perf of data.performances) {
+    result += `  &lt;tr&gt;&lt;td&gt;${perf.play.name}&lt;/td&gt;&lt;td&gt;${perf.audience}&lt;/td&gt;`;
+    result += `&lt;td&gt;${usd(perf.amount)}&lt;/td&gt;&lt;/tr&gt;\n`;
+  }
+  result += "&lt;/table&gt;\n";
+  result += `&lt;p&gt;Amount owed is &lt;em&gt;${usd(data.totalAmount)}&lt;/em&gt;&lt;/p&gt;\n`;
+  result += `&lt;p&gt;You earned &lt;em&gt;${data.totalVolumeCredits}&lt;/em&gt; credits&lt;/p&gt;\n`;
+  return result;
+}
+<strong><span class="pd_green">function usd</span></strong>(aNumber) {
+  return new Intl.NumberFormat("en-US",
+                               { style: "currency", currency: "USD",
+                                 minimumFractionDigits: 2 }).format(aNumber/100);
+}</pre>
+<p class="pro-title"><em>createStatementData.js</em></p>
+<p class="codelink"><a id="p0032_02a" href="ch01_images.xhtml#p0032_02">Click here to view code image</a></p>
+<pre class="pre">export default <strong><span class="pd_green">function createStatementData</span></strong>(invoice, plays) {
+  const result = {};
+  result.customer = invoice.customer;
+  result.performances = invoice.performances.map(enrichPerformance);
+  result.totalAmount = totalAmount(result);
+  result.totalVolumeCredits = totalVolumeCredits(result);
+  return result;
+
+  <strong><span class="pd_green">function enrichPerformance</span></strong>(aPerformance) {
+    const result = Object.assign({}, aPerformance);
+    result.play = playFor(result);
+    result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
+    return result;
+  }
+  <span epub:type="pagebreak" id="page_33"/><strong><span class="pd_green">function playFor</span></strong>(aPerformance) {
+    return plays[aPerformance.playID]
+  }
+  <strong><span class="pd_green">function amountFor</span></strong>(aPerformance) {
+    let result = 0;
+    switch (aPerformance.play.type) {
+    case "tragedy":
+      result = 40000;
+      if (aPerformance.audience &gt; 30) {
+        result += 1000 * (aPerformance.audience - 30);
+      }
+      break;
+    case "comedy":
+      result = 30000;
+      if (aPerformance.audience &gt; 20) {
+        result += 10000 + 500 * (aPerformance.audience - 20);
+      }
+      result += 300 * aPerformance.audience;
+      break;
+    default:
+        throw new Error(`unknown type: ${aPerformance.play.type}`);
+    }
+    return result;
+  }
+  <strong><span class="pd_green">function volumeCreditsFor</span></strong>(aPerformance) {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === aPerformance.play.type) result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
+  <strong><span class="pd_green">function totalAmount</span></strong>(data) {
+    return data.performances
+      .reduce((total, p) =&gt; total + p.amount, 0);
+  }
+  <strong><span class="pd_green">function totalVolumeCredits</span></strong>(data) {
+    return data.performances
+      .reduce((total, p) =&gt; total + p.volumeCredits, 0);
+  }</pre>
+<p class="indent">I have more code than I did when I started: 70 lines (not counting <code>htmlStatement</code>) as opposed to 44, mostly due to the extra wrapping involved in putting things in functions. If all else is equal, more code is bad&#8212;but rarely is all else equal. The extra code breaks up the logic into identifiable parts, separating the calculations of the statements from the layout. This modularity makes it easier for me to understand the parts of the code and how they fit together. Brevity is the soul of wit, but clarity is the soul of evolvable software. Adding this modularity allows to me to support the HTML version of the code without any duplication of the calculations.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <span epub:type="pagebreak" id="page_34"/><em>When programming, follow the camping rule: Always leave the code base healthier than when you found it.</em></p>
+</div>
+<p class="indent">There are more things I could do to simplify the printing logic, but this will do for the moment. I always have to strike a balance between all the refactorings I could do and adding new features. At the moment, most people under-prioritize refactoring&#8212;but there still is a balance. My rule is a variation on the camping rule: Always leave the code base healthier than when you found it. It will never be perfect, but it should be better.</p>
+<h3 class="h3" id="ch01lev1sec8">Reorganizing the Calculations by Type</h3>
+<p class="noindent">Now I&#8217;ll turn my attention to the next feature change: supporting more categories of plays, each with its own charging and volume credits calculations. At the moment, to make changes here I have to go into the calculation functions and edit the conditions in there. The <code>amountFor</code> function highlights the central role the type of play has in the choice of calculations&#8212;but conditional logic like this tends to decay as further modifications are made unless it&#8217;s reinforced by more structural elements of the programming language.</p>
+<p class="indent">There are various ways to introduce structure to make this explicit, but in this case a natural approach is type polymorphism&#8212;a prominent feature of classical object-orientation. Classical OO has long been a controversial feature in the JavaScript world, but the ECMAScript 2015 version provides a sound syntax and structure for it. So it makes sense to use it in a right situation&#8212;like this one.</p>
+<p class="indent">My overall plan is to set up an inheritance hierarchy with comedy and tragedy subclasses that contain the calculation logic for those cases. Callers call a polymorphic amount function that the language will dispatch to the different calculations for the comedies and tragedies. I&#8217;ll make a similar structure for the volume credits calculation. To do this, I utilize a couple of refactorings. The core refactoring is <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec4">Replace Conditional with Polymorphism</a> (<a class="pd_maroon" href="ch10.xhtml#page_272">272</a>)</span></em>, which changes a hunk of conditional code with polymorphism. But before I can do <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec4">Replace Conditional with Polymorphism</a> (<a class="pd_maroon" href="ch10.xhtml#page_272">272</a>)</span></em>, I need to create an inheritance structure of some kind. I need to create a class to host the amount and volume credit functions.</p>
+<p class="indent">I begin by reviewing the calculation code. (One of the pleasant consequences of the previous refactoring is that I can now ignore the formatting code, so long as I produce the same output data structure. I can further support this by adding tests that probe the intermediate data structure.)</p>
+<p class="pro-title"><span epub:type="pagebreak" id="page_35"/><em>createStatementData.js&#8230;</em></p>
+<p class="codelink"><a id="p0035_01a" href="ch01_images.xhtml#p0035_01">Click here to view code image</a></p>
+<pre class="pre">export default <strong><span class="pd_green">function createStatementData</span></strong>(invoice, plays) {
+  const result = {};
+  result.customer = invoice.customer;
+  result.performances = invoice.performances.map(enrichPerformance);
+  result.totalAmount = totalAmount(result);
+  result.totalVolumeCredits = totalVolumeCredits(result);
+  return result;
+
+  <strong><span class="pd_green">function enrichPerformance</span></strong>(aPerformance) {
+    const result = Object.assign({}, aPerformance);
+    result.play = playFor(result);
+    result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
+    return result;
+  }
+  <strong><span class="pd_green">function playFor</span></strong>(aPerformance) {
+    return plays[aPerformance.playID]
+  }
+  <strong><span class="pd_green">function amountFor</span></strong>(aPerformance) {
+    let result = 0;
+    switch (aPerformance.play.type) {
+    case "tragedy":
+      result = 40000;
+      if (aPerformance.audience &gt; 30) {
+        result += 1000 * (aPerformance.audience - 30);
+      }
+      break;
+    case "comedy":
+      result = 30000;
+      if (aPerformance.audience &gt; 20) {
+        result += 10000 + 500 * (aPerformance.audience - 20);
+      }
+      result += 300 * aPerformance.audience;
+      break;
+    default:
+        throw new Error(`unknown type: ${aPerformance.play.type}`);
+    }
+    return result;
+  }
+  <strong><span class="pd_green">function volumeCreditsFor</span></strong>(aPerformance) {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === aPerformance.play.type) result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
+  <strong><span class="pd_green">function totalAmount</span></strong>(data) {
+    return data.performances
+      .reduce((total, p) =&gt; total + p.amount, 0);
+  }
+  <span epub:type="pagebreak" id="page_36"/><strong><span class="pd_green">function totalVolumeCredits</span></strong>(data) {
+    return data.performances
+      .reduce((total, p) =&gt; total + p.volumeCredits, 0);
+  }</pre>
+<h4 class="h4" id="ch01lev2sec5">Creating a Performance Calculator</h4>
+<p class="noindent">The <code>enrichPerformance</code> function is the key, since it populates the intermediate data structure with the data for each performance. Currently, it calls the conditional functions for amount and volume credits. What I need it to do is call those functions on a host class. Since that class hosts functions for calculating data about performances, I&#8217;ll call it a performance calculator.</p>
+<p class="pro-title"><em>function createStatementData&#8230;</em></p>
+<p class="codelink"><a id="p0036_01a" href="ch01_images.xhtml#p0036_01">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  <span class="pd_maroon1">const calculator = new PerformanceCalculator(aPerformance);</span>
+  const result = Object.assign({}, aPerformance);
+  result.play = playFor(result);
+  result.amount = amountFor(result);
+  result.volumeCredits = volumeCreditsFor(result);
+  return result;
+}</pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0036_02a" href="ch01_images.xhtml#p0036_02">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">class PerformanceCalculator {</span>
+  <span class="pd_maroon1">constructor(aPerformance) {</span>
+    <span class="pd_maroon1">this.performance = aPerformance;</span>
+  <span class="pd_maroon1">}</span>
+}</pre>
+<p class="indent">So far, this new object isn&#8217;t doing anything. I want to move behavior into it&#8212;and I&#8217;d like to start with the simplest thing to move, which is the play record. Strictly, I don&#8217;t need to do this, as it&#8217;s not varying polymorphically, but this way I&#8217;ll keep all the data transforms in one place, and that consistency will make the code clearer.</p>
+<p class="indent">To make this work, I will use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec5">Change Function Declaration</a> (<a class="pd_maroon" href="ch06.xhtml#page_124">124</a>)</span></em> to pass the performance&#8217;s play into the calculator.</p>
+<p class="pro-title"><em>function createStatementData&#8230;</em></p>
+<p class="codelink"><a id="p0036_03a" href="ch01_images.xhtml#p0036_03">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const calculator = new PerformanceCalculator(aPerformance, <span class="pd_maroon1">playFor(aPerformance)</span>);
+  const result = Object.assign({}, aPerformance);
+  result.play = <span class="pd_maroon1">calculator.play</span>;
+  result.amount = amountFor(result);
+  result.volumeCredits = volumeCreditsFor(result);
+  return result;
+}</pre>
+<p class="pro-title"><span epub:type="pagebreak" id="page_37"/><em>class PerformanceCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0037_01a" href="ch01_images.xhtml#p0037_01">Click here to view code image</a></p>
+<pre class="pre">class PerformanceCalculator {
+  constructor(aPerformance, <span class="pd_maroon1">aPlay</span>) {
+    this.performance = aPerformance;
+    <span class="pd_maroon1">this.play = aPlay;</span>
+  }
+}</pre>
+<p class="indent">(I&#8217;m not saying compile-test-commit all the time any more, as I suspect you&#8217;re getting tired of reading it. But I still do it at every opportunity. I do sometimes get tired of doing it&#8212;and give mistakes the chance to bite me. Then I learn and get back into the rhythm.)</p>
+<h4 class="h4" id="ch01lev2sec6">Moving Functions into the Calculator</h4>
+<p class="noindent">The next bit of logic I move is rather more substantial for calculating the amount for a performance. I&#8217;ve moved functions around casually while rearranging nested functions&#8212;but this is a deeper change in the context of the function, so I&#8217;ll step through the <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em> refactoring. The first part of this refactoring is to copy the logic over to its new context&#8212;the calculator class. Then, I adjust the code to fit into its new home, changing <code>aPerformance</code> to <code>this.performance</code> and <code>playFor(aPerformance)</code> to <code>this.play</code>.</p>
+<p class="pro-title"><em>class PerformanceCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0037_02a" href="ch01_images.xhtml#p0037_02">Click here to view code image</a></p>
+<pre class="pre">get amount() {
+  let result = 0;
+  switch (<span class="pd_maroon1">this.play</span>.type) {
+    case "tragedy":
+      result = 40000;
+      if (<span class="pd_maroon1">this.performance</span>.audience &gt; 30) {
+        result += 1000 * (<span class="pd_maroon1">this.performance</span>.audience - 30);
+      }
+      break;
+    case "comedy":
+      result = 30000;
+      if (<span class="pd_maroon1">this.performance</span>.audience &gt; 20) {
+        result += 10000 + 500 * (<span class="pd_maroon1">this.performance</span>.audience - 20);
+      }
+      result += 300 * <span class="pd_maroon1">this.performance</span>.audience;
+      break;
+    default:
+      throw new Error(`unknown type: ${<span class="pd_maroon1">this.play</span>.type}`);
+  }
+  return result;
+}</pre>
+<p class="indent">I can compile at this point to check for any compile-time errors. &#8220;Compiling&#8221; in my development environment occurs as I execute the code, so what I actually <span epub:type="pagebreak" id="page_38"/>do is run Babel <span class="pd_maroon">[<a href="biblo.xhtml#bib2">babel</a>]</span>. That will be enough to catch any syntax errors in the new function&#8212;but little more than that. Even so, that can be a useful step.</p>
+<p class="indent">Once the new function fits its home, I take the original function and turn it into a delegating function so it calls the new function.</p>
+<p class="pro-title"><em>function createStatementData&#8230;</em></p>
+<p class="codelink"><a id="p0038_01a" href="ch01_images.xhtml#p0038_01">Click here to view code image</a></p>
+<pre class="pre">function amountFor(aPerformance) {
+  <span class="pd_maroon1">return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;</span>
+}</pre>
+<p class="indent">Now I can compile-test-commit to ensure the code is working properly in its new home. With that done, I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec2">Inline Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_115">115</a>)</span></em> to call the new function directly (compile-test-commit).</p>
+<p class="pro-title"><em>function createStatementData&#8230;</em></p>
+<p class="codelink"><a id="p0038_02a" href="ch01_images.xhtml#p0038_02">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
+  const result = Object.assign({}, aPerformance);
+  result.play = calculator.play;
+  result.amount = <span class="pd_maroon1">calculator.amount</span>;
+  result.volumeCredits = volumeCreditsFor(result);
+  return result;
+}</pre>
+<p class="indent">I repeat the same process to move the volume credits calculation.</p>
+<p class="pro-title"><em>function createStatementData&#8230;</em></p>
+<p class="codelink"><a id="p0038_03a" href="ch01_images.xhtml#p0038_03">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
+  const result = Object.assign({}, aPerformance);
+  result.play = calculator.play;
+  result.amount = calculator.amount;
+  result.volumeCredits = <span class="pd_maroon1">calculator.volumeCredits</span>;
+  return result;
+}</pre>
+<p class="pro-title"><em>class PerformanceCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0038_04a" href="ch01_images.xhtml#p0038_04">Click here to view code image</a></p>
+<pre class="pre">get volumeCredits() {
+  let result = 0;
+  result += Math.max(<span class="pd_maroon1">this.performance</span>.audience - 30, 0);
+  if ("comedy" === <span class="pd_maroon1">this.play</span>.type) result += Math.floor(<span class="pd_maroon1">this.performance</span>.audience / 5);
+  return result;
+}</pre>
+<h4 class="h4" id="ch01lev2sec7">Making the Performance Calculator Polymorphic</h4>
+<p class="noindent">Now that I have the logic in a class, it&#8217;s time to apply the polymorphism. The first step is to use <em><span class="pd_maroon"><a class="pd_maroon" href="ch12.xhtml#ch12lev1sec6">Replace Type Code with Subclasses</a> (<a class="pd_maroon" href="ch12.xhtml#page_362">362</a>)</span></em> to introduce subclasses instead of the type code. For this, I need to create subclasses of the performance <span epub:type="pagebreak" id="page_39"/>calculator and use the appropriate subclass in <code>createPerformanceData</code>. In order to get the right subclass, I need to replace the constructor call with a function, since JavaScript constructors can&#8217;t return subclasses. So I use <em><span class="pd_maroon"><a class="pd_maroon" href="ch11.xhtml#ch11lev1sec8">Replace Constructor with Factory Function</a> (<a class="pd_maroon" href="ch11.xhtml#page_334">334</a>)</span></em>.</p>
+<p class="pro-title"><em>function createStatementData&#8230;</em></p>
+<p class="codelink"><a id="p0039_01a" href="ch01_images.xhtml#p0039_01">Click here to view code image</a></p>
+<pre class="pre">function enrichPerformance(aPerformance) {
+  const calculator = <span class="pd_maroon1">createPerformanceCalculator</span>(aPerformance, playFor(aPerformance));
+  const result = Object.assign({}, aPerformance);
+  result.play = calculator.play;
+  result.amount = calculator.amount;
+  result.volumeCredits = calculator.volumeCredits;
+  return result;
+}</pre>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0039_02a" href="ch01_images.xhtml#p0039_02">Click here to view code image</a></p>
+<pre class="pre"><span class="pd_maroon1">function createPerformanceCalculator(aPerformance, aPlay) {</span>
+  return new PerformanceCalculator(aPerformance, aPlay);
+}</pre>
+<p class="indent">With that now a function, I can create subclasses of the performance calculator and get the creation function to select which one to return.</p>
+<p class="pro-title"><em>top level&#8230;</em></p>
+<p class="codelink"><a id="p0039_03a" href="ch01_images.xhtml#p0039_03">Click here to view code image</a></p>
+<pre class="pre">function createPerformanceCalculator(aPerformance, aPlay) {
+    switch(aPlay.type) {
+    case "tragedy": return new TragedyCalculator(aPerformance, aPlay);
+    case "comedy" : return new ComedyCalculator(aPerformance, aPlay);
+    default:
+        throw new Error(`unknown type: ${aPlay.type}`);
+    }
+}
+
+class TragedyCalculator extends PerformanceCalculator {
+}
+class ComedyCalculator extends PerformanceCalculator {
+}</pre>
+<p class="indent">This sets up the structure for the polymorphism, so I can now move on to <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec4">Replace Conditional with Polymorphism</a> (<a class="pd_maroon" href="ch10.xhtml#page_272">272</a>)</span></em>.</p>
+<p class="indent">I start with the calculation of the amount for tragedies.</p>
+<p class="pro-title"><em>class TragedyCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0039_04a" href="ch01_images.xhtml#p0039_04">Click here to view code image</a></p>
+<pre class="pre">get amount() {
+  let result = 40000;
+  if (this.performance.audience &gt; 30) {
+    result += 1000 * (this.performance.audience - 30);
+  }
+  return result;
+}</pre>
+<p class="indent"><span epub:type="pagebreak" id="page_40"/>Just having this method in the subclass is enough to override the superclass conditional. But if you&#8217;re as paranoid as I am, you might do this:</p>
+<p class="pro-title"><em>class PerformanceCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0040_01a" href="ch01_images.xhtml#p0040_01">Click here to view code image</a></p>
+<pre class="pre">get amount() {
+  let result = 0;
+  switch (this.play.type) {
+    case "tragedy":
+      <span class="pd_maroon1">throw 'bad thing';</span>
+    case "comedy":
+      result = 30000;
+      if (this.performance.audience &gt; 20) {
+        result += 10000 + 500 * (this.performance.audience - 20);
+      }
+      result += 300 * this.performance.audience;
+      break;
+    default:
+      throw new Error(`unknown type: ${this.play.type}`);
+  }
+  return result;
+}</pre>
+<div class="blockquote">
+<p class="noindent">I could have removed the case for tragedy and let the default branch throw an error. But I like the explicit throw&#8212;and it will only be there for a couple more minutes (which is why I threw a string, not a better error object).</p>
+</div>
+<p class="indent">After a compile-test-commit of that, I move the comedy case down too.</p>
+<p class="pro-title"><em>class ComedyCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0040_02a" href="ch01_images.xhtml#p0040_02">Click here to view code image</a></p>
+<pre class="pre">get amount() {
+  let result = 30000;
+  if (this.performance.audience &gt; 20) {
+    result += 10000 + 500 * (this.performance.audience - 20);
+  }
+  result += 300 * this.performance.audience;
+  return result;
+}</pre>
+<p class="indent">I can now remove the superclass <code>amount</code> method, as it should never be called. But it&#8217;s kinder to my future self to leave a tombstone.</p>
+<p class="pro-title"><em>class PerformanceCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0040_03a" href="ch01_images.xhtml#p0040_03">Click here to view code image</a></p>
+<pre class="pre">get amount() {
+  throw new Error('subclass responsibility');
+}</pre>
+<p class="indent">The next conditional to replace is the volume credits calculation. Looking at the discussion of future categories of plays, I notice that most plays expect to check if audience is above 30, with only some categories introducing a variation. So it makes sense to leave the more common case on the superclass as a default, <span epub:type="pagebreak" id="page_41"/>and let the variations override it as necessary. So I just push down the case for comedies:</p>
+<p class="pro-title"><em>class PerformanceCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0041_01a" href="ch01_images.xhtml#p0041_01">Click here to view code image</a></p>
+<pre class="pre">get volumeCredits() {
+  return Math.max(this.performance.audience - 30, 0);
+}</pre>
+<p class="pro-title"><em>class ComedyCalculator&#8230;</em></p>
+<p class="codelink"><a id="p0041_02a" href="ch01_images.xhtml#p0041_02">Click here to view code image</a></p>
+<pre class="pre">get volumeCredits() {
+  return super.volumeCredits + Math.floor(this.performance.audience / 5);
+}</pre>
+<h3 class="h3" id="ch01lev1sec9">Status: Creating the Data with the Polymorphic Calculator</h3>
+<p class="noindent">Time to reflect on what introducing the polymorphic calculator did to the code.</p>
+<p class="pro-title"><em>createStatementData.js</em></p>
+<p class="codelink"><a id="p0041_03a" href="ch01_images.xhtml#p0041_03">Click here to view code image</a></p>
+<pre class="pre">export default <strong><span class="pd_green">function createStatementData</span></strong>(invoice, plays) {
+  const result = {};
+  result.customer = invoice.customer;
+  result.performances = invoice.performances.map(enrichPerformance);
+  result.totalAmount = totalAmount(result);
+  result.totalVolumeCredits = totalVolumeCredits(result);
+  return result;
+
+  <strong><span class="pd_green">function enrichPerformance</span></strong>(aPerformance) {
+    const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance));
+    const result = Object.assign({}, aPerformance);
+    result.play = calculator.play;
+    result.amount = calculator.amount;
+    result.volumeCredits = calculator.volumeCredits;
+    return result;
+  }
+  <strong><span class="pd_green">function playFor</span></strong>(aPerformance) {
+    return plays[aPerformance.playID]
+  }
+  <strong><span class="pd_green">function totalAmount</span></strong>(data) {
+    return data.performances
+      .reduce((total, p) =&gt; total + p.amount, 0);
+  }
+  <strong><span class="pd_green">function totalVolumeCredits</span></strong>(data) {
+    return data.performances
+      .reduce((total, p) =&gt; total + p.volumeCredits, 0);
+  }
+}
+
+<span epub:type="pagebreak" id="page_42"/><strong><span class="pd_green">function createPerformanceCalculator</span></strong>(aPerformance, aPlay) {
+    switch(aPlay.type) {
+    case "tragedy": return new TragedyCalculator(aPerformance, aPlay);
+    case "comedy" : return new ComedyCalculator(aPerformance, aPlay);
+    default:
+        throw new Error(`unknown type: ${aPlay.type}`);
+    }
+}
+<strong><span class="pd_green">class PerformanceCalculator</span></strong> {
+  constructor(aPerformance, aPlay) {
+    this.performance = aPerformance;
+    this.play = aPlay;
+  }
+  <strong><span class="pd_green">get amount()</span></strong> {
+    throw new Error('subclass responsibility');}
+  <strong><span class="pd_green">get volumeCredits()</span></strong> {
+    return Math.max(this.performance.audience - 30, 0);
+  }
+}
+<strong><span class="pd_green">class TragedyCalculator extends PerformanceCalculator</span></strong> {
+  <strong><span class="pd_green">get amount()</span></strong> {
+    let result = 40000;
+    if (this.performance.audience &gt; 30) {
+      result += 1000 * (this.performance.audience - 30);
+    }
+    return result;
+  }
+}
+<strong><span class="pd_green">class ComedyCalculator extends PerformanceCalculator</span></strong> {
+  <strong><span class="pd_green">get amount()</span></strong> {
+    let result = 30000;
+    if (this.performance.audience &gt; 20) {
+      result += 10000 + 500 * (this.performance.audience - 20);
+    }
+    result += 300 * this.performance.audience;
+    return result;
+  }
+  <strong><span class="pd_green">get volumeCredits()</span></strong> {
+    return super.volumeCredits + Math.floor(this.performance.audience / 5);
+  }
+}</pre>
+<p class="indent">Again, the code has increased in size as I&#8217;ve introduced structure. The benefit here is that the calculations for each kind of play are grouped together. If most of the changes will be to this code, it will be helpful to have it clearly separated like this. Adding a new kind of play requires writing a new subclass and adding it to the creation function.</p>
+<p class="indent">The example gives some insight as to when using subclasses like this is useful. Here, I&#8217;ve moved the conditional lookup from two functions (<code>amountFor</code> and <code>volumeCreditsFor</code>) to a single constructor function <code>createPerformanceCalculator</code>. The more <span epub:type="pagebreak" id="page_43"/>functions there are that depend on the same type of polymorphism, the more useful this approach becomes.</p>
+<p class="indent">An alternative to what I&#8217;ve done here would be to have <code>createPerformanceData</code> return the calculator itself, instead of the calculator populating the intermediate data structure. One of the nice features of JavaScript&#8217;s class system is that with it, using getters looks like regular data access. My choice on whether to return the instance or calculate separate output data depends on who is using the downstream data structure. In this case, I preferred to show how to use the intermediate data structure to hide the decision to use a polymorphic calculator.</p>
+<h3 class="h3" id="ch01lev1sec10">Final Thoughts</h3>
+<p class="noindent">This is a simple example, but I hope it will give you a feeling for what refactoring is like. I&#8217;ve used several refactorings, including <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec1">Extract Function</a> (<a class="pd_maroon" href="ch06.xhtml#page_106">106</a>)</span></em>, <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec4">Inline Variable</a> (<a class="pd_maroon" href="ch06.xhtml#page_123">123</a>)</span></em>, <em><span class="pd_maroon"><a class="pd_maroon" href="ch08.xhtml#ch08lev1sec1">Move Function</a> (<a class="pd_maroon" href="ch08.xhtml#page_198">198</a>)</span></em>, and <em><span class="pd_maroon"><a class="pd_maroon" href="ch10.xhtml#ch10lev1sec4">Replace Conditional with Polymorphism</a> (<a class="pd_maroon" href="ch10.xhtml#page_272">272</a>)</span></em>.</p>
+<p class="indent">There were three major stages to this refactoring episode: decomposing the original function into a set of nested functions, using <em><span class="pd_maroon"><a class="pd_maroon" href="ch06.xhtml#ch06lev1sec11">Split Phase</a> (<a class="pd_maroon" href="ch06.xhtml#page_154">154</a>)</span></em> to separate the calculation and printing code, and finally introducing a polymorphic calculator for the calculation logic. Each of these added structure to the code, enabling me to better communicate what the code was doing.</p>
+<p class="indent">As is often the case with refactoring, the early stages were mostly driven by trying to understand what was going on. A common sequence is: Read the code, gain some insight, and use refactoring to move that insight from your head back into the code. The clearer code then makes it easier to understand it, leading to deeper insights and a beneficial positive feedback loop. There are still some improvements I could make, but I feel I&#8217;ve done enough to pass my test of leaving the code significantly better than how I found it.</p>
+<div class="quote">
+<p class="noindent"><img src="graphics/common.jpg" alt="Images"/> <em>The true test of good code is how easy it is to change it.</em></p>
+</div>
+<p class="indent">I&#8217;m talking about improving the code&#8212;but programmers love to argue about what good code looks like. I know some people object to my preference for small, well-named functions. If we consider this to be a matter of aesthetics, where nothing is either good or bad but thinking makes it so, we lack any guide but personal taste. I believe, however, that we can go beyond taste and say that the true test of good code is how easy it is to change it. Code should be obvious: When someone needs to make a change, they should be able to find the code to be changed easily and to make the change quickly without introducing any errors. A healthy code base maximizes our productivity, allowing us to build more features for our users both faster and more cheaply. To keep code healthy, pay attention to what is getting between the programming team and that ideal, then refactor to get closer to the ideal.</p>
+<p class="indent"><span epub:type="pagebreak" id="page_44"/>But the most important thing to learn from this example is the rhythm of refactoring. Whenever I&#8217;ve shown people how I refactor, they are surprised by how small my steps are, each step leaving the code in a working state that compiles and passes its tests. I was just as surprised myself when Kent Beck showed me how to do this in a hotel room in Detroit two decades ago. The key to effective refactoring is recognizing that you go faster when you take tiny steps, the code is never broken, and you can compose those small steps into substantial changes. Remember that&#8212;and the rest is silence.</p>
+</section>
+</body>
+</html>
