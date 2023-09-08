@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Your Book Title</title>
+  <link href="{{ url_for('static', filename='static/css/main.css') }}" rel="stylesheet">
+</head>
+
+<body style="overflow: hidden;">
+
+
+  <div id="navButtons"
+    style="position: fixed; bottom: 0; left: 0; width: 100%; backdrop-filter: backdrop-blur-md; background-color: rgba(255, 255, 255, 0.3); box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; padding: 16px; z-index: 50; transition: opacity 1s; opacity: 1;">
+    <button id="prevButton"
+      style="background-color: #f0f0f0; padding: 8px 16px; border-radius: 4px; font-size: 14px;">Previous</button>
+    <a href='{{ url_for("library") }}'><button
+        style="font-size: 14px; font-weight: bold; padding: 8px 16px; border-radius: 4px;">Return to
+        Library</button></a>
+    <button id="nextButton"
+      style="background-color: #f0f0f0; padding: 8px 16px; border-radius: 4px; font-size: 14px;">Next</button>
+  </div>
+
+  <script>
+  </script>
+
+</body>
+
+</html>

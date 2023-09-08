@@ -11,7 +11,7 @@ class Textbook:
         self.opf = self.get_opf_location()
         self.opf_path = f'data/{self.UUID}/{self.opf}'
         self.opf_folder_location = os.path.dirname(self.opf_path)
-        # self.book_path = "/".join(self.opf_folder_location.split('/')[3:])
+        # self.book_path = "/".join(self.opf_folder_location.split('/')[1:])
         self.book_path = self.opf_folder_location
         self.container_root = self.parse_and_get_root_xml(self.container_path)
         self.spine = self.get_spine()
@@ -45,7 +45,7 @@ class Textbook:
         for idref in self.spine:
             for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
                     if element.attrib['id'] == idref:
-                        href.append(f'{element.attrib["href"]}')
+                        href.append(os.path.join(self.book_path, element.attrib["href"]))
         print('Compiled href list')
         return href
     

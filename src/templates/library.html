@@ -7,7 +7,7 @@
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% for UUID in books.keys() %}
         <div class="bg-white shadow-md p-4">
-            <a href="{{ url_for('read_book', UUID=UUID, nav='load')}}"><img src="{{ books[UUID].cover }}" alt="" class="w-full mb-4"></a>
+            <a href="{{ url_for('ebook_content', UUID=UUID)}}"><img src="{{ books[UUID].cover }}" alt="" class="w-full mb-4"></a>
             <h2 class="text-xl font-semibold">{{ books[UUID].title }}</h2>
             <p class="text-gray-600">{{ books[UUID].author }}</p>
             <p class="mt-2">{{ books[UUID].description }}</p>
