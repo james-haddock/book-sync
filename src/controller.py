@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 import logging
 import uuid
-from model.book_path_corrector import update_links
+
 
 
 def has_file_extension(filename):
@@ -63,37 +63,38 @@ def registration_form():
 
 
 
-@app.route('/data', methods=['GET', 'POST'])
-def ebook_content():
-    UUID = request.args.get('UUID')
-    session["book_UUID"] = UUID
+# Serve the dynamic HTML
+@app.route('/book/<UUID>')
+def book(UUID):
     book = books[UUID]
-    return render_template('/templates/reader.html', UUID=UUID, current_page=book.href[book.book_index_number], book_path=book.book_path)
+    current_page = os.path.join(book.book_path, book.href[book.book_index_number])
+    html_directory = os.path.dirname(current_page) + "/"
+    return render_template('templates/reader.html', UUID=UUID, base=html_directory[5:], book_title=book.title)
 
-@app.route('/get_url', methods=['GET'])
-def get_url():
-    # Use request.args to get query parameters
+
+
+@app.route('/get_content', methods=['GET'])
+def get_content():
     action = request.args.get('action')
     UUID = request.args.get('UUID')
-
-    # Error handling for missing or invalid parameters
     if not action or not UUID:
         return "Missing or invalid parameters", 400
-    # Error handling for missing book object
     if UUID not in books:
         return "Book not found", 404
     current_book = books[UUID]
     current_position = current_book.book_index_number
     max_position = len(current_book.href) - 1
+
     if action == 'initial':
         url_to_load = current_book.href[current_position]
     elif action == 'next':
         current_position = min(current_position + 1, max_position)
     elif action == 'prev':
         current_position = max(0, current_position - 1)
+
     current_book.book_index_number = current_position
     url_to_load = current_book.href[current_position]
-    return jsonify({'url': url_to_load})
+    return render_template(current_book.book_path + '/' + url_to_load)
 
 
 # @app.route('/book/<UUID>/load', methods=['GET', 'POST'])
@@ -129,7 +130,7 @@ def get_url():
     # return render_template('/templates/reader.html', UUID=UUID, book=book)
     # else:
     #     return render_template(book.href[book.book_index_number])
-    return render_template('/templates/reader.html', UUID=UUID, book=book)
+    # return render_template('/templates/reader.html', UUID=UUID, book=book)
 
 
 # @app.route("/current_page", methods=['GET', 'POST'])
