@@ -1,66 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" style="height: 100%;">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book_title }}</title>
     <base href="{{ base }}">
-    <script src='../../../../turnjs4/jquery-3.7.1.js' integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src='../../../../turnjs4/lib/turn.min.js'></script>
+    <!-- <script src='../../../../turnjs4/jquery-3.7.1.js' integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> -->
 </head>
+
+<!-- <style>
+    #content {
+        width: 800px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        background: #fff;
+    }
+</style> -->
+
 <body>
-  <div id="flipbook">
-    <div class="page" id="page1">
+    <div id="content">
         <!-- Content from Flask server will be appended here -->
     </div>
-</div>
+    <div style="text-align:center;margin-top:20px;">
+        <button id="loadMore">Load More</button>
+    </div>
 
-  <script>
-    let UUID = '{{ UUID }}'
-    function checkOverflow(el) {
-      return el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
-  }
-  
-  function paginateContent() {
-      let currentPage = 1;
-  
-      while (checkOverflow(document.getElementById('page' + currentPage))) {
-          let pageEl = document.getElementById('page' + currentPage);
-          let newPageEl = document.createElement('div');
-          newPageEl.className = 'page';
-          currentPage++;
-          newPageEl.id = 'page' + currentPage;
-  
-          // Move the last child (this could be a paragraph, image, etc.) to the new page
-          while (checkOverflow(pageEl) && pageEl.childNodes.length > 0) {
-              newPageEl.insertBefore(pageEl.lastChild, newPageEl.firstChild);
-          }
-  
-          // Append the new page to the flipbook
-          document.getElementById('flipbook').appendChild(newPageEl);
-      }
-  }
-  
-  $(document).ready(function() {
-      $.get("/get_content", {
-          action: "initial",
-          UUID: UUID
-      }).done(function(data) {
-          $("#page1").append(data);
-  
-          // Paginate the content
-          paginateContent();
-  
-          $("#flipbook").turn({
-              width: 800,
-              height: 600,
-              autoCenter: true
-          });
-      }).fail(function() {
-          alert("Error fetching content from the server.");
-      });
-  });
-  
-  </script>
+    <script>
+        let UUID = '{{ UUID }}';
+        let lastFetchedPage = 0;
+
+        function appendContentToDiv(data) {
+            let $contentDiv = $("#content");
+
+            // Convert data to jQuery object
+            let $data = $(data);
+
+            $contentDiv.append($data);
+        }
+
+        $("#loadMore").click(function() {
+            lastFetchedPage++;
+            $.get("/get_content", {
+                action: "load_more",
+                UUID: UUID,
+                page: lastFetchedPage
+            }).done(function(data) {
+                appendContentToDiv(data);
+            }).fail(function() {
+                alert("Error fetching content from the server.");
+            });
+        });
+
+        $(document).ready(function() {
+            $.get("/get_content", {
+                action: "initial",
+                UUID: "{{ UUID }}"
+            }).done(function(data) {
+                appendContentToDiv(data);
+            }).fail(function() {
+                alert("Error fetching content from the server.");
+            });
+        });
+    </script>
 </body>
+
 </html>
