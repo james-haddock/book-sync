@@ -1,15 +1,17 @@
 import xml.etree.ElementTree as ET
 import os
 import uuid
+from . import book_consolidator
 
 class Textbook:
     def __init__(self, UUID):
+        self.book_consolidator = book_consolidator.HtmlConsolidator()
         self.UUID = UUID 
         self.container_namespace = '{urn:oasis:names:tc:opendocument:xmlns:container}'
         self.opf_namespace = '{http://www.idpf.org/2007/opf}'
-        self.container_path = f'data/{self.UUID}/META-INF/container.xml'
+        self.container_path = f'book/{self.UUID}/META-INF/container.xml'
         self.opf = self.get_opf_location()
-        self.opf_path = f'data/{self.UUID}/{self.opf}'
+        self.opf_path = f'book/{self.UUID}/{self.opf}'
         self.opf_folder_location = os.path.dirname(self.opf_path)
         # self.book_path = "/".join(self.opf_folder_location.split('/')[1:])
         self.book_path = self.opf_folder_location
@@ -22,7 +24,10 @@ class Textbook:
         self.cover = self.get_cover()
         self.isbn = ''
         self.book_index_number = 20
+        self.html_directory = os.path.dirname(os.path.join(self.book_path, self.href[self.book_index_number]))
+        self.href_relative_path = [self.book_path + '/' + URL for URL in self.href]
         self.scroll_position = ''
+        self.book_consolidator.consolidate_html(self.href_relative_path, f'{self.html_directory}/consolidated_{UUID}.html')
 
     def parse_and_get_root_xml(self, xml_path):
         tree = ET.parse(xml_path)
@@ -45,7 +50,7 @@ class Textbook:
         for idref in self.spine:
             for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
                     if element.attrib['id'] == idref:
-                        href.append(os.path.join(self.book_path, element.attrib["href"]))
+                        href.append(element.attrib["href"])
         print('Compiled href list')
         return href
     

@@ -3,7 +3,7 @@ import os
 from flask import abort
 
 def extract_book(epub_book, UUID):
-    extract_directory = f'data/{UUID}'
+    extract_directory = f'book/{UUID}'
     try:
         os.makedirs(extract_directory)
     except FileExistsError:
