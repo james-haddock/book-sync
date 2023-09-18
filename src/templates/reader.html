@@ -1,17 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>{{ book.title }}</title>
-    <link href="{{ url_for('static', filename='static/css/main.css') }}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book_title }}</title>
+    <base href="{{ base }}">
+    <script src='../../../../turnjs4/jquery-3.7.1.js' integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src='../../../../turnjs4/lib/turn.min.js'></script>
 </head>
 <body>
-  <div class="fixed bottom-0 left-0 w-full backdrop-filter backdrop-blur-md bg-opacity-30 bg-white shadow-md flex justify-between items-center p-4" style="z-index: 2;">
-    <button id="prevpage" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm">Previous</button>
-    <a href='{{ url_for("library") }}'><button class="text-gray-700 font-bold px-4 py-2 rounded-md">Return to Library</button></a>
-    <button id="nextpage" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm">Next</button>
-  </div>
-  <iframe id="myIframe" src="{{ book.href[1] }}" class="w-screen h-screen" style="position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); border: 1rem; z-index: 1;" frameborder="0"></iframe>
+  <div id="flipbook">
+    <div class="page" id="page1">
+        <!-- Content from Flask server will be appended here -->
+    </div>
+</div>
+
+  <script>
+    let UUID = '{{ UUID }}'
+    function checkOverflow(el) {
+      return el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
+  }
+  
+  function paginateContent() {
+      let currentPage = 1;
+  
+      while (checkOverflow(document.getElementById('page' + currentPage))) {
+          let pageEl = document.getElementById('page' + currentPage);
+          let newPageEl = document.createElement('div');
+          newPageEl.className = 'page';
+          currentPage++;
+          newPageEl.id = 'page' + currentPage;
+  
+          // Move the last child (this could be a paragraph, image, etc.) to the new page
+          while (checkOverflow(pageEl) && pageEl.childNodes.length > 0) {
+              newPageEl.insertBefore(pageEl.lastChild, newPageEl.firstChild);
+          }
+  
+          // Append the new page to the flipbook
+          document.getElementById('flipbook').appendChild(newPageEl);
+      }
+  }
+  
+  $(document).ready(function() {
+      $.get("/get_content", {
+          action: "initial",
+          UUID: UUID
+      }).done(function(data) {
+          $("#page1").append(data);
+  
+          // Paginate the content
+          paginateContent();
+  
+          $("#flipbook").turn({
+              width: 800,
+              height: 600,
+              autoCenter: true
+          });
+      }).fail(function() {
+          alert("Error fetching content from the server.");
+      });
+  });
+  
+  </script>
 </body>
 </html>
