@@ -63,7 +63,7 @@ def registration_form():
 
 
 
-# Serve the dynamic HTML
+
 @app.route('/book/<UUID>')
 def book(UUID):
     book = books[UUID]
