@@ -43,11 +43,6 @@ logger.addHandler(console_handler)
 def index():
     return render_template('/templates/index.html')
 
-# @app.route("/custom_static", methods=['GET', 'POST'])
-# def custom_static():
-#     send_from_
-
-
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -95,86 +90,6 @@ def get_content():
     current_book.book_index_number = current_position
     url_to_load = current_book.href[current_position]
     return render_template(current_book.book_path + '/' + url_to_load)
-
-
-# @app.route('/book/<UUID>/load', methods=['GET', 'POST'])
-# def load_initial_page(UUID):
-#     book = books[UUID]
-#     # Retrieve the saved index from the database
-#     url_to_load = book.href[book.book_index_number]
-#     # Get the URL to load based on the index
-#     return jsonify({'url_to_load': url_to_load})
-
-
-
-    # return render_template(f'data/{os.path.join(book.book_path, book.href[book.book_index_number])}')
-    # if nav == 'load':
-    #     initial_load = os.path.join(ebook_dir, book.href[book.book_index_number])
-    #     return render_template(initial_load)
-    # file_path = os.path.join(ebook_dir, file_path)
-    # if not os.path.exists(file_path):
-    #     return "File not found", 404
-    # if file_path.endswith('.html'):
-    #     return render_template(file_path)
-
-
-# @app.route("/data/<UUID>/<nav>", methods=['GET', 'POST'])
-# def read_book(UUID: str, nav=None):
-#     book = books[UUID]
-    # if nav == 'next' and book.book_index_number < len(book.href):
-    #     book.book_index_number += 1
-    #     return render_template(book.href[book.book_index_number])
-    # elif nav == 'session':
-    #     return render_template(book.href[book.book_index_number])
-    # elif nav == 'load':
-    # return render_template('/templates/reader.html', UUID=UUID, book=book)
-    # else:
-    #     return render_template(book.href[book.book_index_number])
-    # return render_template('/templates/reader.html', UUID=UUID, book=book)
-
-
-# @app.route("/current_page", methods=['GET', 'POST'])
-# @app.route("/current_page/<path:subpath>", methods=['GET', 'POST'])
-# def current_page(subpath=None):
-#     book = books[session["book_UUID"]]
-#     page = f'{book.href[book.book_index_number]}'
-#     directory = f'{book.opf_folder_location}'
-    # if subpath != None:
-    #     return send_from_directory(directory, subpath)
-    # return send_from_directory(directory, page)
-    # return send_from_directory(books[UUID].opf_folder_location, f"/{books[UUID].href[books[UUID].book_index_number]}")
-    # if subpath != None:
-    # static_page = app.send_static_file(f'{book.opf_folder_location}/{static}')
-    # return static_page
-    # return send_from_directory(directory, page)
-    # return render_template(f'/{book.opf_folder_location}/{book.href[book.book_index_number]}')
-
-
-# @app.route('/load_more/<UUID>/<nav>', methods=['GET', 'POST'])
-# def load_more(UUID, nav):
-#     UUID = session["book_UUID"]
-#     # if request.args.get('last_item_id') == 'next':
-#     # if request.args.get('nav') == 'next':
-#     # if nav == 'next':
-#     book = books[UUID]
-#     if book.book_index_number < len(book.href) - 1:
-#         books[UUID].book_index_number += 1
-#         return render_template(f"{book.href[book.book_index_number]}")
-    #     elif request.args.get('last_item_id') == 'previous':
-    #         if books[session['active_book_index']].book_index_number > 0:
-    #             books[session['active_book_index']].book_index_number -= 1
-    #             return render_template(f"{books[session['active_book_index']].opf_folder_location}/{books[session['active_book_index']].href[books[session['active_book_index']].book_index_number]}")
-
-
-# @app.route("/nav/<navigation>", methods=['GET', 'POST'])
-# def read_book_nav(navigation):
-#     if navigation == 'next':
-#         books[session['active_book_index']].book_index_number += 1
-#     elif navigation == 'prev':
-#         if books[session['active_book_index']].book_index_number > 0:
-#             books[session['active_book_index']].book_index_number -= 1
-#     return redirect(url_for('read_book', book_title=books[session['active_book_index']].title))
-    # return render_template('/templates/base_reader.html', iframe=session['iframe'], active_book_index=session['active_book_index'])
 
 
 @app.route("/library", methods=['GET'])
