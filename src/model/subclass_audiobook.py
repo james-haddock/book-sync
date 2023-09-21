@@ -1,8 +1,6 @@
 from class_book import Book
 
-class Audiobook(Book):
+class Audiobook:
     def __init__(self, title):
-
-        super().__init__(title)
         self.title = title
     

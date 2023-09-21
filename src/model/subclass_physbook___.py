@@ -1,0 +1,74 @@
+import xml.etree.ElementTree as ET
+import os
+import uuid
+from . import book_consolidator
+from class_book import Book
+
+class Textbook(Book):
+    def __init__(self, UUID):
+        self.book_consolidator = book_consolidator.HtmlConsolidator()
+        self.UUID = UUID 
+        self.container_namespace = '{urn:oasis:names:tc:opendocument:xmlns:container}'
+        self.opf_namespace = '{http://www.idpf.org/2007/opf}'
+        self.container_path = f'book/{self.UUID}/META-INF/container.xml'
+        self.opf = self.get_opf_location()
+        self.opf_path = f'book/{self.UUID}/{self.opf}'
+        self.opf_folder_location:list = os.path.dirname(self.opf_path)
+        self.book_path:list = self.opf_folder_location
+        self.container_root = self.parse_and_get_root_xml(self.container_path)
+        self.spine = self.get_spine()
+        self.opf_root = self.parse_and_get_root_xml(self.opf_path)
+        self.href:list = self.get_href()
+        self.opf = self.get_opf_location()
+        self.title = self.get_title()
+        self.cover = self.get_cover()
+        self.isbn = ''
+        self.book_index_number = 20
+        self.html_directory = os.path.dirname(os.path.join(self.book_path, self.href[self.book_index_number]))
+        self.href_relative_path = [self.book_path + '/' + URL for URL in self.href]
+        self.book_consolidator.consolidate_html(self.href_relative_path, f'{self.html_directory}/consolidated_{UUID}.html')
+
+    def parse_and_get_root_xml(self, xml_path):
+        tree = ET.parse(xml_path)
+        root = tree.getroot()
+        return root
+
+    def get_opf_location(self):
+        root = self.parse_and_get_root_xml(self.container_path)
+        opf_location = root.find(f'{self.container_namespace}rootfiles/{self.container_namespace}rootfile').attrib['full-path']
+        return opf_location
+    
+    def get_spine(self):
+        root = self.parse_and_get_root_xml(self.opf_path)
+        spine = [item.attrib['idref'] for item in root.findall(f'{self.opf_namespace}spine/{self.opf_namespace}itemref')]
+        print('Spine retrieved')
+        return spine
+    
+    def get_href(self):
+        href = []
+        for idref in self.spine:
+            for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                    if element.attrib['id'] == idref:
+                        href.append(element.attrib["href"])
+        print('Compiled href list')
+        return href
+    
+    def get_cover(self):
+        if self.opf_root.attrib['version'] == '3.0':
+            for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                if element.attrib['id'] == 'cover-image':
+                    cover_loc = element.attrib['href']
+        elif self.opf_root.attrib['version'] == '2.0':
+            for element in self.opf_root.findall(f'{self.opf_namespace}metadata/{self.opf_namespace}meta'):
+                if element.attrib['name'] == 'cover':
+                    cover_id = element.attrib['content']
+                    for item in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                        if item.attrib['id'] == cover_id:
+                            cover_loc = item.attrib['href']
+        opf_folder_location = os.path.dirname(self.opf_path)
+        print('Cover retrieved')
+        return f'{opf_folder_location}/{cover_loc}'
+    
+    def get_title(self):
+        DC_namespace = '{http://purl.org/dc/elements/1.1/}'
+        return self.opf_root.find(f'{self.opf_namespace}metadata/{DC_namespace}title').text
