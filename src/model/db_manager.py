@@ -1,7 +1,7 @@
 
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker
-from .db_schema import Base, DBBook, DBTextbook, DBAudiobook
+from .db_schema import Base, DBBook, DBTextbook
 from .class_book import Book
 from .subclass_physbook import Textbook
 
