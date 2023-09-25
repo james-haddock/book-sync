@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en">
+<head>
+<meta name="dtb:uid" content="9780262367622"/>
+<meta name="dtb:depth" content="3"/>
+<meta name="dtb:totalPageCount" content="0"/>
+<meta name="dtb:maxPageNumber" content="0"/>
+</head>
+<docTitle><text>Structure and Interpretation of Computer Programs</text></docTitle>
+<navMap>
+<navPoint id="navpoint-1" playOrder="1"><navLabel><text>Cover</text></navLabel><content src="xhtml/cover.xhtml#cover"/></navPoint>
+<navPoint id="navpoint-2" playOrder="2"><navLabel><text>Foreword</text></navLabel><content src="xhtml/c000a.xhtml#f2-title-0001"/></navPoint>
+<navPoint id="navpoint-3" playOrder="3"><navLabel><text>Foreword to Structure and Interpretation of Computer Programs, 1984</text></navLabel><content src="xhtml/c000b.xhtml#f3-title-0001"/></navPoint>
+<navPoint id="navpoint-4" playOrder="4"><navLabel><text>Preface</text></navLabel><content src="xhtml/c000c.xhtml#f4-title-0001"/></navPoint>
+<navPoint id="navpoint-5" playOrder="5"><navLabel><text>Prefaces to Structure and Interpretation of Computer Programs, 1996 &amp; 1984</text></navLabel><content src="xhtml/c000d.xhtml#f5-title-0001"/></navPoint>
+<navPoint id="navpoint-6" playOrder="6"><navLabel><text>Acknowledgments</text></navLabel><content src="xhtml/c000e.xhtml#f6-title-0001"/></navPoint>
+<navPoint id="navpoint-7" playOrder="7"><navLabel><text>1: Building Abstractions with Functions</text></navLabel><content src="xhtml/c001.xhtml#c1-title-0001"/></navPoint>
+<navPoint id="navpoint-8" playOrder="8"><navLabel><text>2: Building Abstractions with Data</text></navLabel><content src="xhtml/c002.xhtml#c2-title-0001"/></navPoint>
+<navPoint id="navpoint-9" playOrder="9"><navLabel><text>3: Modularity, Objects, and State</text></navLabel><content src="xhtml/c003.xhtml#c3-title-0001"/></navPoint>
+<navPoint id="navpoint-10" playOrder="10"><navLabel><text>4: Metalinguistic Abstraction</text></navLabel><content src="xhtml/c004.xhtml#c4-title-0001"/></navPoint>
+<navPoint id="navpoint-11" playOrder="11"><navLabel><text>5: Computing with Register Machines</text></navLabel><content src="xhtml/c005.xhtml#c5-title-0001"/></navPoint>
+<navPoint id="navpoint-12" playOrder="12"><navLabel><text>References</text></navLabel><content src="xhtml/c444.xhtml#b1-title-0001"/></navPoint>
+<navPoint id="navpoint-13" playOrder="13"><navLabel><text>Index</text></navLabel><content src="xhtml/c555.xhtml#b2-title-0001"/></navPoint>
+<navPoint id="navpoint-14" playOrder="14"><navLabel><text>List of Exercises</text></navLabel><content src="xhtml/c800.xhtml#b2-title-0001"/></navPoint>
+</navMap>
+</ncx>

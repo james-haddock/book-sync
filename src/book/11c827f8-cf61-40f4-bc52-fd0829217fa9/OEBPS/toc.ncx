@@ -1,0 +1,2751 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en">
+<head>
+<meta content="1682113942" name="dtb:uid"/>
+<meta content="3" name="dtb:depth"/>
+<meta content="mobiunpack.py" name="dtb:generator"/>
+<meta content="0" name="dtb:totalPageCount"/>
+<meta content="0" name="dtb:maxPageNumber"/>
+</head>
+<docTitle>
+<text>Head First: Design Patterns</text>
+</docTitle>
+<navMap>
+    <navPoint id="np_1" playOrder="1">
+    <navLabel>
+    <text>Head First: Design Patterns</text>
+    </navLabel>
+    <content src="Text/part0000.xhtml#head_first_design_patterns"/>
+    </navPoint>
+    <navPoint id="np_2" playOrder="2">
+    <navLabel>
+    <text>Dedication</text>
+    </navLabel>
+    <content src="Text/part0001.xhtml#dedication"/>
+    </navPoint>
+    <navPoint id="np_3" playOrder="3">
+    <navLabel>
+    <text>Praise for Head First Design Patterns</text>
+    </navLabel>
+    <content src="Text/part0002.xhtml#praise_for_head_first_design_patterns"/>
+    </navPoint>
+    <navPoint id="np_4" playOrder="4">
+    <navLabel>
+    <text>More Praise for Head First Design Patterns</text>
+    </navLabel>
+    <content src="Text/part0003.xhtml#more_praise_for_head_first_design_patter"/>
+    </navPoint>
+    <navPoint id="np_5" playOrder="5">
+    <navLabel>
+    <text>Praise for other books by Eric Freeman and Elisabeth Robson</text>
+    </navLabel>
+    <content src="Text/part0004.xhtml#praise_for_other_books_by_eric_freeman_a"/>
+    </navPoint>
+    <navPoint id="np_6" playOrder="6">
+    <navLabel>
+    <text>Authors of Head First Design Patterns</text>
+    </navLabel>
+    <content src="Text/part0005.xhtml#authors_of_head_first_design_patterns"/>
+    </navPoint>
+    <navPoint id="np_7" playOrder="7">
+    <navLabel>
+    <text>Creators of the Head First series (and co-conspirators on this book)</text>
+    </navLabel>
+    <content src="Text/part0006.xhtml#creators_of_the_head_first_series_left_p"/>
+    </navPoint>
+    <navPoint id="np_8" playOrder="8">
+    <navLabel>
+    <text>How to Use This Book: Intro</text>
+    </navLabel>
+    <content src="Text/part0007.xhtml#aid-6LJU2"/>
+      <navPoint id="np_9" playOrder="9">
+      <navLabel>
+      <text>Who is this book for?</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#who_is_this_book_forquestion_mark"/>
+        <navPoint id="np_10" playOrder="10">
+        <navLabel>
+        <text>Who should probably back away from this book?</text>
+        </navLabel>
+        <content src="Text/part0007.xhtml#who_should_probably_back_away_from_this"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_11" playOrder="11">
+      <navLabel>
+      <text>We know what you’re thinking.</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#we_know_what_youapostrophere_thinkingdot"/>
+      </navPoint>
+      <navPoint id="np_12" playOrder="12">
+      <navLabel>
+      <text>And we know what your brain is thinking.</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#and_we_know_what_your_brain_is_thinkingd"/>
+      </navPoint>
+      <navPoint id="np_13" playOrder="13">
+      <navLabel>
+      <text>Metacognition: thinking about thinking</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#metacognition_thinking_about_thinking"/>
+      </navPoint>
+      <navPoint id="np_14" playOrder="14">
+      <navLabel>
+      <text>Here’s what WE did</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#hereapostrophes_what_we_did"/>
+      </navPoint>
+      <navPoint id="np_15" playOrder="15">
+      <navLabel>
+      <text>Here’s what YOU can do to bend your brain into submission</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#hereapostrophes_what_you_can_do_to_bend"/>
+      </navPoint>
+      <navPoint id="np_16" playOrder="16">
+      <navLabel>
+      <text>Read Me</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#read_me"/>
+      </navPoint>
+      <navPoint id="np_17" playOrder="17">
+      <navLabel>
+      <text>Tech Reviewers</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#tech_reviewers"/>
+      </navPoint>
+      <navPoint id="np_18" playOrder="18">
+      <navLabel>
+      <text>Acknowledgments</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#acknowledgments"/>
+      </navPoint>
+      <navPoint id="np_19" playOrder="19">
+      <navLabel>
+      <text>Even more people</text>
+      </navLabel>
+      <content src="Text/part0007.xhtml#even_more_peoplethe_large_number_of_ackn"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_20" playOrder="20">
+    <navLabel>
+    <text>1. Intro to Design Patterns: Welcome to Design Patterns</text>
+    </navLabel>
+    <content src="Text/part0008.xhtml#aid-7K4G2"/>
+      <navPoint id="np_21" playOrder="21">
+      <navLabel>
+      <text>It started with a simple SimUDuck app</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#it_started_with_a_simple_simuduck_app"/>
+      </navPoint>
+      <navPoint id="np_22" playOrder="22">
+      <navLabel>
+      <text>But now we need the ducks to FLY</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#but_now_we_need_the_ducks_to_fly"/>
+      </navPoint>
+      <navPoint id="np_23" playOrder="23">
+      <navLabel>
+      <text>But something went horribly wrong...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#but_something_went_horribly_wronghellip"/>
+      </navPoint>
+      <navPoint id="np_24" playOrder="24">
+      <navLabel>
+      <text>Joe thinks about inheritance...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#joe_thinks_about_inheritancehellip"/>
+      </navPoint>
+      <navPoint id="np_25" playOrder="25">
+      <navLabel>
+      <text>How about an interface?</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#how_about_an_interfacequestion_mark"/>
+      </navPoint>
+      <navPoint id="np_26" playOrder="26">
+      <navLabel>
+      <text>What would you do if you were Joe?</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#what_would_you_do_if_you_were_joequestio"/>
+      </navPoint>
+      <navPoint id="np_27" playOrder="27">
+      <navLabel>
+      <text>The one constant in software development</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#one_constant_in_software_development"/>
+      </navPoint>
+      <navPoint id="np_28" playOrder="28">
+      <navLabel>
+      <text>Zeroing in on the problem...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#zeroing_in_on_the_problemhellip"/>
+      </navPoint>
+      <navPoint id="np_29" playOrder="29">
+      <navLabel>
+      <text>Separating what changes from what stays the same</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#separating_what_changes_from_what_stays"/>
+      </navPoint>
+      <navPoint id="np_30" playOrder="30">
+      <navLabel>
+      <text>Designing the Duck Behaviors</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#designing_the_duck_behaviors"/>
+      </navPoint>
+      <navPoint id="np_31" playOrder="31">
+      <navLabel>
+      <text>Implementing the Duck Behaviors</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#implementing_the_duck_behaviors"/>
+      </navPoint>
+      <navPoint id="np_32" playOrder="32">
+      <navLabel>
+      <text>Integrating the Duck Behavior</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#integrating_the_duck_behavior"/>
+      </navPoint>
+      <navPoint id="np_33" playOrder="33">
+      <navLabel>
+      <text>More integration...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#more_integrationhellip"/>
+      </navPoint>
+      <navPoint id="np_34" playOrder="34">
+      <navLabel>
+      <text>Testing the Duck code</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#testing_the_duck_code"/>
+      </navPoint>
+      <navPoint id="np_35" playOrder="35">
+      <navLabel>
+      <text>Setting behavior dynamically</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#setting_behavior_dynamically"/>
+      </navPoint>
+      <navPoint id="np_36" playOrder="36">
+      <navLabel>
+      <text>The Big Picture on encapsulated behaviors</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#big_picture_on_encapsulated_behaviors"/>
+      </navPoint>
+      <navPoint id="np_37" playOrder="37">
+      <navLabel>
+      <text>HAS-A can be better than IS-A</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#has-a_can_be_better_than_is-a"/>
+      </navPoint>
+      <navPoint id="np_38" playOrder="38">
+      <navLabel>
+      <text>Speaking of Design Patterns...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#speaking_of_design_patternshellip"/>
+      </navPoint>
+      <navPoint id="np_39" playOrder="39">
+      <navLabel>
+      <text>Overheard at the local diner...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#overheard_at_the_local_dinerhellip"/>
+      </navPoint>
+      <navPoint id="np_40" playOrder="40">
+      <navLabel>
+      <text>Overheard in the next cubicle...</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#overheard_in_the_next_cubiclehellip"/>
+      </navPoint>
+      <navPoint id="np_41" playOrder="41">
+      <navLabel>
+      <text>The power of a shared pattern vocabulary</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#power_of_a_shared_pattern_vocabulary"/>
+      </navPoint>
+      <navPoint id="np_42" playOrder="42">
+      <navLabel>
+      <text>How do I use Design Patterns?</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#how_do_i_use_design_patternsquestion_mar"/>
+      </navPoint>
+      <navPoint id="np_43" playOrder="43">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0008.xhtml#tools_for_your_design_toolbox"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_44" playOrder="44">
+    <navLabel>
+    <text>2. The Observer Pattern: Keeping your Objects in the know</text>
+    </navLabel>
+    <content src="Text/part0009.xhtml#aid-8IL22"/>
+      <navPoint id="np_45" playOrder="45">
+      <navLabel>
+      <text>The Weather Monitoring application overview</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#weather_monitoring_application_overview"/>
+      </navPoint>
+      <navPoint id="np_46" playOrder="46">
+      <navLabel>
+      <text>Unpacking the WeatherData class</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#unpacking_the_weatherdata_class"/>
+      </navPoint>
+      <navPoint id="np_47" playOrder="47">
+      <navLabel>
+      <text>What do we know so far?</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#what_do_we_know_so_farquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_48" playOrder="48">
+      <navLabel>
+      <text>Taking a first, misguided SWAG at the Weather Station</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#taking_a_firstcomma_misguided_swag_at_th"/>
+      </navPoint>
+      <navPoint id="np_49" playOrder="49">
+      <navLabel>
+      <text>What’s wrong with our implementation?</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#whatapostrophes_wrong_with_our_implement"/>
+      </navPoint>
+      <navPoint id="np_50" playOrder="50">
+      <navLabel>
+      <text>Meet the Observer Pattern</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#meet_the_observer_pattern"/>
+      </navPoint>
+      <navPoint id="np_51" playOrder="51">
+      <navLabel>
+      <text>Publishers + Subscribers = Observer Pattern</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#publishers_plus_subscribers_equals_obser"/>
+      </navPoint>
+      <navPoint id="np_52" playOrder="52">
+      <navLabel>
+      <text>A day in the life of the Observer Pattern</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#day_in_the_life_of_the_observer_pattern"/>
+      </navPoint>
+      <navPoint id="np_53" playOrder="53">
+      <navLabel>
+      <text>Five-minute drama: a subject for observation</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#five-minute_drama_a_subject_for_observat"/>
+      </navPoint>
+      <navPoint id="np_54" playOrder="54">
+      <navLabel>
+      <text>Two weeks later...</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#two_weeks_laterhellip"/>
+      </navPoint>
+      <navPoint id="np_55" playOrder="55">
+      <navLabel>
+      <text>The Observer Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#observer_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_56" playOrder="56">
+      <navLabel>
+      <text>The Observer Pattern defined: the class diagram</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#observer_pattern_defined_the_class_diagr"/>
+      </navPoint>
+      <navPoint id="np_57" playOrder="57">
+      <navLabel>
+      <text>The power of Loose Coupling</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#power_of_loose_coupling"/>
+      </navPoint>
+      <navPoint id="np_58" playOrder="58">
+      <navLabel>
+      <text>Cubicle conversation</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#cubicle_conversation"/>
+      </navPoint>
+      <navPoint id="np_59" playOrder="59">
+      <navLabel>
+      <text>Designing the Weather Station</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#designing_the_weather_station"/>
+      </navPoint>
+      <navPoint id="np_60" playOrder="60">
+      <navLabel>
+      <text>Implementing the Weather Station</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#implementing_the_weather_station"/>
+      </navPoint>
+      <navPoint id="np_61" playOrder="61">
+      <navLabel>
+      <text>Implementing the Subject interface in WeatherData</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#implementing_the_subject_interface_in_we"/>
+      </navPoint>
+      <navPoint id="np_62" playOrder="62">
+      <navLabel>
+      <text>Now, let’s build those display elements</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#nowcomma_letapostrophes_build_those_disp"/>
+      </navPoint>
+      <navPoint id="np_63" playOrder="63">
+      <navLabel>
+      <text>Power up the Weather Station</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#power_up_the_weather_station"/>
+      </navPoint>
+      <navPoint id="np_64" playOrder="64">
+      <navLabel>
+      <text>Using Java’s built-in Observer Pattern</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#using_javaapostrophes_built-in_observer"/>
+      </navPoint>
+      <navPoint id="np_65" playOrder="65">
+      <navLabel>
+      <text>How Java’s built-in Observer Pattern works</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#how_javaapostrophes_built-in_observer_pa"/>
+      </navPoint>
+      <navPoint id="np_66" playOrder="66">
+      <navLabel>
+      <text>Reworking the Weather Station with the built-in support</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#reworking_the_weather_station_with_the_b"/>
+      </navPoint>
+      <navPoint id="np_67" playOrder="67">
+      <navLabel>
+      <text>Running the new code</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#running_the_new_code"/>
+      </navPoint>
+      <navPoint id="np_68" playOrder="68">
+      <navLabel>
+      <text>The dark side of java.util.Observable</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#dark_side_of_javadotutildotobservable"/>
+      </navPoint>
+      <navPoint id="np_69" playOrder="69">
+      <navLabel>
+      <text>Other places you’ll find the Observer Pattern in the JDK</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#other_places_youapostrophell_find_the_ob"/>
+      </navPoint>
+      <navPoint id="np_70" playOrder="70">
+      <navLabel>
+      <text>And the code...</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#and_the_codehellip"/>
+        <navPoint id="np_71" playOrder="71">
+        <navLabel>
+        <text>The updated code, using lambda expressions</text>
+        </navLabel>
+        <content src="Text/part0009.xhtml#updated_codecomma_using_lambda_expressio"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_72" playOrder="72">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0009.xhtml#tools_for_your_design_toolbox-id00010"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_73" playOrder="73">
+    <navLabel>
+    <text>3. The Decorator Pattern: Decorating Objects</text>
+    </navLabel>
+    <content src="Text/part0010.xhtml#aid-9H5K2"/>
+      <navPoint id="np_74" playOrder="74">
+      <navLabel>
+      <text>Welcome to Starbuzz Coffee</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#welcome_to_starbuzz_coffee"/>
+      </navPoint>
+      <navPoint id="np_75" playOrder="75">
+      <navLabel>
+      <text>The Open-Closed Principle</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#open-closed_principle"/>
+      </navPoint>
+      <navPoint id="np_76" playOrder="76">
+      <navLabel>
+      <text>Meet the Decorator Pattern</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#meet_the_decorator_pattern"/>
+      </navPoint>
+      <navPoint id="np_77" playOrder="77">
+      <navLabel>
+      <text>Constructing a drink order with Decorators</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#constructing_a_drink_order_with_decorato"/>
+        <navPoint id="np_78" playOrder="78">
+        <navLabel>
+        <text>Okay, here’s what we know so far...</text>
+        </navLabel>
+        <content src="Text/part0010.xhtml#okaycomma_hereapostrophes_what_we_know_s"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_79" playOrder="79">
+      <navLabel>
+      <text>The Decorator Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#decorator_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_80" playOrder="80">
+      <navLabel>
+      <text>Decorating our Beverages</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#decorating_our_beverages"/>
+      </navPoint>
+      <navPoint id="np_81" playOrder="81">
+      <navLabel>
+      <text>Cubicle Conversation</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#cubicle_conversation-id00019"/>
+      </navPoint>
+      <navPoint id="np_82" playOrder="82">
+      <navLabel>
+      <text>New barista training</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#new_barista_training"/>
+      </navPoint>
+      <navPoint id="np_83" playOrder="83">
+      <navLabel>
+      <text>Writing the Starbuzz code</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#writing_the_starbuzz_code"/>
+      </navPoint>
+      <navPoint id="np_84" playOrder="84">
+      <navLabel>
+      <text>Coding beverages</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#coding_beverages"/>
+      </navPoint>
+      <navPoint id="np_85" playOrder="85">
+      <navLabel>
+      <text>Coding condiments</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#coding_condiments"/>
+      </navPoint>
+      <navPoint id="np_86" playOrder="86">
+      <navLabel>
+      <text>Serving some coffees</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#serving_some_coffees"/>
+      </navPoint>
+      <navPoint id="np_87" playOrder="87">
+      <navLabel>
+      <text>Real World Decorators: Java I/O</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#real_world_decorators_java_isoliduso"/>
+      </navPoint>
+      <navPoint id="np_88" playOrder="88">
+      <navLabel>
+      <text>Decorating the java.io classes</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#decorating_the_javadotio_classes"/>
+      </navPoint>
+      <navPoint id="np_89" playOrder="89">
+      <navLabel>
+      <text>Writing your own Java I/O Decorator</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#writing_your_own_java_isoliduso_decorato"/>
+      </navPoint>
+      <navPoint id="np_90" playOrder="90">
+      <navLabel>
+      <text>Test out your new Java I/O Decorator</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#test_out_your_new_java_isoliduso_decorat"/>
+        <navPoint id="np_91" playOrder="91">
+        <navLabel>
+        <text>Give it a spin</text>
+        </navLabel>
+        <content src="Text/part0010.xhtml#give_it_a_spin"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_92" playOrder="92">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0010.xhtml#tools_for_your_design_toolbox-id00023"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_93" playOrder="93">
+    <navLabel>
+    <text>4. The Factory Pattern: Baking with OO Goodness</text>
+    </navLabel>
+    <content src="Text/part0011.xhtml#aid-AFM62"/>
+      <navPoint id="np_94" playOrder="94">
+      <navLabel>
+      <text>Identifying the aspects that vary</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#identifying_the_aspects_that_vary"/>
+      </navPoint>
+      <navPoint id="np_95" playOrder="95">
+      <navLabel>
+      <text>But the pressure is on to add more pizza types</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#but_the_pressure_is_on_to_add_more_pizza"/>
+      </navPoint>
+      <navPoint id="np_96" playOrder="96">
+      <navLabel>
+      <text>Encapsulating object creation</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#encapsulating_object_creation"/>
+      </navPoint>
+      <navPoint id="np_97" playOrder="97">
+      <navLabel>
+      <text>Building a simple pizza factory</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#building_a_simple_pizza_factory"/>
+      </navPoint>
+      <navPoint id="np_98" playOrder="98">
+      <navLabel>
+      <text>Reworking the PizzaStore class</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#reworking_the_pizzastore_class"/>
+      </navPoint>
+      <navPoint id="np_99" playOrder="99">
+      <navLabel>
+      <text>The Simple Factory defined</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#simple_factory_defined"/>
+      </navPoint>
+      <navPoint id="np_100" playOrder="100">
+      <navLabel>
+      <text>Franchising the pizza store</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#franchising_the_pizza_store"/>
+        <navPoint id="np_101" playOrder="101">
+        <navLabel>
+        <text>We’ve seen one approach...</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#weapostropheve_seen_one_approachhellip"/>
+        </navPoint>
+        <navPoint id="np_102" playOrder="102">
+        <navLabel>
+        <text>But you’d like a little more quality control...</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#but_youapostrophed_like_a_little_more_qu"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_103" playOrder="103">
+      <navLabel>
+      <text>A framework for the pizza store</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#framework_for_the_pizza_store"/>
+      </navPoint>
+      <navPoint id="np_104" playOrder="104">
+      <navLabel>
+      <text>Allowing the subclasses to decide</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#allowing_the_subclasses_to_decide"/>
+      </navPoint>
+      <navPoint id="np_105" playOrder="105">
+      <navLabel>
+      <text>Let’s make a PizzaStore</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#letapostrophes_make_a_pizzastore"/>
+      </navPoint>
+      <navPoint id="np_106" playOrder="106">
+      <navLabel>
+      <text>Declaring a factory method</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#declaring_a_factory_method"/>
+        <navPoint id="np_107" playOrder="107">
+        <navLabel>
+        <text>Let’s see how it works: ordering pizzas with the pizza factory method</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#letapostrophes_see_how_it_works_ordering"/>
+        </navPoint>
+        <navPoint id="np_108" playOrder="108">
+        <navLabel>
+        <text>So how do they order?</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#so_how_do_they_orderquestion_mark"/>
+        </navPoint>
+        <navPoint id="np_109" playOrder="109">
+        <navLabel>
+        <text>Let’s check out how these pizzas are really made to order...</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#letapostrophes_check_out_how_these_pizza"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_110" playOrder="110">
+      <navLabel>
+      <text>We’re just missing one thing: PIZZA!</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#weapostrophere_just_missing_one_thing_pi"/>
+        <navPoint id="np_111" playOrder="111">
+        <navLabel>
+        <text>Our PizzaStore isn’t going to be very popular without some pizzas, so let’s implement them</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#our_pizzastore_isnapostrophet_going_to_b"/>
+        </navPoint>
+        <navPoint id="np_112" playOrder="112">
+        <navLabel>
+        <text>Now we just need some concrete subclasses... how about defining New York and Chicago style cheese pizzas?</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#now_we_just_need_some_concrete_subclasse"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_113" playOrder="113">
+      <navLabel>
+      <text>You’ve waited long enough. Time for some pizzas!</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#youapostropheve_waited_long_enoughdot_ti"/>
+      </navPoint>
+      <navPoint id="np_114" playOrder="114">
+      <navLabel>
+      <text>It’s finally time to meet the Factory Method Pattern</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#itapostrophes_finally_time_to_meet_the_f"/>
+        <navPoint id="np_115" playOrder="115">
+        <navLabel>
+        <text>The Creator classes</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#creator_classes"/>
+        </navPoint>
+        <navPoint id="np_116" playOrder="116">
+        <navLabel>
+        <text>The Product classes</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#product_classes"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_117" playOrder="117">
+      <navLabel>
+      <text>Another perspective: parallel class hierarchies</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#another_perspective_parallel_class_hiera"/>
+      </navPoint>
+      <navPoint id="np_118" playOrder="118">
+      <navLabel>
+      <text>Factory Method Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#factory_method_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_119" playOrder="119">
+      <navLabel>
+      <text>A very dependent PizzaStore</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#very_dependent_pizzastore"/>
+      </navPoint>
+      <navPoint id="np_120" playOrder="120">
+      <navLabel>
+      <text>Looking at object dependencies</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#looking_at_object_dependencies"/>
+      </navPoint>
+      <navPoint id="np_121" playOrder="121">
+      <navLabel>
+      <text>The Dependency Inversion Principle</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#dependency_inversion_principle"/>
+      </navPoint>
+      <navPoint id="np_122" playOrder="122">
+      <navLabel>
+      <text>Applying the Principle</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#applying_the_principle"/>
+      </navPoint>
+      <navPoint id="np_123" playOrder="123">
+      <navLabel>
+      <text>Inverting your thinking...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#inverting_your_thinkinghellip"/>
+      </navPoint>
+      <navPoint id="np_124" playOrder="124">
+      <navLabel>
+      <text>A few guidelines to help you follow the Principle...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#few_guidelines_to_help_you_follow_the_pr"/>
+      </navPoint>
+      <navPoint id="np_125" playOrder="125">
+      <navLabel>
+      <text>Meanwhile, back at the PizzaStore...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#meanwhilecomma_back_at_the_pizzastorehel"/>
+        <navPoint id="np_126" playOrder="126">
+        <navLabel>
+        <text>Ensuring consistency in your ingredients</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#ensuring_consistency_in_your_ingredients"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_127" playOrder="127">
+      <navLabel>
+      <text>Families of ingredients...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#families_of_ingredientshellip"/>
+      </navPoint>
+      <navPoint id="np_128" playOrder="128">
+      <navLabel>
+      <text>Building the ingredient factories</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#building_the_ingredient_factories"/>
+      </navPoint>
+      <navPoint id="np_129" playOrder="129">
+      <navLabel>
+      <text>Building the New York ingredient factory</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#building_the_new_york_ingredient_factory"/>
+      </navPoint>
+      <navPoint id="np_130" playOrder="130">
+      <navLabel>
+      <text>Reworking the pizzas...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#reworking_the_pizzashellip"/>
+      </navPoint>
+      <navPoint id="np_131" playOrder="131">
+      <navLabel>
+      <text>Reworking the pizzas, continued...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#reworking_the_pizzascomma_continuedhelli"/>
+      </navPoint>
+      <navPoint id="np_132" playOrder="132">
+      <navLabel>
+      <text>Revisiting our pizza stores</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#revisiting_our_pizza_stores"/>
+      </navPoint>
+      <navPoint id="np_133" playOrder="133">
+      <navLabel>
+      <text>What have we done?</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#what_have_we_donequestion_mark"/>
+      </navPoint>
+      <navPoint id="np_134" playOrder="134">
+      <navLabel>
+      <text>More pizza for Ethan and Joel...</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#more_pizza_for_ethan_and_joelhellip"/>
+        <navPoint id="np_135" playOrder="135">
+        <navLabel>
+        <text>From here things change, because we are using an ingredient factory</text>
+        </navLabel>
+        <content src="Text/part0011.xhtml#from_here_things_changecomma_because_we"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_136" playOrder="136">
+      <navLabel>
+      <text>Abstract Factory Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#abstract_factory_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_137" playOrder="137">
+      <navLabel>
+      <text>Factory Method and Abstract Factory compared</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#factory_method_and_abstract_factory_comp"/>
+      </navPoint>
+      <navPoint id="np_138" playOrder="138">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#tools_for_your_design_toolbox-id00037"/>
+      </navPoint>
+      <navPoint id="np_139" playOrder="139">
+      <navLabel>
+      <text>A very dependent PizzaStore</text>
+      </navLabel>
+      <content src="Text/part0011.xhtml#very_dependent_pizzastore-id00042"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_140" playOrder="140">
+    <navLabel>
+    <text>5. The Singleton Pattern: One of a Kind Objects</text>
+    </navLabel>
+    <content src="Text/part0012.xhtml#aid-BE6O2"/>
+      <navPoint id="np_141" playOrder="141">
+      <navLabel>
+      <text>The Little Singleton</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#little_singleton"/>
+        <navPoint id="np_142" playOrder="142">
+        <navLabel>
+        <text>A small Socratic exercise in the style of The Little Lisper</text>
+        </navLabel>
+        <content src="Text/part0012.xhtml#small_socratic_exercise_in_the_style_of"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_143" playOrder="143">
+      <navLabel>
+      <text>Dissecting the classic Singleton Pattern implementation</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#dissecting_the_classic_singleton_pattern"/>
+      </navPoint>
+      <navPoint id="np_144" playOrder="144">
+      <navLabel>
+      <text>The Chocolate Factory</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#chocolate_factory"/>
+      </navPoint>
+      <navPoint id="np_145" playOrder="145">
+      <navLabel>
+      <text>Singleton Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#singleton_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_146" playOrder="146">
+      <navLabel>
+      <text>Houston, Hershey, PA we have a problem...</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#houstoncomma_hersheycomma_pa_we_have_a_p"/>
+      </navPoint>
+      <navPoint id="np_147" playOrder="147">
+      <navLabel>
+      <text>Dealing with multithreading</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#dealing_with_multithreading"/>
+      </navPoint>
+      <navPoint id="np_148" playOrder="148">
+      <navLabel>
+      <text>Can we improve multithreading?</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#can_we_improve_multithreadingquestion_ma"/>
+        <navPoint id="np_149" playOrder="149">
+        <navLabel>
+        <text>1. Do nothing if the performance of getInstance() isn’t critical to your application.</text>
+        </navLabel>
+        <content src="Text/part0012.xhtml#onedot_do_nothing_if_the_performance_of"/>
+        </navPoint>
+        <navPoint id="np_150" playOrder="150">
+        <navLabel>
+        <text>2. Move to an eagerly created instance rather than a lazily created one.</text>
+        </navLabel>
+        <content src="Text/part0012.xhtml#twodot_move_to_an_eagerly_created_instan"/>
+        </navPoint>
+        <navPoint id="np_151" playOrder="151">
+        <navLabel>
+        <text>3. Use “double-checked locking” to reduce the use of synchronization in getInstance().</text>
+        </navLabel>
+        <content src="Text/part0012.xhtml#threedot_use_quotation_markdouble-checke"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_152" playOrder="152">
+      <navLabel>
+      <text>Meanwhile, back at the Chocolate Factory...</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#meanwhilecomma_back_at_the_chocolate_fac"/>
+      </navPoint>
+      <navPoint id="np_153" playOrder="153">
+      <navLabel>
+      <text>Congratulations!</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#congratulationsexclamation_mark"/>
+      </navPoint>
+      <navPoint id="np_154" playOrder="154">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0012.xhtml#tools_for_your_design_toolbox-id00052"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_155" playOrder="155">
+    <navLabel>
+    <text>6. The Command Pattern: Encapsulating Invocation</text>
+    </navLabel>
+    <content src="Text/part0013.xhtml#aid-CCNA2"/>
+      <navPoint id="np_156" playOrder="156">
+      <navLabel>
+      <text>Free hardware! Let’s check out the Remote Control...</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#free_hardwareexclamation_mark_letapostro"/>
+      </navPoint>
+      <navPoint id="np_157" playOrder="157">
+      <navLabel>
+      <text>Taking a look at the vendor classes</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#taking_a_look_at_the_vendor_classes"/>
+      </navPoint>
+      <navPoint id="np_158" playOrder="158">
+      <navLabel>
+      <text>Cubicle Conversation</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#cubicle_conversation-id00058"/>
+      </navPoint>
+      <navPoint id="np_159" playOrder="159">
+      <navLabel>
+      <text>Meanwhile, back at the Diner..., or, A brief introduction to the Command Pattern</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#meanwhilecomma_back_at_the_dinerhellipco"/>
+      </navPoint>
+      <navPoint id="np_160" playOrder="160">
+      <navLabel>
+      <text>Let’s study the interaction in a little more detail...</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#letapostrophes_study_the_interaction_in"/>
+      </navPoint>
+      <navPoint id="np_161" playOrder="161">
+      <navLabel>
+      <text>The Objectville Diner roles and responsibilities</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#objectville_diner_roles_and_responsibili"/>
+      </navPoint>
+      <navPoint id="np_162" playOrder="162">
+      <navLabel>
+      <text>From the Diner to the Command Pattern</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#from_the_diner_to_the_command_pattern"/>
+      </navPoint>
+      <navPoint id="np_163" playOrder="163">
+      <navLabel>
+      <text>Our first command object</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#our_first_command_object"/>
+      </navPoint>
+      <navPoint id="np_164" playOrder="164">
+      <navLabel>
+      <text>Using the command object</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#using_the_command_object"/>
+      </navPoint>
+      <navPoint id="np_165" playOrder="165">
+      <navLabel>
+      <text>Creating a simple test to use the Remote Control</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#creating_a_simple_test_to_use_the_remote"/>
+      </navPoint>
+      <navPoint id="np_166" playOrder="166">
+      <navLabel>
+      <text>The Command Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#command_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_167" playOrder="167">
+      <navLabel>
+      <text>The Command Pattern defined: the class diagram</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#command_pattern_defined_the_class_diagra"/>
+      </navPoint>
+      <navPoint id="np_168" playOrder="168">
+      <navLabel>
+      <text>Assigning Commands to slots</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#assigning_commands_to_slots"/>
+      </navPoint>
+      <navPoint id="np_169" playOrder="169">
+      <navLabel>
+      <text>Implementing the Remote Control</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#implementing_the_remote_control"/>
+      </navPoint>
+      <navPoint id="np_170" playOrder="170">
+      <navLabel>
+      <text>Implementing the Commands</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#implementing_the_commands"/>
+      </navPoint>
+      <navPoint id="np_171" playOrder="171">
+      <navLabel>
+      <text>Putting the Remote Control through its paces</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#putting_the_remote_control_through_its_p"/>
+        <navPoint id="np_172" playOrder="172">
+        <navLabel>
+        <text>Now, let’s check out the execution of our remote control test...</text>
+        </navLabel>
+        <content src="Text/part0013.xhtml#nowcomma_letapostrophes_check_out_the_ex"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_173" playOrder="173">
+      <navLabel>
+      <text>Time to write that documentation...</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#time_to_write_that_documentationhellip"/>
+      </navPoint>
+      <navPoint id="np_174" playOrder="174">
+      <navLabel>
+      <text>What are we doing?</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#what_are_we_doingquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_175" playOrder="175">
+      <navLabel>
+      <text>Time to QA that Undo button!</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#time_to_qa_that_undo_buttonexclamation_m"/>
+      </navPoint>
+      <navPoint id="np_176" playOrder="176">
+      <navLabel>
+      <text>Using state to implement Undo</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#using_state_to_implement_undo"/>
+      </navPoint>
+      <navPoint id="np_177" playOrder="177">
+      <navLabel>
+      <text>Adding Undo to the CeilingFan commands</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#adding_undo_to_the_ceilingfan_commands"/>
+      </navPoint>
+      <navPoint id="np_178" playOrder="178">
+      <navLabel>
+      <text>Get ready to test the ceiling fan</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#get_ready_to_test_the_ceiling_fan"/>
+      </navPoint>
+      <navPoint id="np_179" playOrder="179">
+      <navLabel>
+      <text>Testing the ceiling fan...</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#testing_the_ceiling_fanhellip"/>
+      </navPoint>
+      <navPoint id="np_180" playOrder="180">
+      <navLabel>
+      <text>Every remote needs a Party Mode!</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#every_remote_needs_a_party_modeexclamati"/>
+      </navPoint>
+      <navPoint id="np_181" playOrder="181">
+      <navLabel>
+      <text>Using a macro command</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#using_a_macro_command"/>
+      </navPoint>
+      <navPoint id="np_182" playOrder="182">
+      <navLabel>
+      <text>The Command Pattern means lots of command classes</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#command_pattern_means_lots_of_command_cl"/>
+        <navPoint id="np_183" playOrder="183">
+        <navLabel>
+        <text>Do we really need all these command classes?</text>
+        </navLabel>
+        <content src="Text/part0013.xhtml#do_we_really_need_all_these_command_clas"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_184" playOrder="184">
+      <navLabel>
+      <text>Simplifying the Remote Control with lambda expressions</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#simplifying_the_remote_control_with_lamb"/>
+      </navPoint>
+      <navPoint id="np_185" playOrder="185">
+      <navLabel>
+      <text>Simplifying even more with method references</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#simplifying_even_more_with_method_refere"/>
+        <navPoint id="np_186" playOrder="186">
+        <navLabel>
+        <text>What if we need to do more than one thing in our lambda expression?</text>
+        </navLabel>
+        <content src="Text/part0013.xhtml#what_if_we_need_to_do_more_than_one_thin"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_187" playOrder="187">
+      <navLabel>
+      <text>Test the remote control with lambda expressions</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#test_the_remote_control_with_lambda_expr"/>
+        <navPoint id="np_188" playOrder="188">
+        <navLabel>
+        <text>Check out the results of all those lambda expression commands...</text>
+        </navLabel>
+        <content src="Text/part0013.xhtml#check_out_the_results_of_all_those_lambd"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_189" playOrder="189">
+      <navLabel>
+      <text>More uses of the Command Pattern: queuing requests</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#more_uses_of_the_command_pattern_queuing"/>
+      </navPoint>
+      <navPoint id="np_190" playOrder="190">
+      <navLabel>
+      <text>More uses of the Command Pattern: logging requests</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#more_uses_of_the_command_pattern_logging"/>
+      </navPoint>
+      <navPoint id="np_191" playOrder="191">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0013.xhtml#tools_for_your_design_toolbox-id00064"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_192" playOrder="192">
+    <navLabel>
+    <text>7. The Adapter and Facade Patterns: Being Adaptive</text>
+    </navLabel>
+    <content src="Text/part0014.xhtml#aid-DB7S2"/>
+      <navPoint id="np_193" playOrder="193">
+      <navLabel>
+      <text>Adapters all around us</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#adapters_all_around_us"/>
+      </navPoint>
+      <navPoint id="np_194" playOrder="194">
+      <navLabel>
+      <text>Object-oriented adapters</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#object-oriented_adapters"/>
+      </navPoint>
+      <navPoint id="np_195" playOrder="195">
+      <navLabel>
+      <text>If it walks like a duck and quacks like a duck, then it must might be a duck turkey wrapped with a duck adapter...</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#if_it_walks_like_a_duck_and_quacks_like"/>
+      </navPoint>
+      <navPoint id="np_196" playOrder="196">
+      <navLabel>
+      <text>Test drive the adapter</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#test_drive_the_adapter"/>
+      </navPoint>
+      <navPoint id="np_197" playOrder="197">
+      <navLabel>
+      <text>The Adapter Pattern explained</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#adapter_pattern_explained"/>
+        <navPoint id="np_198" playOrder="198">
+        <navLabel>
+        <text>Here’s how the Client uses the Adapter</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#hereapostrophes_how_the_client_uses_the"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_199" playOrder="199">
+      <navLabel>
+      <text>Adapter Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#adapter_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_200" playOrder="200">
+      <navLabel>
+      <text>Object and class adapters</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#object_and_class_adapters"/>
+      </navPoint>
+      <navPoint id="np_201" playOrder="201">
+      <navLabel>
+      <text>Real-world adapters</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#real-world_adapters"/>
+        <navPoint id="np_202" playOrder="202">
+        <navLabel>
+        <text>Old-world Enumerators</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#old-world_enumerators"/>
+        </navPoint>
+        <navPoint id="np_203" playOrder="203">
+        <navLabel>
+        <text>New-world Iterators</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#new-world_iterators"/>
+        </navPoint>
+        <navPoint id="np_204" playOrder="204">
+        <navLabel>
+        <text>And today...</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#and_todayhellip"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_205" playOrder="205">
+      <navLabel>
+      <text>Adapting an Enumeration to an Iterator</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#adapting_an_enumeration_to_an_iterator"/>
+        <navPoint id="np_206" playOrder="206">
+        <navLabel>
+        <text>Designing the Adapter</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#designing_the_adapter"/>
+        </navPoint>
+        <navPoint id="np_207" playOrder="207">
+        <navLabel>
+        <text>Dealing with the remove() method</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#dealing_with_the_removeleft_parenthesisr"/>
+        </navPoint>
+        <navPoint id="np_208" playOrder="208">
+        <navLabel>
+        <text>Writing the EnumerationIterator adapter</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#writing_the_enumerationiterator_adapter"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_209" playOrder="209">
+      <navLabel>
+      <text>And now for something different...</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#and_now_for_something_differenthellip"/>
+      </navPoint>
+      <navPoint id="np_210" playOrder="210">
+      <navLabel>
+      <text>Home Sweet Home Theater</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#home_sweet_home_theater"/>
+      </navPoint>
+      <navPoint id="np_211" playOrder="211">
+      <navLabel>
+      <text>Watching a movie (the hard way)</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#watching_a_movie_left_parenthesisthe_har"/>
+      </navPoint>
+      <navPoint id="np_212" playOrder="212">
+      <navLabel>
+      <text>Lights, Camera, Facade!</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#lightscomma_cameracomma_facadeexclamatio"/>
+      </navPoint>
+      <navPoint id="np_213" playOrder="213">
+      <navLabel>
+      <text>Constructing your home theater facade</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#constructing_your_home_theater_facade"/>
+      </navPoint>
+      <navPoint id="np_214" playOrder="214">
+      <navLabel>
+      <text>Implementing the simplified interface</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#implementing_the_simplified_interface"/>
+      </navPoint>
+      <navPoint id="np_215" playOrder="215">
+      <navLabel>
+      <text>Time to watch a movie (the easy way)</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#time_to_watch_a_movie_left_parenthesisth"/>
+      </navPoint>
+      <navPoint id="np_216" playOrder="216">
+      <navLabel>
+      <text>Facade Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#facade_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_217" playOrder="217">
+      <navLabel>
+      <text>The Principle of Least Knowledge</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#principle_of_least_knowledge"/>
+      </navPoint>
+      <navPoint id="np_218" playOrder="218">
+      <navLabel>
+      <text>How NOT to Win Friends and Influence Objects</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#how_not_to_win_friends_and_influence_obj"/>
+        <navPoint id="np_219" playOrder="219">
+        <navLabel>
+        <text>Keeping your method calls in bounds...</text>
+        </navLabel>
+        <content src="Text/part0014.xhtml#keeping_your_method_calls_in_boundshelli"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_220" playOrder="220">
+      <navLabel>
+      <text>The Facade and the Principle of Least Knowledge</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#facade_and_the_principle_of_least_knowle"/>
+      </navPoint>
+      <navPoint id="np_221" playOrder="221">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0014.xhtml#tools_for_your_design_toolbox-id00079"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_222" playOrder="222">
+    <navLabel>
+    <text>8. The Template Method Pattern: Encapsulating Algorithms</text>
+    </navLabel>
+    <content src="Text/part0015.xhtml#aid-E9OE2"/>
+      <navPoint id="np_223" playOrder="223">
+      <navLabel>
+      <text>It’s time for some more caffeine</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#itapostrophes_time_for_some_more_caffein"/>
+      </navPoint>
+      <navPoint id="np_224" playOrder="224">
+      <navLabel>
+      <text>Whipping up some coffee and tea classes (in Java)</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#whipping_up_some_coffee_and_tea_classes"/>
+      </navPoint>
+      <navPoint id="np_225" playOrder="225">
+      <navLabel>
+      <text>And now the Tea...</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#and_now_the_teahellip"/>
+      </navPoint>
+      <navPoint id="np_226" playOrder="226">
+      <navLabel>
+      <text>Sir, may I abstract your Coffee, Tea?</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#sircomma_may_i_abstract_your_coffeecomma"/>
+      </navPoint>
+      <navPoint id="np_227" playOrder="227">
+      <navLabel>
+      <text>Taking the design further...</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#taking_the_design_furtherhellip"/>
+      </navPoint>
+      <navPoint id="np_228" playOrder="228">
+      <navLabel>
+      <text>Abstracting prepareRecipe()</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#abstracting_preparerecipeleft_parenthesi"/>
+      </navPoint>
+      <navPoint id="np_229" playOrder="229">
+      <navLabel>
+      <text>What have we done?</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#what_have_we_donequestion_mark-id00089"/>
+      </navPoint>
+      <navPoint id="np_230" playOrder="230">
+      <navLabel>
+      <text>Meet the Template Method</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#meet_the_template_method"/>
+      </navPoint>
+      <navPoint id="np_231" playOrder="231">
+      <navLabel>
+      <text>Let’s make some tea...</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#letapostrophes_make_some_teahellip"/>
+      </navPoint>
+      <navPoint id="np_232" playOrder="232">
+      <navLabel>
+      <text>What did the Template Method get us?</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#what_did_the_template_method_get_usquest"/>
+      </navPoint>
+      <navPoint id="np_233" playOrder="233">
+      <navLabel>
+      <text>Template Method Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#template_method_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_234" playOrder="234">
+      <navLabel>
+      <text>Hooked on Template Method...</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#hooked_on_template_methodhellip"/>
+      </navPoint>
+      <navPoint id="np_235" playOrder="235">
+      <navLabel>
+      <text>Using the hook</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#using_the_hook"/>
+      </navPoint>
+      <navPoint id="np_236" playOrder="236">
+      <navLabel>
+      <text>Let’s run the Test Drive</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#letapostrophes_run_the_test_drive"/>
+      </navPoint>
+      <navPoint id="np_237" playOrder="237">
+      <navLabel>
+      <text>The Hollywood Principle</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#hollywood_principle"/>
+      </navPoint>
+      <navPoint id="np_238" playOrder="238">
+      <navLabel>
+      <text>The Hollywood Principle and Template Method</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#hollywood_principle_and_template_method"/>
+      </navPoint>
+      <navPoint id="np_239" playOrder="239">
+      <navLabel>
+      <text>Template Methods in the Wild</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#template_methods_in_the_wild"/>
+      </navPoint>
+      <navPoint id="np_240" playOrder="240">
+      <navLabel>
+      <text>Sorting with Template Method</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#sorting_with_template_method"/>
+      </navPoint>
+      <navPoint id="np_241" playOrder="241">
+      <navLabel>
+      <text>We’ve got some ducks to sort...</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#weapostropheve_got_some_ducks_to_sorthel"/>
+      </navPoint>
+      <navPoint id="np_242" playOrder="242">
+      <navLabel>
+      <text>What is compareTo()?</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#what_is_comparetoleft_parenthesisright_p"/>
+      </navPoint>
+      <navPoint id="np_243" playOrder="243">
+      <navLabel>
+      <text>Comparing Ducks and Ducks</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#comparing_ducks_and_ducks"/>
+      </navPoint>
+      <navPoint id="np_244" playOrder="244">
+      <navLabel>
+      <text>Let’s sort some Ducks</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#letapostrophes_sort_some_ducks"/>
+      </navPoint>
+      <navPoint id="np_245" playOrder="245">
+      <navLabel>
+      <text>The making of the sorting duck machine</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#making_of_the_sorting_duck_machine"/>
+      </navPoint>
+      <navPoint id="np_246" playOrder="246">
+      <navLabel>
+      <text>Swingin’ with Frames</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#swinginapostrophe_with_frames"/>
+      </navPoint>
+      <navPoint id="np_247" playOrder="247">
+      <navLabel>
+      <text>Applets</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#applets"/>
+      </navPoint>
+      <navPoint id="np_248" playOrder="248">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0015.xhtml#tools_for_your_design_toolbox-id00097"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_249" playOrder="249">
+    <navLabel>
+    <text>9. The Iterator and Composite Patterns: Well-Managed Collections</text>
+    </navLabel>
+    <content src="Text/part0016.xhtml#aid-F8902"/>
+      <navPoint id="np_250" playOrder="250">
+      <navLabel>
+      <text>Breaking News: Objectville Diner and Objectville Pancake House Merge</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#breaking_news_objectville_diner_and_obje"/>
+      </navPoint>
+      <navPoint id="np_251" playOrder="251">
+      <navLabel>
+      <text>Check out the Menu Items</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#check_out_the_menu_items"/>
+      </navPoint>
+      <navPoint id="np_252" playOrder="252">
+      <navLabel>
+      <text>Lou and Mel’s Menu implementations</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#lou_and_melapostrophes_menu_implementati"/>
+      </navPoint>
+      <navPoint id="np_253" playOrder="253">
+      <navLabel>
+      <text>What’s the problem with having two different menu representations?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#whatapostrophes_the_problem_with_having"/>
+        <navPoint id="np_254" playOrder="254">
+        <navLabel>
+        <text>The Java-Enabled Waitress Specification</text>
+        </navLabel>
+        <content src="Text/part0016.xhtml#java-enabled_waitress_specification"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_255" playOrder="255">
+      <navLabel>
+      <text>What now?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#what_nowquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_256" playOrder="256">
+      <navLabel>
+      <text>Can we encapsulate the iteration?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#can_we_encapsulate_the_iterationquestion"/>
+      </navPoint>
+      <navPoint id="np_257" playOrder="257">
+      <navLabel>
+      <text>Meet the Iterator Pattern</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#meet_the_iterator_pattern"/>
+      </navPoint>
+      <navPoint id="np_258" playOrder="258">
+      <navLabel>
+      <text>Adding an Iterator to DinerMenu</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#adding_an_iterator_to_dinermenu"/>
+      </navPoint>
+      <navPoint id="np_259" playOrder="259">
+      <navLabel>
+      <text>Reworking the Diner Menu with Iterator</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#reworking_the_diner_menu_with_iterator"/>
+      </navPoint>
+      <navPoint id="np_260" playOrder="260">
+      <navLabel>
+      <text>Fixing up the Waitress code</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#fixing_up_the_waitress_code"/>
+      </navPoint>
+      <navPoint id="np_261" playOrder="261">
+      <navLabel>
+      <text>Testing our code</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#testing_our_code"/>
+        <navPoint id="np_262" playOrder="262">
+        <navLabel>
+        <text>Here’s the test run...</text>
+        </navLabel>
+        <content src="Text/part0016.xhtml#hereapostrophes_the_test_runhellip"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_263" playOrder="263">
+      <navLabel>
+      <text>What have we done so far?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#what_have_we_done_so_farquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_264" playOrder="264">
+      <navLabel>
+      <text>What we have so far...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#what_we_have_so_farhellip"/>
+      </navPoint>
+      <navPoint id="np_265" playOrder="265">
+      <navLabel>
+      <text>Making some improvements...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#making_some_improvementshellip"/>
+      </navPoint>
+      <navPoint id="np_266" playOrder="266">
+      <navLabel>
+      <text>Cleaning things up with java.util.Iterator</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#cleaning_things_up_with_javadotutildotit"/>
+      </navPoint>
+      <navPoint id="np_267" playOrder="267">
+      <navLabel>
+      <text>We are almost there...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#we_are_almost_therehellip"/>
+      </navPoint>
+      <navPoint id="np_268" playOrder="268">
+      <navLabel>
+      <text>What does this get us?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#what_does_this_get_usquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_269" playOrder="269">
+      <navLabel>
+      <text>Iterator Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#iterator_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_270" playOrder="270">
+      <navLabel>
+      <text>Single Responsibility</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#single_responsibility"/>
+      </navPoint>
+      <navPoint id="np_271" playOrder="271">
+      <navLabel>
+      <text>Taking a look at the Café Menu</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#taking_a_look_at_the_cafeacute_menu"/>
+      </navPoint>
+      <navPoint id="np_272" playOrder="272">
+      <navLabel>
+      <text>Reworking the Café Menu code</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#reworking_the_cafeacute_menu_code"/>
+      </navPoint>
+      <navPoint id="np_273" playOrder="273">
+      <navLabel>
+      <text>Adding the Café Menu to the Waitress</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#adding_the_cafeacute_menu_to_the_waitres"/>
+      </navPoint>
+      <navPoint id="np_274" playOrder="274">
+      <navLabel>
+      <text>Breakfast, lunch AND dinner</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#breakfastcomma_lunch_and_dinner"/>
+        <navPoint id="np_275" playOrder="275">
+        <navLabel>
+        <text>Here’s the test run; check out the new dinner menu from the Café!</text>
+        </navLabel>
+        <content src="Text/part0016.xhtml#hereapostrophes_the_test_runsemicolon_ch"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_276" playOrder="276">
+      <navLabel>
+      <text>What did we do?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#what_did_we_doquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_277" playOrder="277">
+      <navLabel>
+      <text>We decoupled the Waitress....</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#we_decoupled_the_waitresshellipdot"/>
+      </navPoint>
+      <navPoint id="np_278" playOrder="278">
+      <navLabel>
+      <text>... and we made the Waitress more extensible</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#hellip_and_we_made_the_waitress_more_ext"/>
+      </navPoint>
+      <navPoint id="np_279" playOrder="279">
+      <navLabel>
+      <text>But there’s more!</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#but_thereapostrophes_moreexclamation_mar"/>
+      </navPoint>
+      <navPoint id="np_280" playOrder="280">
+      <navLabel>
+      <text>Iterators and Collections</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#iterators_and_collections"/>
+      </navPoint>
+      <navPoint id="np_281" playOrder="281">
+      <navLabel>
+      <text>Is the Waitress ready for prime time?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#is_the_waitress_ready_for_prime_timeques"/>
+      </navPoint>
+      <navPoint id="np_282" playOrder="282">
+      <navLabel>
+      <text>Just when we thought it was safe...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#just_when_we_thought_it_was_safehellip"/>
+      </navPoint>
+      <navPoint id="np_283" playOrder="283">
+      <navLabel>
+      <text>What do we need?</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#what_do_we_needquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_284" playOrder="284">
+      <navLabel>
+      <text>The Composite Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#composite_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_285" playOrder="285">
+      <navLabel>
+      <text>Designing Menus with Composite</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#designing_menus_with_composite"/>
+      </navPoint>
+      <navPoint id="np_286" playOrder="286">
+      <navLabel>
+      <text>Implementing the Menu Component</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#implementing_the_menu_component"/>
+      </navPoint>
+      <navPoint id="np_287" playOrder="287">
+      <navLabel>
+      <text>Implementing the Menu Item</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#implementing_the_menu_item"/>
+      </navPoint>
+      <navPoint id="np_288" playOrder="288">
+      <navLabel>
+      <text>Implementing the Composite Menu</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#implementing_the_composite_menu"/>
+        <navPoint id="np_289" playOrder="289">
+        <navLabel>
+        <text>Fixing the print() method</text>
+        </navLabel>
+        <content src="Text/part0016.xhtml#fixing_the_printleft_parenthesisright_pa"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_290" playOrder="290">
+      <navLabel>
+      <text>Getting ready for a test drive...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#getting_ready_for_a_test_drivehellip"/>
+      </navPoint>
+      <navPoint id="np_291" playOrder="291">
+      <navLabel>
+      <text>Now for the test drive...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#now_for_the_test_drivehellip"/>
+      </navPoint>
+      <navPoint id="np_292" playOrder="292">
+      <navLabel>
+      <text>Getting ready for a test drive...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#getting_ready_for_a_test_drivehe-id00110"/>
+      </navPoint>
+      <navPoint id="np_293" playOrder="293">
+      <navLabel>
+      <text>Flashback to Iterator</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#flashback_to_iterator"/>
+      </navPoint>
+      <navPoint id="np_294" playOrder="294">
+      <navLabel>
+      <text>The Composite Iterator</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#composite_iterator"/>
+      </navPoint>
+      <navPoint id="np_295" playOrder="295">
+      <navLabel>
+      <text>The Null Iterator</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#null_iterator"/>
+      </navPoint>
+      <navPoint id="np_296" playOrder="296">
+      <navLabel>
+      <text>Give me the vegetarian menu</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#give_me_the_vegetarian_menu"/>
+      </navPoint>
+      <navPoint id="np_297" playOrder="297">
+      <navLabel>
+      <text>The magic of Iterator &amp; Composite together...</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#magic_of_iterator_ampersand_composite_to"/>
+      </navPoint>
+      <navPoint id="np_298" playOrder="298">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0016.xhtml#tools_for_your_design_toolbox-id00114"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_299" playOrder="299">
+    <navLabel>
+    <text>10. The State Pattern: The State of Things</text>
+    </navLabel>
+    <content src="Text/part0017.xhtml#aid-G6PI2"/>
+      <navPoint id="np_300" playOrder="300">
+      <navLabel>
+      <text>Jawva Breakers</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#jawva_breakers"/>
+      </navPoint>
+      <navPoint id="np_301" playOrder="301">
+      <navLabel>
+      <text>Cubicle Conversation</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#cubicle_conversation-id00121"/>
+      </navPoint>
+      <navPoint id="np_302" playOrder="302">
+      <navLabel>
+      <text>State machines 101</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#state_machines_101"/>
+      </navPoint>
+      <navPoint id="np_303" playOrder="303">
+      <navLabel>
+      <text>Writing the code</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#writing_the_code"/>
+      </navPoint>
+      <navPoint id="np_304" playOrder="304">
+      <navLabel>
+      <text>In-house testing</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#in-house_testing"/>
+      </navPoint>
+      <navPoint id="np_305" playOrder="305">
+      <navLabel>
+      <text>You knew it was coming... a change request!</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#you_knew_it_was_cominghellip_a_change_re"/>
+      </navPoint>
+      <navPoint id="np_306" playOrder="306">
+      <navLabel>
+      <text>The messy STATE of things...</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#messy_state_of_thingshellip"/>
+      </navPoint>
+      <navPoint id="np_307" playOrder="307">
+      <navLabel>
+      <text>The new design</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#new_design"/>
+      </navPoint>
+      <navPoint id="np_308" playOrder="308">
+      <navLabel>
+      <text>Defining the State interfaces and classes</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#defining_the_state_interfaces_and_classe"/>
+      </navPoint>
+      <navPoint id="np_309" playOrder="309">
+      <navLabel>
+      <text>Implementing our State classes</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#implementing_our_state_classes"/>
+      </navPoint>
+      <navPoint id="np_310" playOrder="310">
+      <navLabel>
+      <text>Reworking the Gumball Machine</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#reworking_the_gumball_machine"/>
+      </navPoint>
+      <navPoint id="np_311" playOrder="311">
+      <navLabel>
+      <text>Now, let’s look at the complete GumballMachine class...</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#nowcomma_letapostrophes_look_at_the_comp"/>
+      </navPoint>
+      <navPoint id="np_312" playOrder="312">
+      <navLabel>
+      <text>Implementing more states</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#implementing_more_states"/>
+      </navPoint>
+      <navPoint id="np_313" playOrder="313">
+      <navLabel>
+      <text>Let’s take a look at what we’ve done so far...</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#letapostrophes_take_a_look_at_what_weapo"/>
+      </navPoint>
+      <navPoint id="np_314" playOrder="314">
+      <navLabel>
+      <text>The State Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#state_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_315" playOrder="315">
+      <navLabel>
+      <text>We still need to finish the Gumball 1 in 10 game</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#we_still_need_to_finish_the_gumball_1_in"/>
+      </navPoint>
+      <navPoint id="np_316" playOrder="316">
+      <navLabel>
+      <text>Finishing the game</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#finishing_the_game"/>
+      </navPoint>
+      <navPoint id="np_317" playOrder="317">
+      <navLabel>
+      <text>Demo for the CEO of Mighty Gumball, Inc.</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#demo_for_the_ceo_of_mighty_gumballcomma"/>
+      </navPoint>
+      <navPoint id="np_318" playOrder="318">
+      <navLabel>
+      <text>Sanity check...</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#sanity_checkhellip"/>
+      </navPoint>
+      <navPoint id="np_319" playOrder="319">
+      <navLabel>
+      <text>We almost forgot!</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#we_almost_forgotexclamation_mark"/>
+      </navPoint>
+      <navPoint id="np_320" playOrder="320">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0017.xhtml#tools_for_your_design_toolbox-id00132"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_321" playOrder="321">
+    <navLabel>
+    <text>11. The Proxy Pattern: Controlling Object Access</text>
+    </navLabel>
+    <content src="Text/part0018.xhtml#aid-H5A42"/>
+      <navPoint id="np_322" playOrder="322">
+      <navLabel>
+      <text>Coding the Monitor</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#coding_the_monitor"/>
+      </navPoint>
+      <navPoint id="np_323" playOrder="323">
+      <navLabel>
+      <text>Testing the Monitor</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#testing_the_monitor"/>
+      </navPoint>
+      <navPoint id="np_324" playOrder="324">
+      <navLabel>
+      <text>The role of the ‘remote proxy’</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#role_of_the_apostropheremote_proxyapostr"/>
+      </navPoint>
+      <navPoint id="np_325" playOrder="325">
+      <navLabel>
+      <text>Adding a remote proxy to the Gumball Machine monitoring code</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#adding_a_remote_proxy_to_the_gumball_mac"/>
+      </navPoint>
+      <navPoint id="np_326" playOrder="326">
+      <navLabel>
+      <text>Remote methods 101</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#remote_methods_101"/>
+      </navPoint>
+      <navPoint id="np_327" playOrder="327">
+      <navLabel>
+      <text>Java RMI, the Big Picture</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#java_rmicomma_the_big_picture"/>
+      </navPoint>
+      <navPoint id="np_328" playOrder="328">
+      <navLabel>
+      <text>How does the client get the stub object?</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#how_does_the_client_get_the_stub_objectq"/>
+      </navPoint>
+      <navPoint id="np_329" playOrder="329">
+      <navLabel>
+      <text>Back to our GumballMachine remote proxy</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#back_to_our_gumballmachine_remote_proxy"/>
+      </navPoint>
+      <navPoint id="np_330" playOrder="330">
+      <navLabel>
+      <text>Getting the GumballMachine ready to be a remote service</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#getting_the_gumballmachine_ready_to_be_a"/>
+      </navPoint>
+      <navPoint id="np_331" playOrder="331">
+      <navLabel>
+      <text>Registering with the RMI registry...</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#registering_with_the_rmi_registryhellip"/>
+      </navPoint>
+      <navPoint id="np_332" playOrder="332">
+      <navLabel>
+      <text>Now for the GumballMonitor client...</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#now_for_the_gumballmonitor_clienthellip"/>
+      </navPoint>
+      <navPoint id="np_333" playOrder="333">
+      <navLabel>
+      <text>Writing the Monitor test drive</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#writing_the_monitor_test_drive"/>
+      </navPoint>
+      <navPoint id="np_334" playOrder="334">
+      <navLabel>
+      <text>Another demo for the CEO of Mighty Gumball...</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#another_demo_for_the_ceo_of_mighty_gumba"/>
+        <navPoint id="np_335" playOrder="335">
+        <navLabel>
+        <text>And now let’s put the monitor in the hands of the CEO. Hopefully, this time he’ll love it</text>
+        </navLabel>
+        <content src="Text/part0018.xhtml#and_now_letapostrophes_put_the_monitor_i"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_336" playOrder="336">
+      <navLabel>
+      <text>The Proxy Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#proxy_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_337" playOrder="337">
+      <navLabel>
+      <text>Get ready for Virtual Proxy</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#get_ready_for_virtual_proxy"/>
+        <navPoint id="np_338" playOrder="338">
+        <navLabel>
+        <text>Remote Proxy</text>
+        </navLabel>
+        <content src="Text/part0018.xhtml#remote_proxy"/>
+        </navPoint>
+        <navPoint id="np_339" playOrder="339">
+        <navLabel>
+        <text>Virtual Proxy</text>
+        </navLabel>
+        <content src="Text/part0018.xhtml#virtual_proxy"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_340" playOrder="340">
+      <navLabel>
+      <text>Displaying CD covers</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#displaying_cd_covers"/>
+      </navPoint>
+      <navPoint id="np_341" playOrder="341">
+      <navLabel>
+      <text>Designing the CD cover Virtual Proxy</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#designing_the_cd_cover_virtual_proxy"/>
+        <navPoint id="np_342" playOrder="342">
+        <navLabel>
+        <text>How ImageProxy is going to work</text>
+        </navLabel>
+        <content src="Text/part0018.xhtml#how_imageproxy_is_going_to_work"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_343" playOrder="343">
+      <navLabel>
+      <text>Writing the Image Proxy</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#writing_the_image_proxy"/>
+      </navPoint>
+      <navPoint id="np_344" playOrder="344">
+      <navLabel>
+      <text>Testing the CD Cover Viewer</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#testing_the_cd_cover_viewer"/>
+        <navPoint id="np_345" playOrder="345">
+        <navLabel>
+        <text>Things to try...</text>
+        </navLabel>
+        <content src="Text/part0018.xhtml#things_to_tryhellip"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_346" playOrder="346">
+      <navLabel>
+      <text>What did we do?</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#what_did_we_doquestion_mark-id00147"/>
+      </navPoint>
+      <navPoint id="np_347" playOrder="347">
+      <navLabel>
+      <text>Using the Java API’s Proxy to create a protection proxy</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#using_the_java_apiapostrophes_proxy_to_c"/>
+      </navPoint>
+      <navPoint id="np_348" playOrder="348">
+      <navLabel>
+      <text>Matchmaking in Objectville</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#matchmaking_in_objectville"/>
+      </navPoint>
+      <navPoint id="np_349" playOrder="349">
+      <navLabel>
+      <text>The PersonBean implementation</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#personbean_implementation"/>
+      </navPoint>
+      <navPoint id="np_350" playOrder="350">
+      <navLabel>
+      <text>Five-minute drama: protecting subjects</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#five-minute_drama_protecting_subjects"/>
+      </navPoint>
+      <navPoint id="np_351" playOrder="351">
+      <navLabel>
+      <text>Big Picture: creating a Dynamic Proxy for the PersonBean</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#big_picture_creating_a_dynamic_proxy_for"/>
+      </navPoint>
+      <navPoint id="np_352" playOrder="352">
+      <navLabel>
+      <text>Step one: creating Invocation Handlers</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#step_one_creating_invocation_handlers"/>
+      </navPoint>
+      <navPoint id="np_353" playOrder="353">
+      <navLabel>
+      <text>Creating Invocation Handlers continued...</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#creating_invocation_handlers_continuedhe"/>
+      </navPoint>
+      <navPoint id="np_354" playOrder="354">
+      <navLabel>
+      <text>Step two: creating the Proxy class and instantiating the Proxy object</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#step_two_creating_the_proxy_class_and_in"/>
+      </navPoint>
+      <navPoint id="np_355" playOrder="355">
+      <navLabel>
+      <text>Testing the matchmaking service</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#testing_the_matchmaking_service"/>
+      </navPoint>
+      <navPoint id="np_356" playOrder="356">
+      <navLabel>
+      <text>Running the code...</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#running_the_codehellip"/>
+      </navPoint>
+      <navPoint id="np_357" playOrder="357">
+      <navLabel>
+      <text>The Proxy Zoo</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#proxy_zoo"/>
+      </navPoint>
+      <navPoint id="np_358" playOrder="358">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#tools_for_your_design_toolbox-id00156"/>
+      </navPoint>
+      <navPoint id="np_359" playOrder="359">
+      <navLabel>
+      <text>The code for the CD Cover Viewer</text>
+      </navLabel>
+      <content src="Text/part0018.xhtml#code_for_the_cd_cover_viewer"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_360" playOrder="360">
+    <navLabel>
+    <text>12. Compound Patterns: Patterns of Patterns</text>
+    </navLabel>
+    <content src="Text/part0019.xhtml#aid-I3QM2"/>
+      <navPoint id="np_361" playOrder="361">
+      <navLabel>
+      <text>Working together</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#working_together"/>
+      </navPoint>
+      <navPoint id="np_362" playOrder="362">
+      <navLabel>
+      <text>Duck reunion</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#duck_reunion"/>
+      </navPoint>
+      <navPoint id="np_363" playOrder="363">
+      <navLabel>
+      <text>What did we do?</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#what_did_we_doquestion_mark-id00169"/>
+      </navPoint>
+      <navPoint id="np_364" playOrder="364">
+      <navLabel>
+      <text>A duck’s eye view: the class diagram</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#duckapostrophes_eye_view_the_class_diagr"/>
+      </navPoint>
+      <navPoint id="np_365" playOrder="365">
+      <navLabel>
+      <text>The King of Compound Patterns</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#king_of_compound_patterns"/>
+        <navPoint id="np_366" playOrder="366">
+        <navLabel>
+        <text>If Elvis were a compound pattern, his name would be Model-View-Controller, and he’d be singing a little song like this...</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#if_elvis_were_a_compound_patterncomma_hi"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_367" playOrder="367">
+      <navLabel>
+      <text>Meet the Model-View-Controller</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#meet_the_model-view-controller"/>
+      </navPoint>
+      <navPoint id="np_368" playOrder="368">
+      <navLabel>
+      <text>A closer look...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#closer_lookhellip"/>
+      </navPoint>
+      <navPoint id="np_369" playOrder="369">
+      <navLabel>
+      <text>Looking at MVC through patterns-colored glasses</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#looking_at_mvc_through_patterns-colored"/>
+        <navPoint id="np_370" playOrder="370">
+        <navLabel>
+        <text>Observer</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#observer"/>
+        </navPoint>
+        <navPoint id="np_371" playOrder="371">
+        <navLabel>
+        <text>Strategy</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#strategy"/>
+        </navPoint>
+        <navPoint id="np_372" playOrder="372">
+        <navLabel>
+        <text>Composite</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#composite"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_373" playOrder="373">
+      <navLabel>
+      <text>Using MVC to control the beat...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#using_mvc_to_control_the_beathellip"/>
+        <navPoint id="np_374" playOrder="374">
+        <navLabel>
+        <text>Meet the Java DJ View</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#meet_the_java_dj_view"/>
+        </navPoint>
+        <navPoint id="np_375" playOrder="375">
+        <navLabel>
+        <text>The controller is in the middle...</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#controller_is_in_the_middlehellip"/>
+        </navPoint>
+        <navPoint id="np_376" playOrder="376">
+        <navLabel>
+        <text>Let’s not forget about the model underneath it all...</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#letapostrophes_not_forget_about_the_mode"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_377" playOrder="377">
+      <navLabel>
+      <text>Putting the pieces together</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#putting_the_pieces_together"/>
+      </navPoint>
+      <navPoint id="np_378" playOrder="378">
+      <navLabel>
+      <text>Building the pieces</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#building_the_pieces"/>
+        <navPoint id="np_379" playOrder="379">
+        <navLabel>
+        <text>Let’s check out the BeatModelInterface before looking at the implementation</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#letapostrophes_check_out_the_beatmodelin"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_380" playOrder="380">
+      <navLabel>
+      <text>Now let’s have a look at the concrete BeatModel class</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#now_letapostrophes_have_a_look_at_the_co"/>
+      </navPoint>
+      <navPoint id="np_381" playOrder="381">
+      <navLabel>
+      <text>The View</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#view"/>
+      </navPoint>
+      <navPoint id="np_382" playOrder="382">
+      <navLabel>
+      <text>Implementing the View</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#implementing_the_view"/>
+      </navPoint>
+      <navPoint id="np_383" playOrder="383">
+      <navLabel>
+      <text>Implementing the View, continued...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#implementing_the_viewcomma_continuedhell"/>
+      </navPoint>
+      <navPoint id="np_384" playOrder="384">
+      <navLabel>
+      <text>Now for the Controller</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#now_for_the_controller"/>
+        <navPoint id="np_385" playOrder="385">
+        <navLabel>
+        <text>And here’s the implementation of the controller</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#and_hereapostrophes_the_implementation_o"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_386" playOrder="386">
+      <navLabel>
+      <text>Putting it all together...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#putting_it_all_togetherhellip"/>
+        <navPoint id="np_387" playOrder="387">
+        <navLabel>
+        <text>And now for a test run...</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#and_now_for_a_test_runhellip"/>
+        </navPoint>
+        <navPoint id="np_388" playOrder="388">
+        <navLabel>
+        <text>Things to do</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#things_to_do"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_389" playOrder="389">
+      <navLabel>
+      <text>Exploring Strategy</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#exploring_strategy"/>
+      </navPoint>
+      <navPoint id="np_390" playOrder="390">
+      <navLabel>
+      <text>Adapting the Model</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#adapting_the_model"/>
+      </navPoint>
+      <navPoint id="np_391" playOrder="391">
+      <navLabel>
+      <text>Now we’re ready for a HeartController</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#now_weapostrophere_ready_for_a_heartcont"/>
+        <navPoint id="np_392" playOrder="392">
+        <navLabel>
+        <text>And that’s it! Now it’s time for some test code...</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#and_thatapostrophes_itexclamation_mark_n"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_393" playOrder="393">
+      <navLabel>
+      <text>And now for a test run...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#and_now_for_a_test_runhellip-id00173"/>
+        <navPoint id="np_394" playOrder="394">
+        <navLabel>
+        <text>Things to do</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#things_to_do-id00174"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_395" playOrder="395">
+      <navLabel>
+      <text>MVC and the Web</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#mvc_and_the_web"/>
+      </navPoint>
+      <navPoint id="np_396" playOrder="396">
+      <navLabel>
+      <text>Model 2: DJ’ing from a cell phone</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#model_2_djapostropheing_from_a_cell_phon"/>
+        <navPoint id="np_397" playOrder="397">
+        <navLabel>
+        <text>The plan</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#plan"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_398" playOrder="398">
+      <navLabel>
+      <text>Step one: the model</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#step_one_the_model"/>
+      </navPoint>
+      <navPoint id="np_399" playOrder="399">
+      <navLabel>
+      <text>Step two: the controller servlet</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#step_two_the_controller_servlet"/>
+      </navPoint>
+      <navPoint id="np_400" playOrder="400">
+      <navLabel>
+      <text>Now we need a view...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#now_we_need_a_viewhellip"/>
+      </navPoint>
+      <navPoint id="np_401" playOrder="401">
+      <navLabel>
+      <text>Putting Model 2 to the test...</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#putting_model_2_to_the_testhellip"/>
+        <navPoint id="np_402" playOrder="402">
+        <navLabel>
+        <text>Things to do</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#things_to_do-id00175"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_403" playOrder="403">
+      <navLabel>
+      <text>Design Patterns and Model 2</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#design_patterns_and_model_2"/>
+        <navPoint id="np_404" playOrder="404">
+        <navLabel>
+        <text>Model 2 is an adaptation of MVC to the Web</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#model_2_is_an_adaptation_of_mvc_to_the_w"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_405" playOrder="405">
+      <navLabel>
+      <text>Observer</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#observer-id00176"/>
+        <navPoint id="np_406" playOrder="406">
+        <navLabel>
+        <text>Strategy</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#strategy-id00177"/>
+        </navPoint>
+        <navPoint id="np_407" playOrder="407">
+        <navLabel>
+        <text>Composite</text>
+        </navLabel>
+        <content src="Text/part0019.xhtml#composite-id00178"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_408" playOrder="408">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#tools_for_your_design_toolbox-id00180"/>
+      </navPoint>
+      <navPoint id="np_409" playOrder="409">
+      <navLabel>
+      <text>Exercise Solutions</text>
+      </navLabel>
+      <content src="Text/part0019.xhtml#exercise_solutions"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_410" playOrder="410">
+    <navLabel>
+    <text>13. Better Living with Patterns: Patterns in the Real World</text>
+    </navLabel>
+    <content src="Text/part0020.xhtml#aid-J2B82"/>
+      <navPoint id="np_411" playOrder="411">
+      <navLabel>
+      <text>Design Pattern defined</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#design_pattern_defined"/>
+      </navPoint>
+      <navPoint id="np_412" playOrder="412">
+      <navLabel>
+      <text>Looking more closely at the Design Pattern definition</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#looking_more_closely_at_the_design_patte"/>
+      </navPoint>
+      <navPoint id="np_413" playOrder="413">
+      <navLabel>
+      <text>So you wanna be a Design Patterns writer</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#so_you_wanna_be_a_design_patterns_writer"/>
+      </navPoint>
+      <navPoint id="np_414" playOrder="414">
+      <navLabel>
+      <text>Organizing Design Patterns</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#organizing_design_patterns"/>
+      </navPoint>
+      <navPoint id="np_415" playOrder="415">
+      <navLabel>
+      <text>Pattern Categories</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#pattern_categories"/>
+      </navPoint>
+      <navPoint id="np_416" playOrder="416">
+      <navLabel>
+      <text>Thinking in Patterns</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#thinking_in_patterns"/>
+        <navPoint id="np_417" playOrder="417">
+        <navLabel>
+        <text>Keep it simple (KISS)</text>
+        </navLabel>
+        <content src="Text/part0020.xhtml#keep_it_simple_left_parenthesiskissright"/>
+        </navPoint>
+        <navPoint id="np_418" playOrder="418">
+        <navLabel>
+        <text>Design Patterns aren’t a magic bullet; in fact, they’re not even a bullet!</text>
+        </navLabel>
+        <content src="Text/part0020.xhtml#design_patterns_arenapostrophet_a_magic"/>
+        </navPoint>
+        <navPoint id="np_419" playOrder="419">
+        <navLabel>
+        <text>You know you need a pattern when...</text>
+        </navLabel>
+        <content src="Text/part0020.xhtml#you_know_you_need_a_pattern_whenhellip"/>
+        </navPoint>
+        <navPoint id="np_420" playOrder="420">
+        <navLabel>
+        <text>Refactoring time is Patterns time!</text>
+        </navLabel>
+        <content src="Text/part0020.xhtml#refactoring_time_is_patterns_timeexclama"/>
+        </navPoint>
+        <navPoint id="np_421" playOrder="421">
+        <navLabel>
+        <text>Take out what you don’t really need. Don’t be afraid to remove a Design Pattern from your design.</text>
+        </navLabel>
+        <content src="Text/part0020.xhtml#take_out_what_you_donapostrophet_really"/>
+        </navPoint>
+        <navPoint id="np_422" playOrder="422">
+        <navLabel>
+        <text>If you don’t need it now, don’t do it now.</text>
+        </navLabel>
+        <content src="Text/part0020.xhtml#if_you_donapostrophet_need_it_nowcomma_d"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="np_423" playOrder="423">
+      <navLabel>
+      <text>Your Mind on Patterns</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#your_mind_on_patterns"/>
+      </navPoint>
+      <navPoint id="np_424" playOrder="424">
+      <navLabel>
+      <text>Don’t forget the power of the shared vocabulary</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#donapostrophet_forget_the_power_of_the_s"/>
+      </navPoint>
+      <navPoint id="np_425" playOrder="425">
+      <navLabel>
+      <text>Cruisin’ Objectville with the Gang of Four</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#cruisinapostrophe_objectville_with_the_g"/>
+      </navPoint>
+      <navPoint id="np_426" playOrder="426">
+      <navLabel>
+      <text>Your journey has just begun...</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#your_journey_has_just_begunhellip"/>
+      </navPoint>
+      <navPoint id="np_427" playOrder="427">
+      <navLabel>
+      <text>The Patterns Zoo</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#patterns_zoo"/>
+      </navPoint>
+      <navPoint id="np_428" playOrder="428">
+      <navLabel>
+      <text>Annihilating evil with Anti-Patterns</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#annihilating_evil_with_anti-patterns"/>
+      </navPoint>
+      <navPoint id="np_429" playOrder="429">
+      <navLabel>
+      <text>Tools for your Design Toolbox</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#tools_for_your_design_toolbox-id00194"/>
+      </navPoint>
+      <navPoint id="np_430" playOrder="430">
+      <navLabel>
+      <text>Leaving Objectville...</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#leaving_objectvillehellip"/>
+      </navPoint>
+      <navPoint id="np_431" playOrder="431">
+      <navLabel>
+      <text>Boy, it’s been great having you in Objectville.</text>
+      </navLabel>
+      <content src="Text/part0020.xhtml#boycomma_itapostrophes_been_great_having"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_432" playOrder="432">
+    <navLabel>
+    <text>A. Leftover Patterns</text>
+    </navLabel>
+    <content src="Text/part0021.xhtml#aid-K0RQ2"/>
+      <navPoint id="np_433" playOrder="433">
+      <navLabel>
+      <text>Bridge</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#bridge"/>
+      </navPoint>
+      <navPoint id="np_434" playOrder="434">
+      <navLabel>
+      <text>Why use the Bridge Pattern?</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#why_use_the_bridge_patternquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_435" playOrder="435">
+      <navLabel>
+      <text>Builder</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#builder"/>
+      </navPoint>
+      <navPoint id="np_436" playOrder="436">
+      <navLabel>
+      <text>Why use the Builder Pattern?</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#why_use_the_builder_patternquestion_mark"/>
+      </navPoint>
+      <navPoint id="np_437" playOrder="437">
+      <navLabel>
+      <text>Chain of Responsibility</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#chain_of_responsibility"/>
+      </navPoint>
+      <navPoint id="np_438" playOrder="438">
+      <navLabel>
+      <text>How to use the Chain of Responsibility Pattern</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#how_to_use_the_chain_of_responsibility_p"/>
+      </navPoint>
+      <navPoint id="np_439" playOrder="439">
+      <navLabel>
+      <text>Flyweight</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#flyweight"/>
+      </navPoint>
+      <navPoint id="np_440" playOrder="440">
+      <navLabel>
+      <text>Why use the Flyweight Pattern?</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#why_use_the_flyweight_patternquestion_ma"/>
+      </navPoint>
+      <navPoint id="np_441" playOrder="441">
+      <navLabel>
+      <text>Interpreter</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#interpreter"/>
+      </navPoint>
+      <navPoint id="np_442" playOrder="442">
+      <navLabel>
+      <text>How to implement an interpreter</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#how_to_implement_an_interpreter"/>
+      </navPoint>
+      <navPoint id="np_443" playOrder="443">
+      <navLabel>
+      <text>Mediator</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#mediator"/>
+      </navPoint>
+      <navPoint id="np_444" playOrder="444">
+      <navLabel>
+      <text>Mediator in action...</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#mediator_in_actionhellip"/>
+      </navPoint>
+      <navPoint id="np_445" playOrder="445">
+      <navLabel>
+      <text>Memento</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#memento"/>
+      </navPoint>
+      <navPoint id="np_446" playOrder="446">
+      <navLabel>
+      <text>The Memento at work</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#memento_at_work"/>
+      </navPoint>
+      <navPoint id="np_447" playOrder="447">
+      <navLabel>
+      <text>Prototype</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#prototype"/>
+      </navPoint>
+      <navPoint id="np_448" playOrder="448">
+      <navLabel>
+      <text>Prototype to the rescue</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#prototype_to_the_rescue"/>
+      </navPoint>
+      <navPoint id="np_449" playOrder="449">
+      <navLabel>
+      <text>Visitor</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#visitor"/>
+      </navPoint>
+      <navPoint id="np_450" playOrder="450">
+      <navLabel>
+      <text>The Visitor drops by</text>
+      </navLabel>
+      <content src="Text/part0021.xhtml#visitor_drops_by"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="np_451" playOrder="451">
+    <navLabel>
+    <text>B.  </text>
+    </navLabel>
+    <content src="Text/part0022.xhtml#app02"/>
+    </navPoint>
+    <navPoint id="np_452" playOrder="452">
+    <navLabel>
+    <text>C. Mighty Gumball</text>
+    </navLabel>
+    <content src="Text/part0023.xhtml#mighty_gumball"/>
+    </navPoint>
+    <navPoint id="np_453" playOrder="453">
+    <navLabel>
+    <text>Index</text>
+    </navLabel>
+    <content src="Text/part0024.xhtml#aid-MSDG2"/>
+    </navPoint>
+    <navPoint id="np_454" playOrder="454">
+    <navLabel>
+    <text>About the Authors</text>
+    </navLabel>
+    <content src="Text/part0025.xhtml#id483756"/>
+    </navPoint>
+    <navPoint id="np_455" playOrder="455">
+    <navLabel>
+    <text>Colophon</text>
+    </navLabel>
+    <content src="Text/part0026.xhtml#colophon"/>
+    </navPoint>
+    <navPoint id="np_456" playOrder="456">
+    <navLabel>
+    <text>Copyright</text>
+    </navLabel>
+    <content src="Text/part0027.xhtml#copyright_page_orm"/>
+    </navPoint>
+  </navMap>
+</ncx>
