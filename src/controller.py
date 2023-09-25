@@ -1,6 +1,11 @@
 from model.book_manager import BookManager
 from model.subclass_physbook import Textbook
-# from model.class_book import Book
+from model.class_book import Book
+from model.xml_parser import XmlParser
+from model.book_consolidator import HtmlConsolidator
+from model.html_consolidation_manager import HtmlConsolidationManager
+from model.opf_extractor import OpfExtractor
+from model.book_metadata_extractor import BookMetadataExtractor
 from model.extract_book import extract_book
 from model.epub_validator import validate_book
 from flask import Flask, render_template, request, flash, url_for, redirect, get_flashed_messages,  send_from_directory, session, abort, Blueprint, jsonify, send_file
@@ -10,6 +15,9 @@ import shutil
 from pathlib import Path
 import logging
 import uuid
+from sqlalchemy import create_engine, exc
+from sqlalchemy.orm import Session, sessionmaker
+from model.db_manager import DatabaseManager
 
 
 
@@ -94,6 +102,8 @@ def get_content():
 
 @app.route("/library", methods=['GET'])
 def library():
+    db_manager = DatabaseManager()
+    books = db_manager.load_books_with_details()
     return render_template('/templates/library.html', books=books)
 
 
@@ -104,9 +114,24 @@ def upload():
         if uploaded_file.filename != '':
             book_instance_id = str(uuid.uuid4())
             extract_book(uploaded_file, book_instance_id)
-            filename = os.path.splitext(uploaded_file.filename)[0]
-            book = Textbook(book_instance_id)
-            book_manager.add_book(book)
+            
+            db_manager = DatabaseManager()
+            
+            try:
+                textbook = Textbook(book_instance_id)
+                db_manager.add_textbook(textbook)
+            except Exception as e:
+                flash('error', f'Failed to create and add Textbook: {e}')
+                return redirect(url_for('library'))
+                
+            try:
+                book = Book(book_instance_id)
+                book.add_textbook(textbook)
+                db_manager.add_book(book)
+            except Exception as e:
+                flash('error', f'Failed to create and add Book: {e}')
+                return redirect(url_for('library'))
+            
             flash('success', f'{book.title} uploaded successfully!')
             return redirect(url_for('library'))
     elif request.method == 'GET':
