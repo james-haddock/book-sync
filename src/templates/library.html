@@ -5,16 +5,20 @@
 <div class="container mx-auto py-16">
     <h1 class="text-3xl font-semibold mb-8">Your Library</h1>
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {% if books %}
         {% for book in books %}
         <div class="bg-white shadow-md p-4">
-            <a href="{{ url_for('book', UUID=book.UUID)}}"><img src="{{ book.cover }}" alt="" class="w-full mb-4"></a>
-            <h2 class="text-xl font-semibold">{{ book.title }}</h2>
-            <p class="text-gray-600">{{ book.author }}</p>
-            <p class="mt-2">{{ book.description }}</p>
+            <a href="{{ url_for('book', UUID=book.book.UUID) }}">
+                <img src="{{ book.DBTextbook.cover }}" alt="" class="w-full mb-4">
+            </a>
+            <h2 class="text-xl font-semibold">{{ book.book.title }}</h2>
+            <p class="text-gray-600"></p>
+            <p class="mt-2"></p>
         </div>
         {% endfor %}
+        {% endif %}
     </div>
-
+</div>
     <div class="max-w-md mx-auto mt-4 p-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
