@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ns="http://www.w3.org/2001/10/synthesis" xml:lang="en-us" lang="en-us">
+  <head>
+    <title>Clean Architecture</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="../page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+<h2 class="h2f" id="ch9"><a id="page_77" class="calibre3"></a><span class="gray">9</span><br class="calibre12"/>LSP: T<small class="calibre7">HE</small> L<small class="calibre7">ISKOV</small> S<small class="calibre7">UBSTITUTION</small> P<small class="calibre7">RINCIPLE</small></h2>
+<div class="image1"><img src="../images/00032.jpeg" alt="Image" class="calibre2"/></div>
+<p class="noindent1"><a id="page_78"></a>In 1988, Barbara Liskov wrote the following as a way of defining subtypes.</p>
+<p class="blockquote"><em class="calibre9">What is wanted here is something like the following substitution property: If for each object o1 of type S there is an object o2 of type T such that for all programs P defined in terms of T, the behavior of P is unchanged when o1 is substituted for o2 then S is a subtype of T</em>.<sup class="calibre14"><a id="ch9fn-1" href="part0021.html#ch9fn1">1</a></sup></p>
+<p class="noindent1">To understand this idea, which is known as the Liskov Substitution Principle (LSP), let’s look at some examples.</p>
+<h3 class="h1" id="toclev_39">G<small class="calibre13">UIDING THE</small> U<small class="calibre13">SE OF</small> I<small class="calibre13">NHERITANCE</small></h3>
+<p class="noindent1">Imagine that we have a class named <code class="calibre11">License</code>, as shown in <a href="part0021.html#ch9fig1">Figure 9.1</a>. This class has a method named <code class="calibre11">calcFee()</code>, which is called by the <code class="calibre11">Billing</code> application. There are two “subtypes” of <code class="calibre11">License</code>: <code class="calibre11">PersonalLicense</code> and <code class="calibre11">BusinessLicense</code>. They use different algorithms to calculate the license fee.</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00033.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch9fig1"></a><strong class="calibre8">Figure 9.1</strong> <code class="calibre11">License</code>, and its derivatives, conform to LSP</p>
+</div>
+<p class="noindent1">This design conforms to the LSP because the behavior of the <code class="calibre11">Billing</code> application does not depend, in any way, on which of the two subtypes it uses. Both of the subtypes are substitutable for the <code class="calibre11">License</code> type.</p>
+<h3 class="h1" id="toclev_40"><a id="page_79" class="calibre3"></a>T<small class="calibre13">HE</small> S<small class="calibre13">QUARE</small>/R<small class="calibre13">ECTANGLE</small> P<small class="calibre13">ROBLEM</small></h3>
+<p class="noindent1">The canonical example of a violation of the LSP is the famed (or infamous, depending on your perspective) square/rectangle problem (<a href="part0021.html#ch9fig2">Figure 9.2</a>).</p>
+<div class="fig-heading">
+<div class="image1"><img src="../images/00034.jpeg" alt="Image" class="calibre2"/></div>
+<p class="fig-caption"><a id="ch9fig2"></a><strong class="calibre8">Figure 9.2</strong> The infamous square/rectangle problem</p>
+</div>
+<p class="noindent1">In this example, <code class="calibre11">Square</code> is not a proper subtype of <code class="calibre11">Rectangle</code> because the height and width of the <code class="calibre11">Rectangle</code> are independently mutable; in contrast, the height and width of the <code class="calibre11">Square</code> must change together. Since the <code class="calibre11">User</code> believes it is communicating with a <code class="calibre11">Rectangle</code>, it could easily get confused. The following code shows why:</p>
+<p class="codelink"><a id="pch9ex01" href="part0056_split_001.html#pch9ex01a">Click here to view code image</a></p>
+<p class="pre2">Rectangle r = …<br class="calibre6"/>
+<br class="calibre6"/>
+r.setW(5);<br class="calibre6"/>
+<br class="calibre6"/>
+r.setH(2);<br class="calibre6"/>
+<br class="calibre6"/>
+assert(r.area() == 10);</p>
+<p class="noindent1">If the … code produced a <code class="calibre11">Square</code>, then the assertion would fail.</p>
+<p class="noindent1">The only way to defend against this kind of LSP violation is to add mechanisms to the <code class="calibre11">User</code> (such as an <code class="calibre11">if</code> statement) that detects whether the <code class="calibre11">Rectangle</code> is, in fact, a <code class="calibre11">Square</code>. Since the behavior of the <code class="calibre11">User</code> depends on the types it uses, those types are not substitutable.</p>
+<h3 class="h1" id="toclev_41"><a id="page_80" class="calibre3"></a>L<small class="calibre13">SP AND</small> A<small class="calibre13">RCHITECTURE</small></h3>
+<p class="noindent1">In the early years of the object-oriented revolution, we thought of the LSP as a way to guide the use of inheritance, as shown in the previous sections. However, over the years the LSP has morphed into a broader principle of software design that pertains to interfaces and implementations.</p>
+<p class="noindent1">The interfaces in question can be of many forms. We might have a Java-style interface, implemented by several classes. Or we might have several Ruby classes that share the same method signatures. Or we might have a set of services that all respond to the same REST interface.</p>
+<p class="noindent1">In all of these situations, and more, the LSP is applicable because there are users who depend on well-defined interfaces, and on the substitutability of the implementations of those interfaces.</p>
+<p class="noindent1">The best way to understand the LSP from an architectural viewpoint is to look at what happens to the architecture of a system when the principle is violated.</p>
+<h3 class="h1" id="toclev_42">E<small class="calibre13">XAMPLE</small> L<small class="calibre13">SP</small> V<small class="calibre13">IOLATION</small></h3>
+<p class="noindent1">Assume that we are building an aggregator for many taxi dispatch services. Customers use our website to find the most appropriate taxi to use, regardless of taxi company. Once the customer makes a decision, our system dispatches the chosen taxi by using a restful service.</p>
+<p class="noindent1">Now assume that the URI for the restful dispatch service is part of the information contained in the driver database. Once our system has chosen a driver appropriate for the customer, it gets that URI from the driver record and then uses it to dispatch the driver.</p>
+<p class="noindent1">Suppose Driver Bob has a dispatch URI that looks like this:</p>
+<p class="codelink"><a id="pch9ex02" href="part0056_split_002.html#pch9ex02a">Click here to view code image</a></p>
+<p class="pre3"><a href="http://purplecab.com/driver/Bob">purplecab.com/driver/Bob</a></p>
+<p class="noindent1"><a id="page_81"></a>Our system will append the dispatch information onto this URI and send it with a PUT, as follows:</p>
+<p class="codelink"><a id="pch9ex03" href="part0056_split_003.html#pch9ex03a">Click here to view code image</a></p>
+<p class="pre3"><a href="http://purplecab.com/driver/Bob">purplecab.com/driver/Bob</a>
+<br class="calibre6"/>
+       /pickupAddress/24 Maple St.<br class="calibre6"/>
+       /pickupTime/153<br class="calibre6"/>
+       /destination/ORD</p>
+<p class="noindent1">Clearly, this means that all the dispatch services, for all the different companies, must conform to the same REST interface. They must treat the <code class="calibre11">pickupAddress</code>, <code class="calibre11">pickupTime</code>, and <code class="calibre11">destination</code> fields identically.</p>
+<p class="noindent1">Now suppose the Acme taxi company hired some programmers who didn’t read the spec very carefully. They abbreviated the destination field to just <code class="calibre11">dest</code>. Acme is the largest taxi company in our area, and Acme’s CEO’s ex-wife is our CEO’s new wife, and … Well, you get the picture. What would happen to the architecture of our system?</p>
+<p class="noindent1">Obviously, we would need to add a special case. The dispatch request for any Acme driver would have to be constructed using a different set of rules from all the other drivers.</p>
+<p class="noindent1">The simplest way to accomplish this goal would be to add an <code class="calibre11">if</code> statement to the module that constructed the dispatch command:</p>
+<p class="codelink"><a id="pch9ex04" href="part0056_split_004.html#pch9ex04a">Click here to view code image</a></p>
+<p class="pre2">if (driver.getDispatchUri().startsWith("acme.com"))…</p>
+<p class="noindent1">But, of course, no architect worth his or her salt would allow such a construction to exist in the system. Putting the word “acme” into the code itself creates an opportunity for all kinds of horrible and mysterious errors, not to mention security breaches.</p>
+<p class="noindent1">For example, what if Acme became even more successful and bought the Purple Taxi company. What if the merged company maintained the separate <a id="page_82"></a>brands and the separate websites, but unified all of the original companies’ systems? Would we have to add another if statement for “purple”?</p>
+<p class="noindent1">Our architect would have to insulate the system from bugs like this by creating some kind of dispatch command creation module that was driven by a configuration database keyed by the dispatch URI. The configuration data might look something like this:</p>
+<p class="codelink"><a id="pch9ex05" href="part0056_split_005.html#pch9ex05a">Click here to view code image</a></p>
+<div class="code">
+<table class="calibre16">
+<thead class="calibre17">
+<tr class="calibre18">
+<td class="calibre19"><p class="noindentnv"><strong class="calibre8">URI</strong></p></td>
+<td class="calibre19"><p class="noindentnv"><strong class="calibre8">Dispatch Format</strong></p></td>
+</tr>
+</thead>
+<tbody class="calibre20">
+<tr class="calibre18">
+<td class="calibre19"><p class="noindentnv"><code class="calibre11"><a href="http://Acme.com">Acme.com</a>    </code></p></td>
+<td class="calibre19"><p class="noindentnv"><code class="calibre11">/pickupAddress/%s/pickupTime/%s/dest/%s</code></p></td>
+</tr>
+<tr class="calibre18">
+<td class="calibre19"><p class="noindentnv"><code class="calibre11">*.*    </code></p></td>
+<td class="calibre19"><p class="noindentnv"><code class="calibre11">/pickupAddress/%s/pickupTime/%s/destination/%s</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="noindent1">And so our architect has had to add a significant and complex mechanism to deal with the fact that the interfaces of the restful services are not all substitutable.</p>
+<h3 class="h1" id="toclev_43">C<small class="calibre13">ONCLUSION</small></h3>
+<p class="noindent1">The LSP can, and should, be extended to the level of architecture. A simple violation of substitutability, can cause a system’s architecture to be polluted with a significant amount of extra mechanisms.</p>
+<p class="fn"><a id="ch9fn1" href="part0021.html#ch9fn-1">1</a>. Barbara Liskov, “Data Abstraction and Hierarchy,” <em class="calibre9">SIGPLAN Notices 23</em>, 5 (May 1988).</p>
+</body></html>
