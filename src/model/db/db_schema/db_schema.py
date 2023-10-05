@@ -38,8 +38,8 @@ class DBTextbook(Base):
     
     id = Column(Integer, primary_key=True)
     cover = Column(String)
-    book_path = Column(String)
     book_content = Column(String)
+    book_base = Column(String)
     isbn = Column(String)
     book_position = Column(Integer)
 

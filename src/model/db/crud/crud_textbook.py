@@ -10,10 +10,10 @@ class CrudTextbook:
         with DatabaseManager() as session:
             db_textbook = DBTextbook(
                 cover=textbook.cover,
-                book_path=textbook.book_path,
                 book_content=textbook.book_content,
                 isbn=textbook.isbn,
-                book_position=textbook.book_position
+                book_position=textbook.book_position,
+                book_base = textbook.book_base
             )
             session.add(db_textbook)
             session.flush()
@@ -22,10 +22,10 @@ class CrudTextbook:
             session.add(association)
             session.commit()
 
+    
     @staticmethod
     def get_textbook_by_book_UUID(UUID):
         with DatabaseManager() as session:
-            # Perform a join between DBBook, Association, and DBTextbook tables
             textbook = session.query(DBTextbook).\
                 join(Association, Association.type_id == DBTextbook.id).\
                 join(DBBook, DBBook.id == Association.book_id).\

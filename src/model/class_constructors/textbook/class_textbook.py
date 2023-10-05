@@ -7,7 +7,7 @@ class Textbook:
         self.UUID = UUID
         self.title = initialiser.title
         self.cover = initialiser.cover
-        self.book_path = os.path.dirname(initialiser.opf_path)
         self.isbn = ''
         self.book_position = 0
         self.book_content = initialiser.html_manager.get_consolidated_html_path
+        self.book_base = os.path.dirname(self.book_content)
