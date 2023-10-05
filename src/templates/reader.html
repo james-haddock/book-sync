@@ -6,65 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book_title }}</title>
     <base href="{{ base }}">
-    <!-- <script src='../../../../turnjs4/jquery-3.7.1.js' integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
-<!-- <style>
-    #content {
-        width: 800px;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        background: #fff;
-    }
-</style> -->
-
 <body>
-    <div id="content">
-        <!-- Content from Flask server will be appended here -->
-    </div>
-    <div style="text-align:center;margin-top:20px;">
-        <button id="loadMore">Load More</button>
-    </div>
 
-    <script>
-        let UUID = '{{ UUID }}';
-        let lastFetchedPage = 0;
+<div id="bookContent"></div>
 
-        function appendContentToDiv(data) {
-            let $contentDiv = $("#content");
+<script>
+    $(document).ready(function(){
+        let UUID = "{{ UUID }}"; 
+        $.ajax({
+            url: '/get_content',
+            type: 'GET',
+            data: {UUID: UUID, action: 'load'}, 
+            dataType: 'json',
+            success: function(response){
+                $('#bookContent').html(response.content);
 
-            // Convert data to jQuery object
-            let $data = $(data);
+                $('#bookContent').find("a[href^='#']").on('click', function(event) {
+                    event.preventDefault();
 
-            $contentDiv.append($data);
-        }
-
-        $("#loadMore").click(function() {
-            lastFetchedPage++;
-            $.get("/get_content", {
-                action: "load_more",
-                UUID: UUID,
-                page: lastFetchedPage
-            }).done(function(data) {
-                appendContentToDiv(data);
-            }).fail(function() {
-                alert("Error fetching content from the server.");
-            });
+                    const targetElement = $(this.getAttribute('href'));
+                    if (targetElement.length) {
+                        const topPosition = targetElement.offset().top;
+                        $('html, body').animate({ scrollTop: topPosition }, 'slow');
+                    }
+                });
+            },
+            error: function(error){
+                console.log(error);
+            }
         });
+    });
+</script>
 
-        $(document).ready(function() {
-            $.get("/get_content", {
-                action: "initial",
-                UUID: "{{ UUID }}"
-            }).done(function(data) {
-                appendContentToDiv(data);
-            }).fail(function() {
-                alert("Error fetching content from the server.");
-            });
-        });
-    </script>
 </body>
 
 </html>

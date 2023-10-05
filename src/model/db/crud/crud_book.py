@@ -39,7 +39,7 @@ class CrudBook:
             if version_instance:
                 book_versions[association.book_type] = version_instance
 
-        data = {'book': book, **book_versions}
+        data = {'DBBook': book, **book_versions}
 
         return data
 
@@ -63,7 +63,7 @@ class CrudBook:
                     if version_instance:
                         book_versions[association.book_type] = version_instance
 
-            data = {'book': book, **book_versions}
+            data = {'DBBook': book, **book_versions}
             result.append(data)
 
         return result

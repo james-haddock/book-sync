@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, url_for, redirect, get_flashed_messages, session
+from flask import Flask, render_template, request, flash, url_for, redirect, get_flashed_messages, session, jsonify
 import os
 import io
 import shutil
@@ -60,15 +60,32 @@ def registration_form():
 def book(UUID):
     with DatabaseManager() as session:
         book_data = crud_book.get_book_with_details(session, UUID)
-        return render_template(book_data['DBTextbook'].book_content, UUID=UUID)
-    # return render_template('templates/reader.html', UUID=UUID, base=book_path[5:], book_title=book.title)
+        textbook = book_data['DBTextbook']
+        book = book_data['DBBook']
+        book_file = '/consolidated_{UUID}.html'
+        html = 'http://127.0.0.1:8000/'
+        # return render_template(book_data['DBTextbook'].book_content, UUID=UUID)
+        return render_template('templates/reader.html', UUID=UUID, base=html + textbook.book_base + '/', book_title=book.title)
 
 
+@app.route('/get_content', methods=['GET'])
+def get_content():
+    with DatabaseManager() as session:
+        action = request.args.get('action')
+        UUID = request.args.get('UUID') 
+        if action == 'load':
+            book_data = crud_book.get_book_with_details(session, UUID)
+            textbook = book_data['DBTextbook']
+            book_content = textbook.book_content
+            with open(book_content, 'r') as file:
+                content = file.read()
+            return jsonify({"content": content})
+         
 
 # @app.route('/get_content', methods=['GET'])
 # def get_content():
 #     action = request.args.get('action')
-#     UUID = request.args.get('UUID')
+#     UUID = request.args.get('UUID') 
 #     if not action or not UUID:
 #         return "Missing or invalid parameters", 400
 #     if UUID not in books:
