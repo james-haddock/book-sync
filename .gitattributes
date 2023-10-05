@@ -1,2 +1,2 @@
-src/static/* linguist-vendored
-src/node_modules/* linguist-vendored
+src/static/** linguist-vendored
+src/node_modules/** linguist-vendored
