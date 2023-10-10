@@ -6,13 +6,13 @@ class HtmlConsolidator:
         if "://" in link_path or link_path.startswith("/"):
             return link_path
         
-        if os.path.dirname(original_file_path) != os.path.dirname(output_path):
-            if link_path.startswith("../"):
-                link_path = link_path[3:]
-            
-            link_path = "../" + link_path
+        original_dir = os.path.dirname(original_file_path)
+        full_path = os.path.normpath(os.path.join(original_dir, link_path))
         
-        return link_path
+        rel_path = os.path.relpath(full_path, os.path.dirname(output_path))
+        
+        return rel_path
+
 
     def generate_unique_id(self, file_path, original_id):
         base_name = file_path.split("/")[-1].replace(".html", "").replace(".xhtml", "")

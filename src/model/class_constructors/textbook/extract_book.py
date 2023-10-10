@@ -2,12 +2,11 @@ import zipfile
 import os
 from flask import abort
 
-def extractbook(epub_book, UUID):
-    extract_directory = f'book/{UUID}'
+def extractbook(epub_book, extraction_directory):
     try:
-        os.makedirs(extract_directory)
+        os.makedirs(extraction_directory)
     except FileExistsError:
-        return FileExistsError('file already exists!!!')
+        return FileExistsError('File already exists')
     with zipfile.ZipFile(epub_book, 'r') as zip:
-        zip.extractall(extract_directory)
+        zip.extractall(extraction_directory)
         print("File successfully unzipped")

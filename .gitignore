@@ -1,5 +1,7 @@
 src/book/**
 .DS_Store
+tests/unit/src/model/class_constructors/textbook/test_data/**
+src/node_modules/**
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
