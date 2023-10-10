@@ -71,6 +71,7 @@ def book(UUID):
 @app.route('/get_content', methods=['GET'])
 def get_content():
     with DatabaseManager() as session:
+        
         action = request.args.get('action')
         UUID = request.args.get('UUID') 
         if action == 'load':
@@ -120,7 +121,8 @@ def upload():
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
             UUID = str(uuid.uuid4())
-            extract_book.extractbook(uploaded_file, UUID)
+            extraction_directory = f'book/{UUID}'
+            extract_book.extractbook(uploaded_file, extraction_directory)
             # try:
             textbook = class_textbook.Textbook(UUID)
             book = crud_book.create_book_in_db(textbook)
