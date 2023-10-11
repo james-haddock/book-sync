@@ -20,7 +20,6 @@ class HtmlConsolidator:
 
     def consolidate_html(self, file_paths, output_path):
         documents = []
-        
         for path in file_paths:
             with open(path, 'r', encoding='utf-8') as file:
                 content = file.read()
