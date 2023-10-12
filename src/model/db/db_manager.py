@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker
+from decouple import Config
+
 
 class DatabaseManager:
-    database_url = "postgresql://james:data0303@localhost:5432/booksync"
+    database_url = Config().get("DATABASE_URL")
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
 
