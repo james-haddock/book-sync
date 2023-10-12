@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 import logging
 import uuid
+from decouple import Config
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import Session, sessionmaker
 from model.db.crud import crud_textbook, crud_book
@@ -16,7 +17,12 @@ from model.class_constructors.textbook import (class_textbook, xml_parser,
 from model.db.crud import crud_book
 from model.db.db_manager import DatabaseManager
 
+config = Config()
 
+DEBUG = config.getboolean("DEBUG")
+SECRET_KEY = config.get("SECRET_KEY")
+DATABASE_URL = config.get("DATABASE_URL")
+API_KEY = config.get("API_KEY")
 
 def has_file_extension(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].isalpha()
@@ -25,8 +31,10 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__, template_folder='', static_folder='')
 
+
+
 class Config:
-    SECRET_KEY = 'golf'
+    SECRET_KEY = config.get("SECRET_KEY")
 
 app.config.from_object(Config)
 
