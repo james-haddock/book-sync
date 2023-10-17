@@ -1,4 +1,4 @@
-src/static/** linguist-detectable=false
-src/node_modules/** linguist-detectable=false
-tests/unit/src/model/class_constructors/textbook/test_data/** linguist-detectable=false
-src/book/** linguist-detectable=false
+src/static/** linguist-vendored
+src/node_modules/** linguist-vendored
+tests/unit/src/model/class_constructors/textbook/test_data/** linguist-vendored
+src/book/** linguist-vendored
