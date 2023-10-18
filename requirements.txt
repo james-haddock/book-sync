@@ -13,6 +13,7 @@ certifi==2022.12.7
 charset-normalizer==3.2.0
 click==8.1.6
 colored==1.4.3
+coverage==7.3.2
 cssutils==2.7.1
 distlib==0.3.6
 docopt==0.6.2
@@ -44,6 +45,7 @@ numpy==1.25.1
 orjson==3.9.5
 packaging==23.1
 pandas==2.0.3
+pipenv==2023.2.4
 pipreqs==0.4.13
 platformdirs==3.0.0
 pluggy==1.2.0
@@ -55,6 +57,7 @@ PyQt6==6.5.2
 PyQt6-Qt6==6.5.2
 PyQt6-sip==13.5.2
 pytest==7.4.0
+pytest-cov==4.1.0
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-engineio==4.6.0
