@@ -31,6 +31,9 @@ class HtmlConsolidator:
                 for image_tag in soup.find_all('image', {'xlink:href': True}):
                     image_tag['xlink:href'] = self.adjust_path(path, output_path, image_tag['xlink:href'])
                 
+                for img_tag in soup.find_all('img'):
+                    img_tag['loading'] = 'lazy'
+                
                 documents.append(soup)
 
         included_stylesheets = set()
