@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Sequence, ForeignKey, create_engine
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship, sessionmaker, declarative_base
+from decouple import config
 
 Base = declarative_base()
 
@@ -71,6 +72,6 @@ class User(Base):
 
 
 if __name__ == '__main__':
-    DATABASE_URL = "postgresql://james:data0303@localhost:5432/booksync"
+    DATABASE_URL = database_url = config("LOCAL_DATABASE_URL")
     engine = create_engine(DATABASE_URL)
     Base.metadata.create_all(engine)
