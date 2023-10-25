@@ -19,7 +19,7 @@ class HtmlConsolidationManager:
 
     @property
     def get_consolidated_html_path(self):
-        return f'{self.get_html_directory}/consolidated_{self.UUID}.html'
+        return f'book/{self.UUID}/consolidated_{self.UUID}.html'
 
     def consolidate_html_files(self):
-        self.html_consolidator.consolidate_html(self.get_href_relative_path, self.get_consolidated_html_path)
+        self.html_consolidator.consolidate_html(self.get_href_relative_path, self.get_consolidated_html_path, self.UUID)
