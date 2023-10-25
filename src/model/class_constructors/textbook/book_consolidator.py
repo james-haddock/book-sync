@@ -13,20 +13,16 @@ class HtmlConsolidator:
         
         return rel_path
 
-
     def generate_unique_id(self, file_path, original_id):
         base_name = file_path.split("/")[-1].replace(".html", "").replace(".xhtml", "")
         return f"{base_name}_{original_id}"
 
-    def consolidate_html(self, file_paths, output_path):
+    def consolidate_html(self, file_paths, output_path, UUID):
         documents = []
         for path in file_paths:
             with open(path, 'r', encoding='utf-8') as file:
                 content = file.read()
                 soup = BeautifulSoup(content, 'html.parser')
-                
-                for link_tag in soup.find_all('link', {'rel': 'stylesheet', 'href': True}):
-                    link_tag['href'] = self.adjust_path(path, output_path, link_tag['href'])
                 
                 for image_tag in soup.find_all('image', {'xlink:href': True}):
                     image_tag['xlink:href'] = self.adjust_path(path, output_path, image_tag['xlink:href'])
@@ -55,13 +51,18 @@ class HtmlConsolidator:
                 
                 if tag.name in ['img', 'script', 'link'] and tag.has_attr('src'):
                     tag['src'] = self.adjust_path(file_paths[index], output_path, tag['src'])
+                
                 if tag.name == 'link' and tag.has_attr('href'):
-                    tag['href'] = self.adjust_path(file_paths[index], output_path, tag['href'])
+                    adjusted_href = self.adjust_path(file_paths[index], output_path, tag['href'])
+                    tag['href'] = adjusted_href
                     
-                if tag.name == 'link' and tag.has_attr('rel') and 'stylesheet' in tag['rel'] and tag['href'] not in included_stylesheets:
-                    included_stylesheets.add(tag['href'])
+                    if tag.has_attr('rel') and 'stylesheet' in tag['rel']:
+                        included_stylesheets.add(adjusted_href)
 
         consolidated_soup = BeautifulSoup("<html><head></head><body></body></html>", 'html.parser')
+        
+        base_tag = consolidated_soup.new_tag("base", href=f"{UUID}/")
+        consolidated_soup.head.insert(0, base_tag)
         
         for stylesheet in included_stylesheets:
             link_tag = consolidated_soup.new_tag("link", rel="stylesheet", href=stylesheet)

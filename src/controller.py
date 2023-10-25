@@ -64,26 +64,22 @@ def book(UUID):
     with DatabaseManager() as session:
         book_data = crud_book.get_book_with_details(session, UUID)
         textbook = book_data['DBTextbook']
-        book = book_data['DBBook']
-        book_file = '/consolidated_{UUID}.html'
-        html = 'http://127.0.0.1:8000/'
-        # return render_template(book_data['DBTextbook'].book_content, UUID=UUID)
-        return render_template('templates/reader.html', UUID=UUID, base=html + textbook.book_base + '/', book_title=book.title)
+        return render_template(textbook.book_content)
 
 
-@app.route('/get_content', methods=['GET'])
-def get_content():
-    with DatabaseManager() as session:
+# @app.route('/get_content', methods=['GET'])
+# def get_content():
+#     with DatabaseManager() as session:
         
-        action = request.args.get('action')
-        UUID = request.args.get('UUID') 
-        if action == 'load':
-            book_data = crud_book.get_book_with_details(session, UUID)
-            textbook = book_data['DBTextbook']
-            book_content = textbook.book_content
-            with open(book_content, 'r') as file:
-                content = file.read()
-            return jsonify({"content": content})
+#         action = request.args.get('action')
+#         UUID = request.args.get('UUID') 
+#         if action == 'load':
+#             book_data = crud_book.get_book_with_details(session, UUID)
+#             textbook = book_data['DBTextbook']
+#             book_content = textbook.book_content
+#             with open(book_content, 'r') as file:
+#                 content = file.read()
+#             return jsonify({"content": content})
          
 
 

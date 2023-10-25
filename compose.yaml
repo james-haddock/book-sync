@@ -7,12 +7,12 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
-services:
-  server:
-    build:
-      context: .
-    ports:
-      - 8000:8000
+# services:
+#   server:
+#     build:
+#       context: .
+#     ports:
+#       - 8000:8000
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
@@ -47,3 +47,52 @@ services:
 #   db-password:
 #     file: db/password.txt
 
+version: "3.8"
+
+services:
+  web:
+    depends_on:
+      - db
+    restart: always
+    build: .
+    container_name: flask_gunicorn_app
+    expose:
+      - "8000:8000"
+    volumes:
+      - ./src/book:/app/src/book
+
+  nginx:
+    restart: always
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./src/book:/app/src/book
+    depends_on:
+      - web
+
+  db:
+    restart: always
+    image: postgres:15.4
+    container_name: postgres_database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - /Users/jameshaddock/Desktop/Coding/Projects/Database/ABReader:/var/lib/postgresql/data
+
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
