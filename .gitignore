@@ -1,6 +1,8 @@
 src/book/**
 .DS_Store
+.minikube-darwin-arm64
 src/node_modules/**
+.kubectl
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
