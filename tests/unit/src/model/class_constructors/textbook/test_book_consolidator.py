@@ -51,7 +51,7 @@ def test_relative_links_resolve():
         shutil.copytree(extracted_epub_directory, temp_epub_directory)
         temp_consolidated_file = os.path.join(tempdir, "0fad8c06-624c-485f-abf6-52813e095698/text/consolidated_test.html")
         consolidator = HtmlConsolidator()
-        consolidator.consolidate_html(absolute_paths, temp_consolidated_file)
+        consolidator.consolidate_html(absolute_paths, temp_consolidated_file, '0fad8c06-624c-485f-abf6-52813e095698')
 
         with open(temp_consolidated_file, 'r', encoding='utf-8') as file:
             soup = BeautifulSoup(file.read(), 'html.parser')
