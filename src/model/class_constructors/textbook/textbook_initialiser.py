@@ -1,10 +1,11 @@
-
 from .xml_parser import XmlParser
 import os
 from .opf_extractor import OpfExtractor
 from .book_metadata_extractor import BookMetadataExtractor
 from ..class_book import Book
 from .html_consolidation_manager import HtmlConsolidationManager
+from ...volumes.s3_crud import s3_crud
+from decouple import config
 
 class TextbookInitialiser:
     def __init__(self, UUID):
@@ -31,7 +32,9 @@ class TextbookInitialiser:
 
         self.html_manager = HtmlConsolidationManager(self.opf_folder_location, self.href, UUID)
         self.html_manager.consolidate_html_files()
-
+           
+    
     def get_opf_location(self):
         opf_location = self.container_root.find(f'{self.container_namespace}rootfiles/{self.container_namespace}rootfile').attrib['full-path']
         return opf_location
+    
