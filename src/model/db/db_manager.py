@@ -1,10 +1,11 @@
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker
 import os
+from decouple import config
 
 class DatabaseManager:
     def __enter__(self):
-        database_url = os.getenv("DATABASE_URL")
+        database_url = config("DATABASE_URL")
         engine = create_engine(database_url)
         Session = sessionmaker(bind=engine)
         self.session = Session()
