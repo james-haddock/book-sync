@@ -31,6 +31,7 @@ s3 = boto3.client(
 
 aws_bucket=config('DO_BUCKET_NAME')
 
+database_url = config("DATABASE_URL")
 
 class Config:
     DEBUG = config("DEBUG")
