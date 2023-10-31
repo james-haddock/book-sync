@@ -61,8 +61,8 @@ class HtmlConsolidator:
 
         consolidated_soup = BeautifulSoup("<html><head></head><body></body></html>", 'html.parser')
         
-        base_tag = consolidated_soup.new_tag("base", href=f"{UUID}/")
-        consolidated_soup.head.insert(0, base_tag)
+        # base_tag = consolidated_soup.new_tag("base", href=f"{UUID}/")
+        # consolidated_soup.head.insert(0, base_tag)
         
         for stylesheet in included_stylesheets:
             link_tag = consolidated_soup.new_tag("link", rel="stylesheet", href=stylesheet)

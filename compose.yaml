@@ -58,8 +58,7 @@ services:
     container_name: flask_gunicorn_app
     expose:
       - "8000:8000"
-    volumes:
-      - ./src/book:/app/src/book
+
 
   nginx:
     restart: always
@@ -69,7 +68,6 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./src/book:/app/src/book
     depends_on:
       - web
 
@@ -87,12 +85,12 @@ services:
       - /Users/jameshaddock/Desktop/Coding/Projects/Database/ABReader:/var/lib/postgresql/data
 
 
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
+  # pgadmin:
+  #   container_name: pgadmin4_container
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: root
+  #   ports:
+  #     - "5050:80"

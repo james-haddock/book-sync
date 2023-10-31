@@ -13,7 +13,7 @@ class BookMetadataExtractor:
     def get_cover(self):
         if self.opf_root.attrib['version'] == '3.0':
             for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
-                if element.attrib['id'] == 'cover-image' or item.attrib['properties'] == 'cover-image':
+                if element.attrib['id'] == 'cover-image' or element.attrib['properties'] == 'cover-image':
                     cover_loc = element.attrib['href']
         elif self.opf_root.attrib['version'] == '2.0':
             for element in self.opf_root.findall(f'{self.opf_namespace}metadata/{self.opf_namespace}meta'):
