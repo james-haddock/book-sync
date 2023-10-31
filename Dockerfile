@@ -27,5 +27,5 @@ USER appuser
 
 WORKDIR /app/src
 
-CMD ["gunicorn", "controller:app", "--bind", "0.0.0.0:8000", "--timeout", "120"]
+CMD ["gunicorn", "controller:app", "--bind", "0.0.0.0:8000", "--timeout", "600"]
 
