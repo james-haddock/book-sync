@@ -34,7 +34,7 @@ class change_urls_to_presigned:
         if "://" in link_path:
             return link_path
 
-        s3_key = os.path.join(self, base_s3_directory, link_path)
+        s3_key = os.path.join(base_s3_directory, link_path)
         presigned_url = self.generate_presigned_url(aws_bucket, s3_key, s3)
 
         return presigned_url if presigned_url else link_path
