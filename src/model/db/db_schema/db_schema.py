@@ -72,6 +72,6 @@ class User(Base):
 
 
 if __name__ == '__main__':
-    DATABASE_URL = database_url = config("LOCAL_DATABASE_URL")
+    DATABASE_URL = database_url = config("DATABASE_URL")
     engine = create_engine(DATABASE_URL)
     Base.metadata.create_all(engine)

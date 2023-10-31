@@ -71,18 +71,18 @@ services:
     depends_on:
       - web
 
-  db:
-    restart: always
-    image: postgres:15.4
-    container_name: postgres_database
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - /Users/jameshaddock/Desktop/Coding/Projects/Database/ABReader:/var/lib/postgresql/data
+  # db:
+  #   restart: always
+  #   image: postgres:15.4
+  #   container_name: postgres_database
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #   volumes:
+  #     - /Users/jameshaddock/Desktop/Coding/Projects/Database/ABReader:/var/lib/postgresql/data
 
 
   # pgadmin:
