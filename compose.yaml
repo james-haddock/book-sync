@@ -51,6 +51,8 @@ version: "3.8"
 
 services:
   web:
+    depends_on:
+      - db
     restart: always
     build: .
     container_name: flask_gunicorn_app
