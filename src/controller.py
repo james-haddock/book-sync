@@ -22,6 +22,8 @@ from model.volumes.s3_crud import s3_crud
 import copy
 from model.change_urls_to_presigned import change_urls_to_presigned
 
+change_urls_to_presigned = change_urls_to_presigned()
+
 s3 = boto3.client(
     's3',
     aws_access_key_id=config('DO_ACCESS_KEY'),
