@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Sequence, ForeignKey, create_eng
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship, sessionmaker, declarative_base
 from decouple import config
+import os
 
 Base = declarative_base()
 
@@ -72,6 +73,6 @@ class User(Base):
 
 
 if __name__ == '__main__':
-    DATABASE_URL = database_url = config("DATABASE_URL")
+    DATABASE_URL = database_url = os.getenv("DATABASE_URL")
     engine = create_engine(DATABASE_URL)
     Base.metadata.create_all(engine)
