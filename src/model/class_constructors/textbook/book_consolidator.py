@@ -65,7 +65,7 @@ class HtmlConsolidator:
         # consolidated_soup.head.insert(0, base_tag)
         
         for stylesheet in included_stylesheets:
-            link_tag = consolidated_soup.new_tag("link", rel="stylesheet", href=stylesheet)
+            link_tag = consolidated_soup.new_tag("link", rel="stylesheet", type="text/css", href=stylesheet)
             consolidated_soup.head.append(link_tag)
 
         body_contents = [doc.body for doc in documents]
