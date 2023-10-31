@@ -10,7 +10,7 @@ class change_urls_to_presigned:
             soup.insert(0, Doctype('html'))
 
         for tag in soup.find_all('img', src=True):
-            tag['src'] = self.generate_presigned_url_for_path(tag['src'], base_s3_directory)
+            tag['src'] = self.generate_presigned_url_for_path(tag['src'], base_s3_directory, aws_bucket, s3)
 
         for tag in soup.find_all('a', href=True):
             if tag['href'].startswith('#'):
