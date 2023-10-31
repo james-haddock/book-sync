@@ -20,21 +20,26 @@ from model.db.crud import crud_book
 from model.db.db_manager import DatabaseManager
 from model.volumes.s3_crud import s3_crud
 import copy
+from model.change_urls_to_presigned import change_urls_to_presigned
 
 s3 = boto3.client(
     's3',
-    aws_access_key_id=os.getenv('DO_ACCESS_KEY'),
-    aws_secret_access_key=os.getenv('DO_SECRET_KEY'),
-    region_name=os.getenv('DO_REGION'),
-    endpoint_url=os.getenv('DO_ENDPOINT_URL')
+    aws_access_key_id=config('DO_ACCESS_KEY'),
+    aws_secret_access_key=config('DO_SECRET_KEY'),
+    region_name=config('DO_REGION'),
+    endpoint_url=config('DO_ENDPOINT_URL')
 )
 
-aws_bucket=os.getenv('DO_BUCKET_NAME')
+aws_bucket=config('DO_BUCKET_NAME')
+
+
+
 
 class Config:
-    DEBUG = os.getenv("DEBUG")
-    SECRET_KEY = os.getenv("SECRET_KEY")
-    API_KEY = os.getenv("API_KEY")
+    DEBUG = config("DEBUG")
+    SECRET_KEY = config("SECRET_KEY")
+    DATABASE_URL = config("DATABASE_URL")
+    API_KEY = config("API_KEY")
 
 def has_file_extension(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].isalpha()
@@ -68,28 +73,7 @@ def registration_form():
     if request.method == 'GET':
         return render_template('/templates/register.html')
 #     if request.method == 'POST':
-
-
-
-
-# @app.route('/book/<UUID>')
-# def book(UUID):
-#     with DatabaseManager() as session:
-#         book_data = crud_book.get_book_with_details(session, UUID)
-#         textbook = book_data['DBTextbook']
-#         return render_template(textbook.book_content)
     
-
-
-def generate_presigned_url(aws_bucket, object_name, s3, expiration=3600):
-    try:
-        response = s3.generate_presigned_url('get_object',
-                                                    Params={'Bucket': aws_bucket, 'Key': object_name},
-                                                    ExpiresIn=expiration)
-    except Exception as e:
-        print(e)
-        return None
-    return response
 
 def get_s3_object_content(aws_bucket, object_name, s3):
     try:
@@ -109,42 +93,11 @@ def book(UUID):
         if not html_content:
             return "Error fetching book content", 500
 
-        soup = BeautifulSoup(html_content, 'html.parser')
-        base_s3_directory = f"book/{UUID}/"
         
-        if soup.find('doctype') is None:
-            soup.insert(0, Doctype('html'))
-
-        for tag in soup.find_all('img', src=True):
-            tag['src'] = generate_presigned_url_for_path(tag['src'], base_s3_directory)
-
-        for tag in soup.find_all('a', href=True):
-            if tag['href'].startswith('#'):
-                continue
-            if not ("://" in tag['href'] or tag['href'].startswith("/")):
-                tag['href'] = generate_presigned_url_for_path(tag['href'], base_s3_directory)
-
-        for tag in soup.find_all('link', href=True):
-            if 'stylesheet' in tag.get('rel', []):
-                tag['href'] = generate_presigned_url_for_path(tag['href'], base_s3_directory)
-
-        for tag in soup.find_all('script', src=True):
-            tag['src'] = generate_presigned_url_for_path(tag['src'], base_s3_directory)
-
-        for tag in soup.find_all('image', {'xlink:href': True}):
-            tag['xlink:href'] = generate_presigned_url_for_path(tag['xlink:href'], base_s3_directory)
-
-        return render_template_string(str(soup))
-
-
-def generate_presigned_url_for_path(link_path, base_s3_directory):
-    if "://" in link_path:
-        return link_path
-
-    s3_key = os.path.join(base_s3_directory, link_path)
-    presigned_url = generate_presigned_url(aws_bucket, s3_key, s3)
-
-    return presigned_url if presigned_url else link_path
+        amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
+        
+        return amended_html
+        
 
 
 
@@ -172,7 +125,7 @@ def library():
         all_books = crud_book.get_all_books_with_details(session)
         all_books_copy = copy.deepcopy(all_books)
         for book in all_books_copy:
-            book['DBTextbook'].cover = generate_presigned_url(aws_bucket, book['DBTextbook'].cover, s3)
+            book['DBTextbook'].cover = change_urls_to_presigned.generate_presigned_url(aws_bucket, book['DBTextbook'].cover, s3)
         return render_template('/templates/library.html', books=all_books_copy)
 
 

@@ -32,7 +32,3 @@
 LICENSE
 README.md
 tests/**
-kubectl
-minikube-darwin-arm64
-abreader_venv/**
-.vscode/**
