@@ -23,21 +23,18 @@ import copy
 
 s3 = boto3.client(
     's3',
-    aws_access_key_id=config('DO_ACCESS_KEY'),
-    aws_secret_access_key=config('DO_SECRET_KEY'),
-    region_name=config('DO_REGION'),
-    endpoint_url=config('DO_ENDPOINT_URL')
+    aws_access_key_id=os.getenv('DO_ACCESS_KEY'),
+    aws_secret_access_key=os.getenv('DO_SECRET_KEY'),
+    region_name=os.getenv('DO_REGION'),
+    endpoint_url=os.getenv('DO_ENDPOINT_URL')
 )
 
-aws_bucket=config('DO_BUCKET_NAME')
-
-database_url = config("DATABASE_URL")
+aws_bucket=os.getenv('DO_BUCKET_NAME')
 
 class Config:
-    DEBUG = config("DEBUG")
-    SECRET_KEY = config("SECRET_KEY")
-    DATABASE_URL = config("DATABASE_URL")
-    API_KEY = config("API_KEY")
+    DEBUG = os.getenv("DEBUG")
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    API_KEY = os.getenv("API_KEY")
 
 def has_file_extension(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].isalpha()
