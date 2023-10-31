@@ -7,8 +7,13 @@ src/node_modules/**
 __pycache__/
 *.py[cod]
 *$py.class
+kubectl
+minikube-darwin-arm64
+abreader_venv/**
+.vscode/**
+compose.yaml
 
-# C extensions
+# C extensionsbrew install helm
 *.so
 
 # Distribution / packaging
