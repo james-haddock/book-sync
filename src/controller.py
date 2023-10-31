@@ -23,12 +23,14 @@ import copy
 
 s3 = boto3.client(
     's3',
-    aws_access_key_id=config('AWS_ACCESS_KEY'),
-    aws_secret_access_key=config('AWS_SECRET_KEY'),
-    region_name=config('AWS_REGION')
+    aws_access_key_id=config('DO_ACCESS_KEY'),
+    aws_secret_access_key=config('DO_SECRET_KEY'),
+    region_name=config('DO_REGION'),
+    endpoint_url=config('DO_ENDPOINT_URL')
 )
 
-aws_bucket=config('AWS_BUCKET_NAME')
+aws_bucket=config('DO_BUCKET_NAME')
+
 
 class Config:
     DEBUG = config("DEBUG")
