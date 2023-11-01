@@ -2,34 +2,70 @@
 {% block title %}Library{% endblock %}
 {% block content %}
 
+<style>
+  .fade-in {
+    opacity: 0; /* Start invisible but still take up space */
+    transition: opacity 0.5s ease-in-out;
+    display: block; /* Ensure this matches your layout, e.g., flex, inline-block, etc. */
+  }
+
+  .loaded {
+    opacity: 1; /* Fade in to fully visible */
+  }
+</style>
+
 <div class="container mx-auto py-16">
     <h1 class="text-3xl font-semibold mb-8">Your Library</h1>
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% if books %}
         {% for book in books %}
-        <div class="bg-white shadow-md p-4">
+        <!-- Apply the fade-in class to the outer div -->
+        <div class="bg-white shadow-md p-4 fade-in">
             <a href="{{ url_for('book', UUID=book.DBBook.UUID) }}">
-                <img src="{{ book.DBTextbook.cover }}" alt="" class="w-full mb-4">
+                <!-- Add an onload event to each image to trigger the fade-in -->
+                <img src="{{ book.DBTextbook.cover }}" alt="" class="w-full mb-4" onload="imageLoaded(this)">
             </a>
             <h2 class="text-xl font-semibold">{{ book.DBBook.title }}</h2>
-            <p class="text-gray-600"></p>
-            <p class="mt-2"></p>
+            <p class="text-gray-600">{{ book.DBBook.author }}</p>
+            <p class="mt-2">{{ book.DBBook.description }}</p>
         </div>
         {% endfor %}
         {% endif %}
     </div>
 </div>
-    <div class="max-w-md mx-auto mt-4 p-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="relative">
-                    {% for message, category in messages %}
-                        <div class="p-4 mb-4 rounded border shadow-md {% if category == 'success' %}bg-green-200{% else %}bg-red-200{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
-    {% endblock %}
+
+<script>
+function imageLoaded(imgElement) {
+  var parentDiv = imgElement.closest('.fade-in');
+  if (!parentDiv) {
+    console.error('No parent .fade-in div found for image', imgElement);
+    return;
+  }
+
+  // Check if all images within the div have loaded
+  var images = parentDiv.getElementsByTagName('img');
+  for (var i = 0; i < images.length; i++) {
+    if (!images[i].complete || images[i].naturalHeight === 0) {
+      return; // If any image is not loaded, exit the function
+    }
+  }
+  // If all images are loaded, add the 'loaded' class
+  parentDiv.classList.add('loaded');
+}
+</script>
+
+<div class="max-w-md mx-auto mt-4 p-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="relative">
+                {% for message, category in messages %}
+                    <div class="p-4 mb-4 rounded border shadow-md {% if category == 'success' %}bg-green-200{% else %}bg-red-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</div>
+
+{% endblock %}
