@@ -21,6 +21,7 @@ from model.db.db_manager import DatabaseManager
 from model.volumes.s3_crud import s3_crud
 import copy
 from model.change_urls_to_presigned import change_urls_to_presigned
+from model.save_book_session import save_book_session_js
 
 change_urls_to_presigned = change_urls_to_presigned()
 
@@ -97,49 +98,12 @@ def book(UUID):
             return "Error fetching book content", 500
 
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
-        
-        scroll_and_fade_script = f"""
-<script>
-document.documentElement.style.opacity = 0;
-
-function fadeInContent() {{
-  document.documentElement.style.transition = 'opacity 0.5s';
-  document.documentElement.style.opacity = 1;
-}}
-
-document.addEventListener('DOMContentLoaded', function() {{
-  const savedId = localStorage.getItem('topElementId-' + '{UUID}');
-  if (savedId) {{
-    const element = document.getElementById(savedId);
-    if (element) {{
-      element.scrollIntoView();
-      setTimeout(fadeInContent, 100);
-      fadeInContent();
-  }}
-  
-  window.addEventListener('scroll', function() {{
-    let elementsAtTop = [...document.elementsFromPoint(window.innerWidth / 2, 0)];
-    let topVisibleElement = elementsAtTop.find(el => el.id && isInViewport(el));
-    if (topVisibleElement) {{
-      localStorage.setItem('topElementId-' + '{UUID}', topVisibleElement.id);
-    }}
-  }});
-  
-  function isInViewport(element) {{
-    const rect = element.getBoundingClientRect();
-    return (
-      rect.bottom >= 0 &&
-      rect.right >= 0 &&
-      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.left <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }}
-}});
-</script>
-        """
-        amended_html = amended_html.replace('</head>', scroll_and_fade_script + '</head>')
+        save_book_session = save_book_session_js(UUID)
+        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head>')
 
         return render_template_string(amended_html)
+
+
     
     
     
