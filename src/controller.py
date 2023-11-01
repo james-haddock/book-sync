@@ -109,24 +109,15 @@ function fadeInContent() {{
 }}
 
 document.addEventListener('DOMContentLoaded', function() {{
-  // Restore scroll position or fallback to default behavior
   const savedId = localStorage.getItem('topElementId-' + '{UUID}');
   if (savedId) {{
     const element = document.getElementById(savedId);
     if (element) {{
       element.scrollIntoView();
-      // Fade in content after the element has been scrolled into view
-      setTimeout(fadeInContent, 100); // Adjust if needed for layout stability
-    }} else {{
-      // If saved element is not found, just fade in the content
+      setTimeout(fadeInContent, 100);
       fadeInContent();
-    }}
-  }} else {{
-    // If there is no saved element, just fade in the content
-    fadeInContent();
   }}
   
-  // Save the id of the element that is at the top of the viewport
   window.addEventListener('scroll', function() {{
     let elementsAtTop = [...document.elementsFromPoint(window.innerWidth / 2, 0)];
     let topVisibleElement = elementsAtTop.find(el => el.id && isInViewport(el));
