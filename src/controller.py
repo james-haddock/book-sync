@@ -101,7 +101,7 @@ def book(UUID):
         save_book_session = save_book_session_js(UUID)
         amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head>')
 
-        return render_template_string(amended_html)
+        return render_template('templates/reader_nav.html', amended_html=amended_html, book_title=book_data['DBBook'].title)
 
 
     
