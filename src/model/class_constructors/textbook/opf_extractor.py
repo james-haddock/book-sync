@@ -1,16 +1,37 @@
+import logging
+
+logging.basicConfig(level=logging.ERROR,
+                    format='[%(asctime)s] %(levelname)s: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
+
 class OpfExtractor:
     def __init__(self, root):
         self.root = root
         self.opf_namespace = '{http://www.idpf.org/2007/opf}'
 
     def get_spine(self):
-        spine = [item.attrib['idref'] for item in self.root.findall(f'{self.opf_namespace}spine/{self.opf_namespace}itemref')]
-        return spine
-    
+        try:
+            spine = [item.attrib['idref'] for item in self.root.findall(f'{self.opf_namespace}spine/{self.opf_namespace}itemref')]
+            return spine
+        except AttributeError:
+            logger.error(f"Error: Could not extract 'idref' attribute in XML.")
+            return []
+        except Exception as e:
+            logger.error(f"Unexpected error while fetching spine from XML: {e}")
+            return []
+
     def get_href(self, spine):
-        href = []
-        for idref in spine:
-            for element in self.root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
-                if element.attrib['id'] == idref:
-                    href.append(element.attrib["href"])
-        return href
+        try:
+            href = []
+            for idref in spine:
+                for element in self.root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                    if 'id' in element.attrib and element.attrib['id'] == idref:
+                        href.append(element.attrib.get("href", ""))
+            return href
+        except AttributeError:
+            logger.error(f"Error: Could not find the expected attributes in XML.")
+            return []
+        except Exception as e:
+            logger.error(f"Unexpected error while fetching href from XML: {e}")
+            return []

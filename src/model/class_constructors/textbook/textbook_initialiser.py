@@ -6,6 +6,12 @@ from ..class_book import Book
 from .html_consolidation_manager import HtmlConsolidationManager
 from ...volumes.s3_crud import s3_crud
 from decouple import config
+import logging
+
+logging.basicConfig(level=logging.ERROR,
+                    format='[%(asctime)s] %(levelname)s: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 class TextbookInitialiser:
     def __init__(self, UUID):
@@ -35,6 +41,14 @@ class TextbookInitialiser:
            
     
     def get_opf_location(self):
-        opf_location = self.container_root.find(f'{self.container_namespace}rootfiles/{self.container_namespace}rootfile').attrib['full-path']
-        return opf_location
-    
+        try:
+            opf_location = self.container_root.find(f'{self.container_namespace}rootfiles/{self.container_namespace}rootfile').attrib['full-path']
+            return opf_location
+        except AttributeError:
+            logger.error(f"Error: Could not find the attribute 'full-path' in XML.")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error while fetching OPF location: {e}")
+            return None
+
+        
