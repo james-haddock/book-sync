@@ -100,7 +100,6 @@ def book(UUID):
         
         scroll_and_fade_script = f"""
 <script>
-// Hide content initially
 document.documentElement.style.opacity = 0;
 
 function fadeInContent() {{
