@@ -85,6 +85,7 @@ def get_s3_object_content(aws_bucket, object_name, s3):
         print(f"Error fetching S3 object {object_name}: {e}")
         return None
 
+
 @app.route('/book/<UUID>')
 def book(UUID):
     with DatabaseManager() as session:
@@ -95,32 +96,63 @@ def book(UUID):
         if not html_content:
             return "Error fetching book content", 500
 
-        
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
         
-        return amended_html
-        
+        scroll_and_fade_script = f"""
+<script>
+// Hide content initially
+document.documentElement.style.opacity = 0;
 
+function fadeInContent() {{
+  document.documentElement.style.transition = 'opacity 0.5s';
+  document.documentElement.style.opacity = 1;
+}}
 
+document.addEventListener('DOMContentLoaded', function() {{
+  // Restore scroll position or fallback to default behavior
+  const savedId = localStorage.getItem('topElementId-' + '{UUID}');
+  if (savedId) {{
+    const element = document.getElementById(savedId);
+    if (element) {{
+      element.scrollIntoView();
+      // Fade in content after the element has been scrolled into view
+      setTimeout(fadeInContent, 100); // Adjust if needed for layout stability
+    }} else {{
+      // If saved element is not found, just fade in the content
+      fadeInContent();
+    }}
+  }} else {{
+    // If there is no saved element, just fade in the content
+    fadeInContent();
+  }}
+  
+  // Save the id of the element that is at the top of the viewport
+  window.addEventListener('scroll', function() {{
+    let elementsAtTop = [...document.elementsFromPoint(window.innerWidth / 2, 0)];
+    let topVisibleElement = elementsAtTop.find(el => el.id && isInViewport(el));
+    if (topVisibleElement) {{
+      localStorage.setItem('topElementId-' + '{UUID}', topVisibleElement.id);
+    }}
+  }});
+  
+  function isInViewport(element) {{
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.bottom >= 0 &&
+      rect.right >= 0 &&
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }}
+}});
+</script>
+        """
+        amended_html = amended_html.replace('</head>', scroll_and_fade_script + '</head>')
 
-# @app.route('/get_content', methods=['GET'])
-# def get_content():
-#     with DatabaseManager() as session:
-        
-#         action = request.args.get('action')
-#         UUID = request.args.get('UUID') 
-#         if action == 'load':
-#             book_data = crud_book.get_book_with_details(session, UUID)
-#             textbook = book_data['DBTextbook']
-#             book_content = textbook.book_content
-#             with open(book_content, 'r') as file:
-#                 content = file.read()
-#             return jsonify({"content": content})
-         
-
-
-
-
+        return render_template_string(amended_html)
+    
+    
+    
 @app.route("/library", methods=['GET'])
 def library():
     with DatabaseManager() as session:
