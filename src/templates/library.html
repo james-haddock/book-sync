@@ -4,13 +4,13 @@
 
 <style>
   .fade-in {
-    opacity: 0; /* Start invisible but still take up space */
+    opacity: 0;
     transition: opacity 0.5s ease-in-out;
-    display: block; /* Ensure this matches your layout, e.g., flex, inline-block, etc. */
+    display: block;
   }
 
   .loaded {
-    opacity: 1; /* Fade in to fully visible */
+    opacity: 1;
   }
 </style>
 
@@ -19,10 +19,8 @@
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% if books %}
         {% for book in books %}
-        <!-- Apply the fade-in class to the outer div -->
         <div class="bg-white shadow-md p-4 fade-in">
             <a href="{{ url_for('book', UUID=book.DBBook.UUID) }}">
-                <!-- Add an onload event to each image to trigger the fade-in -->
                 <img src="{{ book.DBTextbook.cover }}" alt="" class="w-full mb-4" onload="imageLoaded(this)">
             </a>
             <h2 class="text-xl font-semibold">{{ book.DBBook.title }}</h2>
@@ -42,14 +40,12 @@ function imageLoaded(imgElement) {
     return;
   }
 
-  // Check if all images within the div have loaded
   var images = parentDiv.getElementsByTagName('img');
   for (var i = 0; i < images.length; i++) {
     if (!images[i].complete || images[i].naturalHeight === 0) {
-      return; // If any image is not loaded, exit the function
+      return;
     }
   }
-  // If all images are loaded, add the 'loaded' class
   parentDiv.classList.add('loaded');
 }
 </script>

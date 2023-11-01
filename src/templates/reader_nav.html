@@ -1,30 +1,92 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Your Book Title</title>
+  <title>{{ book_title }}</title>
   <link href="{{ url_for('static', filename='static/css/main.css') }}" rel="stylesheet">
+  <style>
+    #navButtons {
+      transition: opacity 1s ease-in-out;
+      opacity: 0; /* Start with the nav bar hidden */
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      backdrop-filter: backdrop-blur-md;
+      background-color: rgba(255, 255, 255, 0.9); /* Adjust background opacity */
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: center; /* Center the button horizontally */
+      align-items: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    #navTrigger {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px; /* Height of the transparent area for triggering the nav */
+      z-index: 49; /* Below the nav bar */
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    iframe {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+    #libraryButton {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-align: center;
+  </style>
 </head>
-
 <body style="overflow: hidden;">
 
+  <iframe srcdoc="{{ amended_html }}" title="book_content"></iframe>
 
-  <div id="navButtons"
-    style="position: fixed; bottom: 0; left: 0; width: 100%; backdrop-filter: backdrop-blur-md; background-color: rgba(255, 255, 255, 0.3); box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; padding: 16px; z-index: 50; transition: opacity 1s; opacity: 1;">
-    <button id="prevButton"
-      style="background-color: #f0f0f0; padding: 8px 16px; border-radius: 4px; font-size: 14px;">Previous</button>
-    <a href='{{ url_for("library") }}'><button
-        style="font-size: 14px; font-weight: bold; padding: 8px 16px; border-radius: 4px;">Return to
-        Library</button></a>
-    <button id="nextButton"
-      style="background-color: #f0f0f0; padding: 8px 16px; border-radius: 4px; font-size: 14px;">Next</button>
+  <div id="navTrigger"></div> 
+  <div id="navButtons">
+    <a href='{{ url_for("library") }}'>
+      <button id="libraryButton">Return to Library</button>
+    </a>
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var nav = document.getElementById('navButtons');
+      var navTrigger = document.getElementById('navTrigger'); 
+      var fadeOutTime = 5000;
+
+
+      function fadeOutNav() {
+        nav.style.opacity = '0';
+        setTimeout(() => { nav.style.display = 'none'; }, 1000);
+      }
+
+      function fadeInNav() {
+        nav.style.display = 'flex'; 
+        nav.style.opacity = '1';
+      }
+
+      setTimeout(fadeInNav, 100); 
+      var fadeOutDelay = setTimeout(fadeOutNav, fadeOutTime); 
+
+      navTrigger.addEventListener('mouseenter', fadeInNav);
+
+      nav.addEventListener('mouseleave', function() {
+        clearTimeout(fadeOutDelay);
+        fadeOutDelay = setTimeout(fadeOutNav, fadeOutTime);
+      });
+    });
   </script>
-
 </body>
-
 </html>
