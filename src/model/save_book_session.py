@@ -1,8 +1,10 @@
 def save_book_session_js(UUID):
     return f"""
 var bookUUID = "{UUID}";
-document.documentElement.style.opacity = 0; // Hide content until ready
-document.addEventListener('DOMContentLoaded', function() {{
+document.documentElement.style.opacity = 0; // Initially hide content
+window.onload = function() {{
+  // All assets are now fully loaded, including images.
+
   // Select all significant content elements
   const contentElements = document.querySelectorAll(
     'p, h1, h2, h3, h4, h5, h6, li, span, strong, div, img, ' +
@@ -35,11 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {{
 
   window.addEventListener('scroll', saveTopElement, {{ passive: true }});
   window.addEventListener('resize', saveTopElement, {{ passive: true }});
-  restoreScrollPosition();
 
-  setTimeout(() => {{
-    document.documentElement.style.transition = 'opacity 0.5s';
-    document.documentElement.style.opacity = 1;
-  }}, 100);
-}});
+  restoreScrollPosition(); // Call this immediately to restore position
+
+  // Now that everything is loaded, we can fade in the content
+  document.documentElement.style.transition = 'opacity 0.5s';
+  document.documentElement.style.opacity = 1;
+}};
 """
