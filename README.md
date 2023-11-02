@@ -26,9 +26,11 @@ git clone https://github.com/yourusername/epub-reader-flask.git
 
 2. Navigate to the project directory:
 cd abreader
+```
 
-## Usage
+## Installation Usage
 
+```zsh
 3. Define environment variables (.env):
 
 FLASK_SECRET_KEY=
@@ -46,12 +48,12 @@ DO_REGION=
 DO_ENDPOINT_URL=
 DO_BUCKET_NAME=
 
-To create app cluster and start the application, run:
+4. To create app cluster and start the application, run:
 
 docker-compose up --build
 
-Then, navigate to `http://127.0.0.1/` in your web browser to use the application.
-
+5. Then, navigate to `http://127.0.0.1/` in your web browser to use the application.
+```
 ## License
 
 This project is licensed under the GNU Affero General Public License - see the LICENSE.md file for details.
