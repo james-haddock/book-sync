@@ -40,7 +40,7 @@ aws_bucket=config('DO_BUCKET_NAME')
 
 class Config:
     DEBUG = config("DEBUG")
-    SECRET_KEY = config("SECRET_KEY")
+    SECRET_KEY = config("FLASK_SECRET_KEY")
     DATABASE_URL = config("DATABASE_URL")
     API_KEY = config("API_KEY")
 
