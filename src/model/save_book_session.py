@@ -1,6 +1,7 @@
 def save_book_session_js(UUID):
     return f"""
 var bookUUID = "{UUID}";
+
 document.documentElement.style.opacity = 0;
 window.onload = function() {{
 
