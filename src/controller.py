@@ -99,7 +99,7 @@ def book(UUID):
 
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
         save_book_session = save_book_session_js(UUID)
-        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head>')
+        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}</style>')
 
         return render_template('templates/reader_nav.html', amended_html=amended_html, book_title=book_data['DBBook'].title)
 
