@@ -21,11 +21,16 @@
       align-items: center;
       padding: 16px;
       z-index: 50;
+      
     }
     #libraryButtonContainer {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
+      
+    }
+    #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
+      color: #666;
     }
     #zoomControls {
         display: flex;
@@ -62,6 +67,20 @@
       padding: 8px 16px;
       border-radius: 4px;
       text-align: center;}
+      @media (prefers-color-scheme: dark) {
+        #navButtons {
+          background-color: rgba(50, 50, 50, 0.9); 
+          color: white; 
+        }
+        #libraryButton, #resetTextButton, #decreaseTextButton, #increaseTextButton {
+          background-color: rgba(50, 50, 50, 0);
+          color: white; 
+          border: none;
+        }
+        #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
+          color: #444;
+        }
+      }
   </style>
 </head>
 <body style="overflow: hidden;">

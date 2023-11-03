@@ -22,6 +22,7 @@ from model.volumes.s3_crud import s3_crud
 import copy
 from model.change_urls_to_presigned import change_urls_to_presigned
 from model.save_book_session import save_book_session_js
+from model.iframe_styles import get_iframe_styles
 
 change_urls_to_presigned = change_urls_to_presigned()
 
@@ -112,17 +113,8 @@ def content(UUID):
 
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
         save_book_session = save_book_session_js(UUID)
-        amended_html = amended_html.replace('</head>', f'''<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}
-
-img {{
-    opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}}
-
-img.loaded {{
-  opacity: 1;
-}}
-</style>''')
+        iframe_styles = get_iframe_styles()
+        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>{iframe_styles}</style>')
         return render_template_string(amended_html)
     
     
