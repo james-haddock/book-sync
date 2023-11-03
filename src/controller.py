@@ -96,10 +96,6 @@ def book(UUID):
         html_content = get_s3_object_content(aws_bucket, textbook.book_content, s3)
         if not html_content:
             return "Error fetching book content", 500
-
-        amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
-        save_book_session = save_book_session_js(UUID)
-        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}</style>')
     
         return render_template('templates/reader_nav.html', book_title=book_data['DBBook'].title, UUID=UUID)
 
@@ -116,7 +112,17 @@ def content(UUID):
 
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
         save_book_session = save_book_session_js(UUID)
-        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}</style>')
+        amended_html = amended_html.replace('</head>', f'''<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}
+
+img {{
+    opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}}
+
+img.loaded {{
+  opacity: 1;
+}}
+</style>''')
         return render_template_string(amended_html)
     
     
