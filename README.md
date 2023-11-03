@@ -31,7 +31,7 @@ git clone https://github.com/yourusername/epub-reader-flask.git
 cd abreader
 ```
 
-## Installation Usage
+## Usage
 
 ```zsh
 3. Define environment variables (.env):
