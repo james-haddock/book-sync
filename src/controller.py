@@ -100,11 +100,24 @@ def book(UUID):
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
         save_book_session = save_book_session_js(UUID)
         amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}</style>')
-
-        return render_template('templates/reader_nav.html', amended_html=amended_html, book_title=book_data['DBBook'].title)
-
-
     
+        return render_template('templates/reader_nav.html', book_title=book_data['DBBook'].title, UUID=UUID)
+
+
+@app.route('/content/<UUID>')
+def content(UUID):
+    with DatabaseManager() as session:
+        book_data = crud_book.get_book_with_details(session, UUID)
+        textbook = book_data['DBTextbook']
+
+        html_content = get_s3_object_content(aws_bucket, textbook.book_content, s3)
+        if not html_content:
+            return "Error fetching book content", 500
+
+        amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
+        save_book_session = save_book_session_js(UUID)
+        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>body{{overflow-x:hidden;}}</style>')
+        return render_template_string(amended_html)
     
     
 @app.route("/library", methods=['GET'])
