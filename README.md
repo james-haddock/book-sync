@@ -11,6 +11,9 @@ An EPUB book reader web application that allows users to upload and read EPUB fi
 - In-browser reading experience
 - Automatic bookmarking functionality
 - Book library
+- Text scaling for accessibility
+- Dynamically reflows content based on viewport size
+- Dark mode based on user system settings
 
 ## Prerequisites
 
