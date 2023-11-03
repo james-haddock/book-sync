@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class HtmlConsolidator:
     def adjust_path(self, original_file_path, output_path, link_path):
         try:
-            if "://" in link_path or link_path.startswith("/"):
+            if "://" in link_path:
                 return link_path
 
             original_dir = os.path.dirname(original_file_path)

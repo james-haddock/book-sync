@@ -65,7 +65,7 @@
   </style>
 </head>
 <body style="overflow: hidden;">
-  <iframe srcdoc="{{ amended_html }}" title="book_content" id='iframe'></iframe>
+  <iframe src="{{ url_for('content', UUID=UUID) }}" title="book_content" id='iframe'></iframe>
   <div id="navTrigger"></div> 
   <div id="navButtons">
     <a href='{{ url_for("library") }}' id="libraryButtonContainer">
@@ -86,6 +86,7 @@
       var navVisible = false;
       var iframe = document.getElementById('iframe');
       var defaultFontSize;
+
     
       function fadeOutNav() {
         if (navVisible) {
@@ -159,3 +160,4 @@
   </script>
 </body>
 </html>
+
