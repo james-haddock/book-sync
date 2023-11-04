@@ -5,6 +5,7 @@ class change_urls_to_presigned:
     def change_html_links(self, html_content, UUID, aws_bucket, s3):
         soup = BeautifulSoup(html_content, 'html.parser')
         base_s3_directory = f"book/{UUID}/"
+        stylesheets = []
         
         if soup.find('doctype') is None:
             soup.insert(0, Doctype('html'))

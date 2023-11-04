@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>{{ book_title }}</title>
-  <link href="{{ url_for('static', filename='static/css/main.css') }}" rel="stylesheet">
+
   <style>
     #navButtons {
       transition: opacity 1s ease-in-out;
@@ -29,12 +29,22 @@
       transform: translateX(-50%);
       
     }
-    #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
-      color: #666;
+    #libraryButton, #resetTextButton, #decreaseTextButton, #increaseTextButton {
+      background: none; 
+      border: none;     
+      padding: 0;       
+      font-size: inherit; 
+      cursor: pointer;   
     }
+    
+    #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
+      color: #666;     
+    }
+    
     #zoomControls {
         display: flex;
         gap: 10px; 
+        padding-right: 25px;
         margin-left: auto;
       }
       #increaseTextButton, #decreaseTextButton {
@@ -51,40 +61,66 @@
       height: 50px; 
       z-index: 49;
     }
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    iframe {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
     #libraryButton {
       font-size: 14px;
       font-weight: bold;
       padding: 8px 16px;
       border-radius: 4px;
       text-align: center;}
-      @media (prefers-color-scheme: dark) {
-        #navButtons {
-          background-color: rgba(50, 50, 50, 0.9); 
-          color: white; 
-        }
-        #libraryButton, #resetTextButton, #decreaseTextButton, #increaseTextButton {
-          background-color: rgba(50, 50, 50, 0);
-          color: white; 
-          border: none;
-        }
-        #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
-          color: #444;
-        }
+@media (prefers-color-scheme: dark) {
+    html, body, p, h1, h2, h3, h4, h5, h6, a, span, pre, blockquote, ul, ol, li, table, tr, th, td, input, textarea, button, select, label {
+        color: #ffffff; 
+        background-color: #000000; 
+        
+    }
+
+    a {
+        color: #bb86fc;
+    }
+    svg text {
+        fill: #ffffff;
+    }
+
+    input, textarea, button, select {
+        background-color: #333;
+        border: 1px solid #555;
+        color: #ddd;
+    }
+
+    table {
+        border-color: #555;
+    }
+    th, td {
+        border-color: #555;
+    }
+    
+    }
+    img {
+        opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    }
+
+    img.loaded {
+    opacity: 1;
+    }
+    @media (prefers-color-scheme: dark) {
+      #navButtons {
+        background-color: rgba(50, 50, 50, 0.9); 
+        color: white; 
       }
+      #libraryButton, #resetTextButton, #decreaseTextButton, #increaseTextButton {
+        background-color: rgba(50, 50, 50, 0.9);
+        color: white; 
+        border: none;
+      }
+      #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
+        color: #444;
+      }
+    }
   </style>
 </head>
-<body style="overflow: hidden;">
-  <iframe src="{{ url_for('content', UUID=UUID) }}" title="book_content" id='iframe'></iframe>
+<body>
+  <div id='book_content'></div>
   <div id="navTrigger"></div> 
   <div id="navButtons">
     <a href='{{ url_for("library") }}' id="libraryButtonContainer">
@@ -103,10 +139,45 @@
       var navTrigger = document.getElementById('navTrigger');
       var fadeOutTime = 5000;
       var navVisible = false;
-      var iframe = document.getElementById('iframe');
+      var book = document.getElementById('book_content');
       var defaultFontSize;
 
+      fetch('/content/' + '{{ UUID }}') 
+      .then(response => response.text())
+      .then(html => {
+          var tempContainer = document.createElement('div');
+          tempContainer.innerHTML = html;
     
+          var stylesheets = tempContainer.querySelectorAll('link[rel="stylesheet"]');
+    
+          var head = document.head;
+          var firstChild = head.firstChild;
+          stylesheets.forEach(function(sheet) {
+              head.insertBefore(sheet, firstChild);
+          });
+    
+          var bookContent = document.getElementById('book_content');
+          bookContent.innerHTML = tempContainer.innerHTML; 
+    
+          var images = bookContent.getElementsByTagName('img');
+          for (var i = 0; i < images.length; i++) {
+              if (images[i].complete) {
+                  images[i].classList.add('loaded');
+              } else {
+                  images[i].onload = function() {
+                      this.classList.add('loaded');
+                  };
+              }
+          }
+      })
+      .catch(error => console.error('Error loading content:', error));
+    
+    
+
+
+      var bookContent = document.getElementById('book_content');
+      var defaultFontSize = 16;
+
       function fadeOutNav() {
         if (navVisible) {
           nav.style.opacity = '0';
@@ -148,34 +219,31 @@
       setTimeout(fadeInNav, 100);
       resetInactivityTimeout();
     
-      iframe.addEventListener('load', function() {
-        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        defaultFontSize = parseInt(getComputedStyle(iframeDoc.body).fontSize);
-    
-        function changeIframeTextSize(delta) {
-          var currentSize = parseInt(iframeDoc.body.style.fontSize) || defaultFontSize;
-          if (delta === 'reset') {
-            iframeDoc.body.style.fontSize = defaultFontSize + 'px';
-          } else {
-            iframeDoc.body.style.fontSize = (currentSize + delta) + 'px';
-          }
-          resetInactivityTimeout();
+
+
+      function changeBookTextSize(delta) {
+        var currentSize = parseInt(window.getComputedStyle(bookContent, null).getPropertyValue('font-size'));
+        if (delta === 'reset') {
+          bookContent.style.fontSize = defaultFontSize + 'px';
+        } else {
+          bookContent.style.fontSize = (currentSize + delta) + 'px';
         }
-    
-        document.getElementById('increaseTextButton').addEventListener('click', function() {
-          changeIframeTextSize(1);
-        });
-    
-        document.getElementById('decreaseTextButton').addEventListener('click', function() {
-          changeIframeTextSize(-1);
-        });
-    
-        document.getElementById('resetTextButton').addEventListener('click', function() {
-          changeIframeTextSize('reset');
-        });
+      }
+
+      document.getElementById('increaseTextButton').addEventListener('click', function() {
+        changeBookTextSize(1);
       });
-    });
-    
+
+      document.getElementById('decreaseTextButton').addEventListener('click', function() {
+        changeBookTextSize(-1);
+      });
+
+      document.getElementById('resetTextButton').addEventListener('click', function() {
+        changeBookTextSize('reset');
+      });
+      });
+    {{ save_book_session_js }}
+  
   </script>
 </body>
 </html>
