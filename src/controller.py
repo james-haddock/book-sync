@@ -76,7 +76,7 @@ def login():
 def registration_form():
     if request.method == 'GET':
         return render_template('/templates/register.html')
-#     if request.method == 'POST':
+
     
 
 def get_s3_object_content(aws_bucket, object_name, s3):
@@ -97,8 +97,8 @@ def book(UUID):
         html_content = get_s3_object_content(aws_bucket, textbook.book_content, s3)
         if not html_content:
             return "Error fetching book content", 500
-    
-        return render_template('templates/reader_nav.html', book_title=book_data['DBBook'].title, UUID=UUID)
+        save_book_session = save_book_session_js(UUID)
+        return render_template('templates/reader_nav.html', book_title=book_data['DBBook'].title, UUID=UUID, save_book_session=save_book_session)
 
 
 @app.route('/content/<UUID>')
@@ -112,9 +112,6 @@ def content(UUID):
             return "Error fetching book content", 500
 
         amended_html = change_urls_to_presigned.change_html_links(html_content, UUID, aws_bucket, s3)
-        save_book_session = save_book_session_js(UUID)
-        iframe_styles = get_iframe_styles()
-        amended_html = amended_html.replace('</head>', f'<script>{save_book_session}</script></head><style>{iframe_styles}</style>')
         return render_template_string(amended_html)
     
     

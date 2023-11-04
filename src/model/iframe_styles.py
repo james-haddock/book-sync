@@ -22,16 +22,16 @@ def get_iframe_styles():
 
     table {
         border-color: #555;
-    }}
+    }
     th, td {
         border-color: #555;
-    }}
+    }
     
-    }}
+    }
     img {
         opacity: 0;
     transition: opacity 0.5s ease-in-out;
-    }}
+    }
 
     img.loaded {
     opacity: 1;
