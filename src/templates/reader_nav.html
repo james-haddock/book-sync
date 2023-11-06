@@ -7,6 +7,7 @@
 
   <style>
     #navButtons {
+      backdrop-filter: blur(4px);
       transition: opacity 1s ease-in-out;
       opacity: 0;
       position: fixed;
@@ -54,6 +55,7 @@
         cursor: pointer;
       }
     #navTrigger {
+      background: none; 
       position: fixed;
       bottom: 0;
       left: 0;
@@ -67,33 +69,45 @@
       padding: 8px 16px;
       border-radius: 4px;
       text-align: center;}
-@media (prefers-color-scheme: dark) {
-    html, body, p, h1, h2, h3, h4, h5, h6, a, span, pre, blockquote, ul, ol, li, table, tr, th, td, input, textarea, button, select, label {
-        color: #ffffff; 
-        background-color: #000000; 
-        
-    }
 
-    a {
-        color: #bb86fc;
+      :root {
+        --text-color: #000;
+        --background-color: #fff;
+      }
+      @media  {
+        :root {
+          --text-color: #fff;
+          --background-color: #000;
+        }
+      }
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: var(--background-color) !important;
+  }
+    * {
+      color: var(--text-color) !important;
+      background-color: var(--background-color) !important;
+    }
+   a {
+        color: #bb86fc !important;
     }
     svg text {
-        fill: #ffffff;
+        fill: #ffffff !important;
     }
 
-    input, textarea, button, select {
-        background-color: #333;
-        border: 1px solid #555;
-        color: #ddd;
+     input, textarea, button, select {
+        background-color: #333 !important;
+        border: 1px solid #555!important;
+        color: #ddd !important;
     }
 
     table {
-        border-color: #555;
+        border-color: #555 !important;
     }
-    th, td {
-        border-color: #555;
+ th, td {
+        border-color: #555 !important;
     }
-    
     }
     img {
         opacity: 0;
@@ -104,23 +118,27 @@
     opacity: 1;
     }
     @media (prefers-color-scheme: dark) {
-      #navButtons {
-        background-color: rgba(50, 50, 50, 0.9); 
-        color: white; 
+      #navTrigger {
+        opacity: 0;
+        background-color:none !important;
       }
-      #libraryButton, #resetTextButton, #decreaseTextButton, #increaseTextButton {
-        background-color: rgba(50, 50, 50, 0.9);
-        color: white; 
-        border: none;
+      #navButtons {
+        background-color: rgba(50, 50, 50, 0.9) !important;
+        color: white !important; 
+      }
+      #libraryButtonContainer, #libraryButtonContainer *, #zoomControls, #zoomControls * {
+        background: none !important; 
+        color: white !important; 
+        border: none !important;
       }
       #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
-        color: #444;
+        color: #bbb !important;
       }
     }
   </style>
 </head>
 <body>
-  <div id='book_content'></div>
+  <main class='book_content'><div id='book_content'></div></main>
   <div id="navTrigger"></div> 
   <div id="navButtons">
     <a href='{{ url_for("library") }}' id="libraryButtonContainer">
@@ -131,10 +149,13 @@
       <button id="decreaseTextButton">-</button>
       <button id="increaseTextButton">+</button>
     </div>
+
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+    
       var nav = document.getElementById('navButtons');
       var navTrigger = document.getElementById('navTrigger');
       var fadeOutTime = 5000;
