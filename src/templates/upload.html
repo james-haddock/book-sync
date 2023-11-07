@@ -2,6 +2,78 @@
 
 {% block content %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      function validateForm() {
+        var fileInput = document.getElementById('dropzone-file');
+        var flashMessage = document.getElementById('flash-message');
+    
+        function showMessage(message) {
+          flashMessage.textContent = message;
+          flashMessage.classList.remove('flash-message-hidden', 'fade-out'); 
+          flashMessage.offsetWidth; 
+          flashMessage.classList.add('fade-in'); 
+    
+          setTimeout(() => {
+            flashMessage.classList.remove('fade-in');
+            flashMessage.classList.add('fade-out'); 
+            setTimeout(() => {
+              flashMessage.classList.add('flash-message-hidden');
+            }, 500); 
+          }, 5000);
+        }
+    
+        if (!fileInput.value || fileInput.files.length === 0) {
+          showMessage("Please select a valid epub file.");
+          return false;
+        }
+    
+        var allowedExtensions = /\.epub$/i;
+        if (!allowedExtensions.exec(fileInput.value)) {
+          showMessage('Please upload file with an .epub extension.');
+          fileInput.value = '';
+          return false;
+        }
+        
+        return true;
+      }
+    
+      var form = document.querySelector('form[name="myForm"]');
+      form.onsubmit = validateForm;
+    });
+    </script>
+    
+
+  
+  
+  
+
+    <style>
+        .flash-message-hidden {
+          display: none;
+        }
+        
+        .flash-message {
+          opacity: 0; 
+          transition: opacity 0.2s ease-in; 
+        }
+        
+        .flash-message.fade-in {
+          opacity: 1;
+        }
+        
+        .flash-message.fade-out {
+          opacity: 0; 
+          transition: opacity 0.5s ease-out;
+        }
+        </style>
+        
+
+    
+
+      
+      
+  
     <div class="bg-white py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto max-w-4xl sm:text-center">
@@ -11,7 +83,8 @@
             <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-center">Upload your own ebook and make it accessible from anywhere.</p>
             <div class="mt-20">
                 <div class="mx-auto max-w-2xl">
-                    <form action="{{url_for('upload')}}" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <form name='myForm' action="{{url_for('upload')}}" onsubmit="return validateForm()" method="post" enctype="multipart/form-data" class="space-y-6">
+
 
                         <div class="flex items-center justify-center w-full">
                             <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 hover:bg-gray-100 dark:border-gray-600">
@@ -20,7 +93,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500">Supported formats: epub, pdf, mobi.</p>
+                                    <p class="text-xs text-gray-500">Supported format: epub.</p>
                                 </div>
                                 <input id="dropzone-file" type="file" name="file" class="hidden" />
                             </label>
@@ -29,8 +102,11 @@
                         <div class="sm:text-center">
                             <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-md shadow-lg hover:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">Upload Ebook</button>
                         </div>
+                        <div id="flash-message" class="flash-message-hidden max-w-md mx-auto p-4 border shadow-md bg-red-200 rounded mt-4 flash-message"></div>
+
+                    </div>
                     </form>
-                </div>
+
             </div>
         </div>
     </div>
