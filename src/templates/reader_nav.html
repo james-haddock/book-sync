@@ -6,6 +6,52 @@
   <title>{{ book_title }}</title>
 
   <style>
+    .container {
+      display: none; 
+      position: fixed; 
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(#CECECE, #fff); 
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; 
+    }
+    .loader {
+      width: 100px; 
+      height: 100px;
+      border-radius: 100%;
+      background: linear-gradient(165deg, rgba(255,255,255,1) 0%, rgb(220, 220, 220) 40%, rgb(170, 170, 170) 98%, rgb(10, 10, 10) 100%);
+      position: relative;
+    }
+    .loader:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 100%;
+      border-bottom: 0 solid transparent;
+      box-shadow: 
+        0 -10px 20px 20px #ffffff40 inset,
+        0 -5px 15px 10px #ffffff50 inset,
+        0 -2px 5px #ffffff80 inset,
+        0 -3px 2px #ffffffBB inset,
+        0 2px 0px #ffffff,
+        0 2px 3px #ffffff,
+        0 5px 5px #ffffff90,
+        0 10px 15px #ffffff60,
+        0 10px 20px 20px #ffffff40;
+      filter: blur(3px);
+      animation: rotate 2s linear infinite;
+    }
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
     #navButtons {
       backdrop-filter: blur(4px);
       transition: opacity 1s ease-in-out;
@@ -60,7 +106,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 50px; 
+      height: 75px; 
       z-index: 49;
     }
     #libraryButton {
@@ -135,10 +181,21 @@
         color: #bbb !important;
       }
     }
+    @media (hover: none) and (pointer: coarse) {
+      #libraryButton:hover,
+      #resetTextButton:hover,
+      #decreaseTextButton:hover,
+      #increaseTextButton:hover {
+        color: inherit;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class='book_content'><div id='book_content'></div></main>
+  <div class="container">
+    <div class="loader"></div>
+  </div>
+  <main><div id='book_content'></div></main>
   <div id="navTrigger"></div> 
   <div id="navButtons">
     <a href='{{ url_for("library") }}' id="libraryButtonContainer">
@@ -154,14 +211,48 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-
     
+      var loaderContainer = document.querySelector('.container');
+      loaderContainer.style.display = 'flex';
       var nav = document.getElementById('navButtons');
       var navTrigger = document.getElementById('navTrigger');
       var fadeOutTime = 5000;
       var navVisible = false;
       var book = document.getElementById('book_content');
       var defaultFontSize;
+      
+      function saveTopElement() {
+        const contentElements = document.querySelectorAll(
+          'p, h1, h2, h3, h4, h5, h6, li, span, strong, div, img, ' +
+          'a, table, tr, th, td, ul, ol, blockquote, figure, figcaption, ' +
+          'section, article, aside, header, footer, nav, time, mark, ' +
+          'code, pre, q, cite, *[id]'
+        );
+        let topElementIndex = 0;
+        let highestTop = -Infinity;
+        contentElements.forEach((element, index) => {
+          const rect = element.getBoundingClientRect();
+          if (rect.top < 0 && rect.top > highestTop) {
+            highestTop = rect.top;
+            topElementIndex = index;
+          }
+        });
+        localStorage.setItem('topElementIndex-' + '{{ UUID }}', topElementIndex.toString());
+      }
+    
+      function restoreScrollPosition() {
+        const topElementIndex = parseInt(localStorage.getItem('topElementIndex-' + '{{ UUID }}'), 10);
+        const contentElements = document.querySelectorAll(
+          'p, h1, h2, h3, h4, h5, h6, li, span, strong, div, img, ' +
+          'a, table, tr, th, td, ul, ol, blockquote, figure, figcaption, ' +
+          'section, article, aside, header, footer, nav, time, mark, ' +
+          'code, pre, q, cite, *[id]'
+        );
+        if (!isNaN(topElementIndex) && contentElements[topElementIndex]) {
+          contentElements[topElementIndex].scrollIntoView({ block: 'start' });
+        }
+      }
+    
 
       fetch('/content/' + '{{ UUID }}') 
       .then(response => response.text())
@@ -179,7 +270,7 @@
     
           var bookContent = document.getElementById('book_content');
           bookContent.innerHTML = tempContainer.innerHTML; 
-    
+          
           var images = bookContent.getElementsByTagName('img');
           for (var i = 0; i < images.length; i++) {
               if (images[i].complete) {
@@ -189,12 +280,21 @@
                       this.classList.add('loaded');
                   };
               }
-          }
+          }      book.classList.remove('loading');
+          restoreScrollPosition();
+          loaderContainer.style.display = 'none';
       })
-      .catch(error => console.error('Error loading content:', error));
     
+      .catch(error => {
+        console.error('Error loading content:', error);
+        loaderContainer.style.display = 'none';
+    });
     
+    window.addEventListener('scroll', saveTopElement, { passive: true });
+    window.addEventListener('resize', saveTopElement, { passive: true });
 
+    document.documentElement.style.transition = 'opacity 0.5s';
+    document.documentElement.style.opacity = 1;
 
       var bookContent = document.getElementById('book_content');
       var defaultFontSize = 16;
@@ -253,17 +353,20 @@
 
       document.getElementById('increaseTextButton').addEventListener('click', function() {
         changeBookTextSize(1);
+        resetInactivityTimeout();
       });
 
       document.getElementById('decreaseTextButton').addEventListener('click', function() {
         changeBookTextSize(-1);
+        resetInactivityTimeout();
       });
 
       document.getElementById('resetTextButton').addEventListener('click', function() {
         changeBookTextSize('reset');
+        resetInactivityTimeout();
       });
       });
-    {{ save_book_session_js }}
+
   
   </script>
 </body>

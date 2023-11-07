@@ -1,23 +1,8 @@
 def save_book_session_js(UUID):
     return f"""
 var bookUUID = "{UUID}";
-document.addEventListener("DOMContentLoaded", function() {{
-  const images = document.querySelectorAll('img');
 
-  images.forEach(img => {{
-    if (img.complete && img.naturalHeight !== 0) {{
-      img.classList.add('loaded');
-    }} else {{
-      img.addEventListener('load', function() {{
-        img.classList.add('loaded');
-      }});
-      img.addEventListener('error', function() {{
-      }});
-    }}
-  }});
-}});
 
-document.documentElement.style.opacity = 0;
 window.onload = function() {{
 
   const contentElements = document.querySelectorAll(
