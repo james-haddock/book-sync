@@ -9,21 +9,20 @@ import re
 def test_adjust_path():
     hc = HtmlConsolidator()
 
-    assert hc.adjust_path("/book/path", "/book/path/output", "http://example.com/style.css") == "http://example.com/style.css"
+    assert hc.adjust_path("/book/path", "/book/path/output", "http://example.com/image.png") == "http://example.com/image.png"
 
-    assert hc.adjust_path("/book/path", "/book/path/output", "/absolute/path/style.css") == "/absolute/path/style.css"
+    assert hc.adjust_path("/book/path/file.html", "/book/path/output.html", "image.png") == "image.png"
 
-    assert hc.adjust_path("/book/path/file.html", "/book/path/output.html", "style.css") == "style.css"
+    assert hc.adjust_path("/book/path/file.html", "/book/path/output.html", "../sibling/image.png") == "../sibling/image.png"
 
-    assert hc.adjust_path("/book/path/file.html", "/book/path/output.html", "../sibling/style.css") == "../sibling/style.css"
+    assert hc.adjust_path("/book/path/file.html", "/book/path/output.html", "child/image.png") == "child/image.png"
 
-    assert hc.adjust_path("/book/path/file.html", "/book/path/output.html", "child/style.css") == "child/style.css"
+    assert hc.adjust_path("/book/path/deeper/file.html", "/book/path/output.html", "../../image.png") == "../image.png"
 
-    assert hc.adjust_path("/book/path/deeper/file.html", "/book/path/output.html", "../../style.css") == "../style.css"
+    assert hc.adjust_path("/book/another_path/file.html", "/book/path/output.html", "image.png") == "../another_path/image.png"
 
-    assert hc.adjust_path("/book/another_path/file.html", "/book/path/output.html", "style.css") == "../another_path/style.css"
+    assert hc.adjust_path("/book/file.html", "/book/path/output.html", "static/image.png") == "../static/image.png"
 
-    assert hc.adjust_path("/book/file.html", "/book/path/output.html", "static/style.css") == "../static/style.css"
     
     
 def test_generate_unique_id():
