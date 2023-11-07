@@ -23,24 +23,22 @@ class BookMetadataExtractor:
     def get_cover(self):
         cover_loc = None
         try:
-            version = self.opf_root.attrib.get('version')
-            if version == '3.0':
-                for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
-                    if element.attrib.get('id') == 'cover-image' or element.attrib.get('properties') == 'cover-image':
-                        cover_loc = element.attrib.get('href')
-            elif version == '2.0':
-                for element in self.opf_root.findall(f'{self.opf_namespace}metadata/{self.opf_namespace}meta'):
-                    if element.attrib.get('name') == 'cover':
-                        cover_id = element.attrib.get('content')
-                        for item in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
-                            if item.attrib.get('id') == cover_id:
-                                cover_loc = item.attrib.get('href')
+            for element in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                if element.attrib.get('id') == 'cover-image' or element.attrib.get('properties') == 'cover-image':
+                    cover_loc = element.attrib.get('href')
+                else:    
+                    for element in self.opf_root.findall(f'{self.opf_namespace}metadata/{self.opf_namespace}meta'):
+                        if element.attrib.get('name') == 'cover':
+                            cover_id = element.attrib.get('content')
+                            for item in self.opf_root.findall(f'{self.opf_namespace}manifest/{self.opf_namespace}item'):
+                                if item.attrib.get('id') == cover_id:
+                                    cover_loc = item.attrib.get('href')
             if cover_loc:
                 print('Cover retrieved')
                 return os.path.join(self.opf_folder_location, cover_loc)
             else:
-                logger.error("Error: Could not extract cover location from XML.")
-                return None
+                logger.error("Error: Could not extract cover location from XML. Using palceholder")
+                return 'static/Book-icon.png'
         except Exception as e:
             logger.error(f"Unexpected error while fetching cover from XML: {e}")
             return None

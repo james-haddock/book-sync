@@ -2,9 +2,6 @@ def save_book_session_js(UUID):
     return f"""
 var bookUUID = "{UUID}";
 
-
-window.onload = function() {{
-
   const contentElements = document.querySelectorAll(
     'p, h1, h2, h3, h4, h5, h6, li, span, strong, div, img, ' +
     'a, table, tr, th, td, ul, ol, blockquote, figure, figcaption, ' +
@@ -39,5 +36,4 @@ window.onload = function() {{
 
   document.documentElement.style.transition = 'opacity 0.5s';
   document.documentElement.style.opacity = 1;
-}};
 """
