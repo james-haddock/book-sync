@@ -4,23 +4,29 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+      var hideTimeout, fadeOutTimeout;
+    
       function validateForm() {
         var fileInput = document.getElementById('dropzone-file');
         var flashMessage = document.getElementById('flash-message');
     
         function showMessage(message) {
-          flashMessage.textContent = message;
-          flashMessage.classList.remove('flash-message-hidden', 'fade-out'); 
-          flashMessage.offsetWidth; 
-          flashMessage.classList.add('fade-in'); 
+          clearTimeout(hideTimeout);
+          clearTimeout(fadeOutTimeout);
     
-          setTimeout(() => {
+          flashMessage.textContent = message;
+          flashMessage.classList.remove('flash-message-hidden', 'fade-out');
+          flashMessage.offsetWidth;
+          flashMessage.classList.add('fade-in');
+    
+         
+          hideTimeout = setTimeout(() => {
             flashMessage.classList.remove('fade-in');
-            flashMessage.classList.add('fade-out'); 
-            setTimeout(() => {
+            flashMessage.classList.add('fade-out');
+            fadeOutTimeout = setTimeout(() => {
               flashMessage.classList.add('flash-message-hidden');
             }, 500); 
-          }, 5000);
+          }, 3200);
         }
     
         if (!fileInput.value || fileInput.files.length === 0) {
@@ -42,6 +48,7 @@
       form.onsubmit = validateForm;
     });
     </script>
+    
     
 
   
