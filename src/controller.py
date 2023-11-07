@@ -130,23 +130,24 @@ def library():
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
-        uploaded_file = request.files['file']
-        if uploaded_file.filename != '':
-            UUID = str(uuid.uuid4())
-            extraction_directory = f'book/{UUID}'
-            extract_book.extractbook(uploaded_file, extraction_directory)
-            try:
-                textbook = class_textbook.Textbook(UUID)
-                book = crud_book.create_book_in_db(textbook)
-                crud_textbook.create_textbook_in_db(textbook, book)
-                s3_crud.upload_to_s3(aws_bucket, extraction_directory, f"{extraction_directory}/", s3)
-                flash('success', f'{book.title} uploaded successfully!')
-            except Exception as e:
-                flash('error', f'Failed to create and add Ebook: {e}')
-            return redirect(url_for('library'))
+        if request.files:
+            uploaded_file = request.files['file']
+            if uploaded_file.filename:
+                UUID = str(uuid.uuid4())
+                extraction_directory = f'book/{UUID}'
+                extract_book.extractbook(uploaded_file, extraction_directory)
+                try:
+                    textbook = class_textbook.Textbook(UUID)
+                    book = crud_book.create_book_in_db(textbook)
+                    crud_textbook.create_textbook_in_db(textbook, book)
+                    s3_crud.upload_to_s3(aws_bucket, extraction_directory, f"{extraction_directory}/", s3)
+                    flash('success', f'{book.title} uploaded successfully!')
+                except Exception as e:
+                    flash('error', f'Failed to create and add Ebook: {e}')
+                return redirect(url_for('library'))
     elif request.method == 'GET':
         return render_template('/templates/upload.html')
-
+    return render_template('/templates/upload.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
