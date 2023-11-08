@@ -15,6 +15,7 @@ An EPUB book reader web application that allows users to upload and read EPUB fi
 - Dynamically reflows content based on viewport size
 - Dark mode based on user system settings
 - Lazy loading of imagery to fetch content only when it's about to come into the viewport.
+- Table of contents hyperlinks to relevant sections for easy navigation.
 
 ## Prerequisites
 
