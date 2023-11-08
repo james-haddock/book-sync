@@ -314,7 +314,7 @@
         }
       }
 
-      
+
       function fadeInNav() {
         if (!navVisible) {
           nav.style.visibility = 'visible';
@@ -336,11 +336,12 @@
       });
       
       nav.addEventListener('mouseover', function() {
+        fadeInNav();
         resetInactivityTimeout();
       });
       
       nav.addEventListener('mouseleave', function() {
-        fadeOutNav();
+
         resetInactivityTimeout();
       });
 
