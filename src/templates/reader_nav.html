@@ -198,7 +198,7 @@
   <div class="container">
     <div class="loader"></div>
   </div>
-  <main id="main_book"><div id='book_content'></div>
+  <main id="main_book"><div id='book_content'></div></main>
   <div id="navTrigger"></div> 
   <div id="navButtons">
     <a href='{{ url_for("library") }}' id="libraryButtonContainer">
@@ -209,7 +209,6 @@
       <button id="decreaseTextButton">-</button>
       <button id="increaseTextButton">+</button>
     </div>
-  </main>
 
 
   <script>
@@ -341,7 +340,6 @@
       });
       
       nav.addEventListener('mouseleave', function() {
-
         resetInactivityTimeout();
       });
 
