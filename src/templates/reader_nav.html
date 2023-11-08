@@ -76,14 +76,19 @@
     }
         #navTrigger {
       visibility: visible;
-      background: none; 
+      backdrop-filter: blur(4px);
+      transition: opacity 1s ease-in-out;
+      opacity: 0;
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
-      height: 75px; 
+      right: 0;
+      max-height:100%;
+      max-width: 100%;
+      backdrop-filter: backdrop-blur-md; ;
+      display: flex;
+      padding: 40px;
       z-index: 49;
-      opacity: 1;
       background-color: rgba(255, 255, 255, 0); 
     }
     #libraryButtonContainer {
