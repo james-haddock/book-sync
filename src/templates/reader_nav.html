@@ -72,7 +72,19 @@
       align-items: center;
       padding: 16px;
       z-index: 50;
-      
+      visibility: hidden;
+    }
+        #navTrigger {
+      visibility: visible;
+      background: none; 
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 75px; 
+      z-index: 49;
+      opacity: 1;
+      background-color: rgba(255, 255, 255, 0); 
     }
     #libraryButtonContainer {
       position: absolute;
@@ -103,17 +115,6 @@
         font-size: 16px; 
         cursor: pointer;
       }
-    #navTrigger {
-      background: none; 
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 75px; 
-      z-index: 49;
-      opacity: 1;
-      background-color: rgba(255, 255, 255, 0); 
-    }
     #libraryButton {
       font-size: 14px;
       font-weight: bold;
@@ -306,9 +307,13 @@
       function fadeOutNav() {
         if (navVisible) {
           nav.style.opacity = '0';
-          setTimeout(() => { nav.style.visibility = 'hidden'; navVisible = false; }, 1000);
+          setTimeout(() => { 
+            nav.style.visibility = 'hidden'; 
+            navVisible = false; 
+          }, 1000);
         }
       }
+
       
       function fadeInNav() {
         if (!navVisible) {
@@ -339,7 +344,8 @@
         resetInactivityTimeout();
       });
 
-      navTrigger.addEventListener('touchstart', function() {
+      navTrigger.addEventListener('touchstart', function(event) {
+        event.preventDefault();
         fadeInNav();
         resetInactivityTimeout();
       });
