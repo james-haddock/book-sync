@@ -4,49 +4,131 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-      var hideTimeout, fadeOutTimeout;
-    
-      function validateForm() {
+        var hideTimeout, fadeOutTimeout;
         var fileInput = document.getElementById('dropzone-file');
+        var form = document.querySelector('form[name="myForm"]');
         var flashMessage = document.getElementById('flash-message');
-    
-        function showMessage(message) {
-          clearTimeout(hideTimeout);
-          clearTimeout(fadeOutTimeout);
-    
-          flashMessage.textContent = message;
-          flashMessage.classList.remove('flash-message-hidden', 'fade-out');
-          flashMessage.offsetWidth;
-          flashMessage.classList.add('fade-in');
-    
-         
-          hideTimeout = setTimeout(() => {
-            flashMessage.classList.remove('fade-in');
-            flashMessage.classList.add('fade-out');
-            fadeOutTimeout = setTimeout(() => {
-              flashMessage.classList.add('flash-message-hidden');
-            }, 500); 
-          }, 3200);
-        }
-    
-        if (!fileInput.value || fileInput.files.length === 0) {
-          showMessage("Please select a valid epub file.");
-          return false;
-        }
-    
-        var allowedExtensions = /\.epub$/i;
-        if (!allowedExtensions.exec(fileInput.value)) {
-          showMessage('Please upload file with an .epub extension.');
-          fileInput.value = '';
-          return false;
+        var dropzone = document.getElementById('dropzone-wrapper');
+      
+        function showMessage(message, isSuccess = false) {
+            clearTimeout(hideTimeout);
+            clearTimeout(fadeOutTimeout);
+        
+            flashMessage.textContent = message;
+            flashMessage.classList.remove('flash-message-hidden', 'fade-out', 'bg-red-200', 'bg-green-200');
+        
+            flashMessage.offsetWidth;
+        
+            flashMessage.classList.add('fade-in', isSuccess ? 'bg-green-200' : 'bg-red-200');
+        
+            hideTimeout = setTimeout(() => {
+                flashMessage.classList.remove('fade-in');
+                flashMessage.offsetWidth; 
+                flashMessage.classList.add('fade-out');
+                fadeOutTimeout = setTimeout(() => {
+                    flashMessage.classList.add('flash-message-hidden');
+                }, 500); 
+            }, 3200);
         }
         
-        return true;
-      }
-    
-      var form = document.querySelector('form[name="myForm"]');
-      form.onsubmit = validateForm;
-    });
+          fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length) {
+              var file = e.target.files[0];
+              if (/\.epub$/i.test(file.name)) {
+                showMessage('File is ready to be uploaded.', true);
+              } else {
+                showMessage('Please upload a file with an .epub extension.');
+              }
+            }
+          });
+
+        function handleFiles(files) {
+            if (files.length > 0 && /\.epub$/i.test(files[0].name)) {
+              fileInput.files = createFileList(...files);
+              showMessage('File is ready to be uploaded.', true); 
+            } else {
+              showMessage('Please upload a file with an .epub extension.');
+            }
+          }
+          fileInput.addEventListener('change', function(e) {
+            handleFiles(e.target.files);
+          });
+        function validateForm() {
+          if (!fileInput.files.length) {
+            showMessage("Please select a valid epub file.");
+            return false;
+          }
+      
+          var allowedExtensions = /\.epub$/i;
+          if (!allowedExtensions.exec(fileInput.files[0].name)) {
+            showMessage('Please upload file with an .epub extension.');
+            fileInput.value = '';
+            return false;
+          }
+          
+          return true;
+        }
+      
+        form.onsubmit = validateForm;
+      
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          document.addEventListener(eventName, preventDefaults, false);
+          dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+      
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropzone.addEventListener(eventName, highlight, false);
+        });
+      
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropzone.addEventListener(eventName, unhighlight, false);
+        });
+      
+        function highlight(e) {
+          dropzone.classList.add('highlight');
+        }
+      
+        function unhighlight(e) {
+          dropzone.classList.remove('highlight');
+        }
+      
+        dropzone.addEventListener('drop', handleDrop, false);
+      
+        function handleDrop(e) {
+          var dt = e.dataTransfer;
+          var files = dt.files;
+      
+          fileInput.files = files;
+          handleFiles(files);
+        }
+      
+        function handleFiles(files) {
+          ([...files]).forEach(uploadFile);
+        }
+      
+        function uploadFile(file) {
+            if (file.type === "application/epub+zip" || /\.epub$/i.test(file.name)) {
+              fileInput.files = createFileList(file);
+              showMessage('File is ready to be uploaded.', true); 
+            } else {
+              showMessage('Please upload a file with an .epub extension.');
+              fileInput.value = '';
+            }
+          }
+      
+        function createFileList(...files) {
+          const dataTransfer = new DataTransfer();
+          files.forEach(file => {
+            dataTransfer.items.add(file);
+          });
+          return dataTransfer.files;
+        }
+      });
     </script>
     
     
@@ -73,6 +155,24 @@
           opacity: 0; 
           transition: opacity 0.5s ease-out;
         }
+        .text-gradient-title {
+            background: linear-gradient(to right, blue, red);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline; 
+            line-height: 1.2; 
+            padding-bottom: 0.2em;
+        }
+        .highlight {
+            border-color: #666;
+          }
+          .bg-green-200 {
+            background-color: #c6f6d5; /* Adjust the color to match your design */
+          }
+          
+          .bg-red-200 {
+            background-color: #fed7d7; /* Adjust the color to match your design */
+          }
         </style>
         
 
@@ -85,16 +185,16 @@
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto max-w-4xl sm:text-center">
                 <h2 class="text-base font-semibold leading-7 text-indigo-600">Upload Your Ebook</h2>
-                <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Share Your Knowledge with the World</p>
+                <p class="text-gradient-title file:mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Expand Your Reading Collection</p>
             </div>
-            <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-center">Upload your own ebook and make it accessible from anywhere.</p>
+            <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-center">Upload your ebook and enjoy a personalized, convenient reading experience from anywhere, on any device.</p>
             <div class="mt-20">
                 <div class="mx-auto max-w-2xl">
                     <form name='myForm' action="{{url_for('upload')}}" onsubmit="return validateForm()" method="post" enctype="multipart/form-data" class="space-y-6">
 
 
                         <div class="flex items-center justify-center w-full">
-                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 hover:bg-gray-100 dark:border-gray-600">
+                            <label id="dropzone-wrapper" for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 hover:bg-gray-100 dark:border-gray-600">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>

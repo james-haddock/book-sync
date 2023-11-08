@@ -1,11 +1,15 @@
 {% extends '/templates/base.html' %}
-
+<style>.text-gradient-title {
+    background: linear-gradient(to right, blue, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }</style>
 {% block content %}
 <div class="relative isolate px-6 lg:px-8 pt-20">
     <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true"></div>
     <div class="mx-auto max-w-2xl py-10 sm:py-48 lg:py-10">
         <div class="text-center">
-            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Create Your Account</h1>
+            <h1 class="text-4xl font-bold tracking-tight sm:text-6xl text-gradient-title">Create Your Account</h1>
             <p class="mt-6 text-lg leading-8 text-gray-600">Sign up to experience the seamless integration of reading and listening with BookSync. Upload your own eBooks and audiobooks to enjoy them in one interface.</p>
             <form class="mt-10 space-y-6" action="#" method="POST">
                 <div class="rounded-md shadow-sm -space-y-px">
