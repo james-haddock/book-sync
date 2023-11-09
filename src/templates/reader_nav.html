@@ -6,6 +6,11 @@
   <title>{{ book_title }}</title>
 
   <style>
+    html{
+      max-width: 100dvw;
+      max-height: 100dvh;
+      overflow-x: hidden;
+    }
     .container {
       display: none; 
       position: fixed; 
@@ -16,7 +21,7 @@
       background: radial-gradient(#CECECE, #fff); 
       justify-content: center;
       align-items: center;
-      z-index: 1000; 
+      z-index: 25; 
       width: 100%;
       height: 100%;
     }
@@ -62,8 +67,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      max-height:100%;
-      max-width: 100%;
+      max-height:100dvh;
+      max-width: 100dvw;
       backdrop-filter: backdrop-blur-md;
       background-color: rgba(255, 255, 255, 0.9); 
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -75,21 +80,15 @@
       visibility: hidden;
     }
         #navTrigger {
-      visibility: visible;
-      backdrop-filter: blur(4px);
-      transition: opacity 1s ease-in-out;
       opacity: 0;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      max-height:100%;
-      max-width: 100%;
-      backdrop-filter: backdrop-blur-md; ;
-      display: flex;
-      padding: 40px;
+      height:60px;
       z-index: 49;
-      background-color: rgba(255, 255, 255, 0); 
+      max-height:100dvh;
+      max-width: 100dvw;
     }
     #libraryButtonContainer {
       position: absolute;
@@ -105,16 +104,13 @@
       cursor: pointer;   
     }
     
-    #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
-      color: #666;     
-    }
-    
     #zoomControls {
         display: flex;
         gap: 10px; 
         margin-left: auto;
       }
       #increaseTextButton, #decreaseTextButton, #resetTextButton {
+        color:#000000;
         padding: 5px 10px; 
         margin: 0;
         font-size: 16px; 
@@ -184,23 +180,33 @@
       #libraryButton:hover, #resetTextButton:hover, #decreaseTextButton:hover, #increaseTextButton:hover {
         color: #bbb !important;
       }
+      #libraryButton {
+        background: linear-gradient(to right, rgb(125, 125, 255), rgb(255, 125, 125)) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
     }
-    @media (hover: none) and (pointer: coarse) {
+    @media (hover: hover) and (pointer: fine) {
       #libraryButton:hover,
       #resetTextButton:hover,
       #decreaseTextButton:hover,
       #increaseTextButton:hover {
-        color: inherit;
+        color: #666;
       }
     }
+    
     #book_content {
-      overflow-x: hidden; 
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 100dvw;
+      max-height: 100dvh;
     }
     body {
-      max-width: 100%;
-      max-height: 100%
+      max-width: 100dvw;
+      max-height: 100dvh;
+    }
+    #libraryButton {
+      background: linear-gradient(to right, blue, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   </style>
 </head>
