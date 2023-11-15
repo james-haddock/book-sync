@@ -14,13 +14,8 @@ class DBBook(Base):
     UUID = Column(String, unique=True, nullable=False)
     title = Column(String)
     cover = Column(String)
-    
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='books', foreign_keys=[user_id])
-    
-    current_reader_id = Column(Integer, ForeignKey('users.id'))
-    current_reader = relationship('User', back_populates='currently_reading', uselist=False, foreign_keys=[current_reader_id])
-    
     associations = relationship('Association', back_populates='book', cascade="all, delete-orphan")
 
 
@@ -31,7 +26,6 @@ class Association(Base):
     book_id = Column(Integer, ForeignKey('books.id'))
     book_type = Column(String) 
     type_id = Column(Integer)  
-    
     book = relationship('DBBook', back_populates='associations')
 
 
@@ -59,10 +53,7 @@ class User(Base):
     username = Column(String(50), unique=True)
     email = Column(String(100), unique=True)
     password_hash = Column(String(128))
-    
     books = relationship('DBBook', back_populates='user', foreign_keys='DBBook.user_id')
-    currently_reading_id = Column(Integer, ForeignKey('books.id'))
-    currently_reading = relationship('DBBook', back_populates='current_reader', uselist=False, post_update=True, foreign_keys='DBBook.current_reader_id')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
