@@ -2,7 +2,7 @@ import pytest
 import os
 import shutil
 from tempfile import TemporaryDirectory
-from .......src.model.class_constructors.textbook.extract_book import extractbook
+from model.class_constructors.textbook.extract_book import extractbook
 
 def test_extractbook():
     with TemporaryDirectory() as tempdir:

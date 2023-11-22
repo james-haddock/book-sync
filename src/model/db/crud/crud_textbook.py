@@ -1,9 +1,9 @@
 import logging
 from sqlalchemy.exc import SQLAlchemyError
-from ..db_schema.db_schema import DBTextbook, DBBook, Association
-from ...class_constructors.textbook.class_textbook import Textbook
-from ..db_manager import DatabaseManager
-from .crud_book import CrudBook
+from src.model.db.db_schema.db_schema import DBTextbook, DBBook, Association
+from src.model.class_constructors.textbook.class_textbook import Textbook
+from src.model.db.db_manager import DatabaseManager
+from src.model.db.crud.crud_book import CrudBook
 
 logging.basicConfig(level=logging.ERROR,
                     format='[%(asctime)s] %(levelname)s: %(message)s',

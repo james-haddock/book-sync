@@ -25,7 +25,5 @@ RUN chown -R appuser:appuser src/book
 
 USER appuser
 
-WORKDIR /app/src
-
-CMD ["gunicorn", "controller:app", "--bind", "0.0.0.0:8000", "--timeout", "600"]
+CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:8000", "--timeout", "600"]
 

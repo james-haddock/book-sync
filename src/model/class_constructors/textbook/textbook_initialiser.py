@@ -1,10 +1,10 @@
-from .xml_parser import XmlParser
+from src.model.class_constructors.textbook.xml_parser import XmlParser
 import os
-from .opf_extractor import OpfExtractor
-from .book_metadata_extractor import BookMetadataExtractor
-from ..class_book import Book
-from .html_consolidation_manager import HtmlConsolidationManager
-from ...volumes.s3_crud import s3_crud
+from src.model.class_constructors.textbook.opf_extractor import OpfExtractor
+from src.model.class_constructors.textbook.book_metadata_extractor import BookMetadataExtractor
+from src.model.class_constructors.class_book import Book
+from src.model.class_constructors.textbook.html_consolidation_manager import HtmlConsolidationManager
+from src.model.db.crud.s3_crud import s3_crud
 from decouple import config
 import logging
 
@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 class TextbookInitialiser:
     def __init__(self, UUID):
         self.container_namespace = '{urn:oasis:names:tc:opendocument:xmlns:container}'
-        self.container_path = f'book/{UUID}/META-INF/container.xml'
+        self.container_path = f'src/book/{UUID}/META-INF/container.xml'
         
         container_parser = XmlParser(self.container_path)
         self.container_root = container_parser.get_root()
         
         self.opf = self.get_opf_location()
-        self.opf_path = f'book/{UUID}/{self.opf}'
+        self.opf_path = f'src/book/{UUID}/{self.opf}'
         self.opf_folder_location = os.path.dirname(self.opf_path)
         
         opf_parser = XmlParser(self.opf_path)
