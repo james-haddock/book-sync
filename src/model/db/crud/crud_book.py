@@ -1,12 +1,11 @@
-from ..db_schema.db_schema import DBBook, Association, DBTextbook, DBAudiobook
-from ..db_manager import DatabaseManager
+from src.model.db.db_schema.db_schema import DBBook, Association, DBTextbook, DBAudiobook
+from src.model.db.db_manager import DatabaseManager
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import SQLAlchemyError
 import copy
-from ...db.db_schema.db_schema import Base
+from src.model.db.db_schema.db_schema import Base
 import logging
 
-# Setting up logging
 logging.basicConfig(level=logging.ERROR,
                     format='[%(asctime)s] %(levelname)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')

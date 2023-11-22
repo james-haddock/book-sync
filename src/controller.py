@@ -10,17 +10,17 @@ from decouple import config
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import Session, sessionmaker
 from werkzeug.exceptions import HTTPException, InternalServerError, BadRequest
-from model.db.crud import crud_textbook, crud_book
-from model.db.db_schema import db_schema
-from model.class_constructors import class_book
+from src.model.db.crud import crud_textbook, crud_book
+from src.model.db.db_schema import db_schema
+from src.model.class_constructors import class_book
 from bs4 import BeautifulSoup, Doctype
-from model.db.crud import crud_book
-from model.db.db_manager import DatabaseManager
-from model.volumes.s3_crud import s3_crud
+from src.model.db.crud import crud_book
+from src.model.db.db_manager import DatabaseManager
+from src.model.db.crud.s3_crud import s3_crud
 import copy
-from model.change_urls_to_presigned import change_urls_to_presigned
-from model.save_book_session import save_book_session_js
-from model.class_constructors.textbook import (class_textbook, xml_parser, 
+from src.model.change_urls_to_presigned import change_urls_to_presigned
+from src.model.save_book_session import save_book_session_js
+from src.model.class_constructors.textbook import (class_textbook, xml_parser, 
                                                book_consolidator, html_consolidation_manager, opf_extractor,
                                                book_metadata_extractor, extract_book, epub_validator)
 
@@ -109,7 +109,7 @@ def upload():
             if uploaded_file and '.' in uploaded_file.filename and uploaded_file.filename.rsplit('.', 1)[1].lower() == 'epub':
                 try:
                     UUID = str(uuid.uuid4())
-                    extraction_directory = f'book/{UUID}'
+                    extraction_directory = f'src/book/{UUID}'
                     extract_book.extractbook(uploaded_file, extraction_directory)
                     textbook = class_textbook.Textbook(UUID)
                     book = crud_book.create_book_in_db(textbook)
@@ -159,6 +159,3 @@ def get_error_message(code):
         504: "Our servers are taking longer than expected to respond."
     }
     return messages.get(code, "An unexpected error has occurred.")
-
-if __name__ == '__main__':
-    app.run(port=8000)         

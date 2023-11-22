@@ -1,6 +1,6 @@
 
 import os
-from .book_consolidator import HtmlConsolidator
+from src.model.class_constructors.textbook.book_consolidator import HtmlConsolidator
 
 class HtmlConsolidationManager:
     def __init__(self, opf_folder_location: str, href: list, UUID:str):
@@ -19,7 +19,7 @@ class HtmlConsolidationManager:
 
     @property
     def get_consolidated_html_path(self):
-        return f'book/{self.UUID}/consolidated_{self.UUID}.html'
+        return f'src/book/{self.UUID}/consolidated_{self.UUID}.html'
 
     def consolidate_html_files(self):
         self.html_consolidator.consolidate_html(self.get_href_relative_path, self.get_consolidated_html_path, self.UUID)
