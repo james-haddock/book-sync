@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 import copy
 import logging
 from faker import Faker
-from model.db.crud.crud_book import CrudBook
+from src.model.db.crud.crud_book import CrudBook
 import pytest
 from unittest.mock import MagicMock, patch
 from sqlalchemy.exc import SQLAlchemyError

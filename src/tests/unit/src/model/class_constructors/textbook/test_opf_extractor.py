@@ -1,6 +1,6 @@
 import pytest
 import xml.etree.ElementTree as ET
-from model.class_constructors.textbook.opf_extractor import OpfExtractor
+from src.model.class_constructors.textbook.opf_extractor import OpfExtractor
 
 
 def test_OpfExtractor():
