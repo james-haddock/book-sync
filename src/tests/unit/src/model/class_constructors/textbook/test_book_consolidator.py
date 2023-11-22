@@ -1,5 +1,5 @@
 import pytest
-from .......model.class_constructors.textbook.book_consolidator import HtmlConsolidator
+from src.model.class_constructors.textbook.book_consolidator import HtmlConsolidator
 import os
 from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
