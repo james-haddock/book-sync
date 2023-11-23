@@ -1,10 +1,5 @@
 import os
-import logging
-
-logging.basicConfig(level=logging.ERROR,
-                    format='[%(asctime)s] %(levelname)s: %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-logger = logging.getLogger(__name__)
+from src.logger import logger
 
 class BookMetadataExtractor:
     def __init__(self, opf_root, opf_folder_location):
@@ -37,8 +32,8 @@ class BookMetadataExtractor:
                 print('Cover retrieved')
                 return os.path.join(self.opf_folder_location, cover_loc)
             else:
-                logger.error("Error: Could not extract cover location from XML. Using palceholder")
+                logger.error("Error: Could not extract cover location from XML. Using placeholder")
                 return 'static/Book-icon.png'
         except Exception as e:
-            logger.error(f"Unexpected error while fetching cover from XML: {e}")
-            return None
+            logger.error("Error: Could not extract cover location from XML. Using placeholder")
+            return 'static/Book-icon.png'

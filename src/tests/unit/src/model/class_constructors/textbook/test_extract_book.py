@@ -18,8 +18,6 @@ def test_extractbook():
         result = extractbook(temp_epub_path, extraction_path)
         assert isinstance(result, FileExistsError), "Should return FileExistsError if directory already exists"
         
-import os
-
 def directories_match(dir1, dir2):
     for subdir, _, filenames in os.walk(dir1):
         filenames = [f for f in filenames if f != '.DS_Store']
@@ -45,11 +43,8 @@ def directories_match(dir1, dir2):
         corresponding_subdir = os.path.join(dir1, rel_path)
         if not os.path.exists(corresponding_subdir):
             raise AssertionError(f"Extra directory {subdir} found in {dir2} that's not in {dir1}")
-
     return True
-
-        
-        
+    
 def test_extractbook_contents_match():
     with TemporaryDirectory() as tempdir:
         test_epub_path = os.path.join(os.path.dirname(__file__), "test_data", "Clean Architecture A Craftsman’s Guide to Software Structure and Design (Martin, R.C.).epub")
