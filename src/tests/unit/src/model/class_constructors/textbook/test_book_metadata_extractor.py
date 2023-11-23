@@ -18,7 +18,8 @@ def test_get_cover_with_valid_cover(fake_opf_root_with_cover, fake_opf_folder_lo
     extractor = BookMetadataExtractor(fake_opf_root_with_cover, fake_opf_folder_location)
     cover = extractor.get_cover()
     assert cover is not None
-    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif'])
+    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg', '.tiff', '.webp'])
+
 
 def test_get_cover_with_no_cover(fake_opf_root_without_cover, fake_opf_folder_location):
     extractor = BookMetadataExtractor(fake_opf_root_without_cover, fake_opf_folder_location)
@@ -46,7 +47,7 @@ def test_get_cover_with_meta_element(fake_opf_root_with_meta_cover, fake_opf_fol
     extractor = BookMetadataExtractor(fake_opf_root_with_meta_cover, fake_opf_folder_location)
     cover = extractor.get_cover()
     assert cover is not None
-    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif'])
+    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg', '.tiff', '.webp'])
 
 @pytest.fixture
 def fake_opf_root_with_meta_cover():
