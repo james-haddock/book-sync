@@ -104,3 +104,17 @@ def fake_opf_root_without_manifest():
     title = SubElement(metadata, f'{DC_NAMESPACE}title')
     title.text = faker.sentence()
     return root
+
+@pytest.fixture
+def fake_opf_root_that_raises_exception():
+    class FakeRoot:
+        def findall(self, _):
+            raise Exception("Test Exception")
+
+    return FakeRoot()
+
+def test_get_cover_exception_handling(fake_opf_root_that_raises_exception, fake_opf_folder_location, caplog):
+    extractor = BookMetadataExtractor(fake_opf_root_that_raises_exception, fake_opf_folder_location)
+    cover = extractor.get_cover()
+    assert cover == 'static/Book-icon.png'
+    assert "Error: Could not extract cover location from XML. Using placeholder" in caplog.text
