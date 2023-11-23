@@ -1,4 +1,3 @@
-
 import os
 from src.model.class_constructors.textbook.book_consolidator import HtmlConsolidator
 
