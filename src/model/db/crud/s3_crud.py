@@ -1,7 +1,9 @@
 import os
 import shutil
 from boto3.s3.transfer import S3Transfer
-from botocore.exceptions import BotoCoreError, ClientError
+from boto3.exceptions import S3UploadFailedError
+from botocore.exceptions import (BotoCoreError, ClientError, ParamValidationError,
+                                 ReadTimeoutError, EndpointConnectionError)
 
 class s3_crud:
     @staticmethod
@@ -20,9 +22,9 @@ class s3_crud:
                         
             shutil.rmtree(source_directory)
             print(f'{source_directory} Uploaded Successfully')
-        except (BotoCoreError, ClientError) as error:
+        except (BotoCoreError, S3UploadFailedError) as error:
             print(f'Error occurred during S3 upload: {error}')
             raise
-        except Exception as general_error:
-            print(f'General error occurred: {general_error}')
+        except Exception as error:
+            print(f'Error occurred during S3 upload: {error}')
             raise
