@@ -1,4 +1,5 @@
 import logging
+import xml.etree.ElementTree as ET
 
 logging.basicConfig(level=logging.ERROR,
                     format='[%(asctime)s] %(levelname)s: %(message)s',
@@ -14,9 +15,6 @@ class OpfExtractor:
         try:
             spine = [item.attrib['idref'] for item in self.root.findall(f'{self.opf_namespace}spine/{self.opf_namespace}itemref')]
             return spine
-        except AttributeError:
-            logger.error(f"Error: Could not extract 'idref' attribute in XML.")
-            return []
         except Exception as e:
             logger.error(f"Unexpected error while fetching spine from XML: {e}")
             return []
@@ -29,9 +27,6 @@ class OpfExtractor:
                     if 'id' in element.attrib and element.attrib['id'] == idref:
                         href.append(element.attrib.get("href", ""))
             return href
-        except AttributeError:
-            logger.error(f"Error: Could not find the expected attributes in XML.")
-            return []
         except Exception as e:
             logger.error(f"Unexpected error while fetching href from XML: {e}")
             return []

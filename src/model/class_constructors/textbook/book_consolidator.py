@@ -1,11 +1,6 @@
 from bs4 import BeautifulSoup
 import os
-import logging
-
-logging.basicConfig(level=logging.ERROR,
-                    format='[%(asctime)s] %(levelname)s: %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-logger = logging.getLogger(__name__)
+from src.logger import logger
 
 class HtmlConsolidator:
     def adjust_path(self, original_file_path, output_path, link_path):
@@ -15,7 +10,6 @@ class HtmlConsolidator:
 
             original_dir = os.path.dirname(original_file_path)
             full_path = os.path.normpath(os.path.join(original_dir, link_path))
-
             rel_path = os.path.relpath(full_path, os.path.dirname(output_path))
 
             return rel_path
