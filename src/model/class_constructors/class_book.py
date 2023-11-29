@@ -1,5 +1,3 @@
-
-
 class Book:
     def __init__(self, UUID):
         self.UUID = UUID
