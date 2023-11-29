@@ -53,7 +53,7 @@ BookSync's architecture embraces principles of abstraction and modularity. It fe
 
 #### Key Architectural Features:
 
-- **Abstraction and Encapsulation:** By coding to interfaces rather than concrete implementations, the system promotes flexibility, allowing for various types of ebooks and user interactions without altering the core logic.
+- **Abstraction and Encapsulation Through Class Composition**: The app utilises class composition over inheritance to enhance its design and functionality. This approach allows encapsulation of distinct functionalities into separate classes, such as ebook parsing, metadata extraction, and user interaction handling. Each class focuses on a specific aspect of ebook processing or user interaction, making the system more modular and maintainable.
 
 - **Decoupled Components:** The architecture strategically decouples components, which enhances the ability to iterate rapidly and safely introduce new features or modifications.
 
@@ -115,7 +115,7 @@ Clone the repository to your local machine:
 
 ```zsh
 1. Clone the repository:
-git clone https://github.com/yourusername/epub-reader-flask.git
+git clone https://github.com/james-haddock/ABReader.git
 
 2. Navigate to the project directory:
 cd abreader
