@@ -7,6 +7,7 @@ import shutil
 import re
 from unittest.mock import patch, Mock
 from src.logger import logger
+from sqlalchemy.exc import SQLAlchemyError
 
 @pytest.fixture
 def consolidator():
@@ -106,20 +107,5 @@ def test_consolidate_html_error_handling(consolidator):
         consolidator.consolidate_html(file_paths, "output/path", "UUID")
         mock_logger.error.assert_called()
         
-@pytest.fixture
-def enumerate():
-    return Exception("Simulated Error")
-
-@pytest.mark.parametrize(
-    "file_paths, output_path, UUID",
-    [
-        (["file1.html", "file2.html"], "output.html", "test-uuid"),
-    ],
-)
-
-def test_consolidate_html_with_error(file_paths, output_path, UUID, consolidator, enumerate):
-    with patch('src.model.class_constructors.textbook.book_consolidator.logger') as mock_logger:
-        with patch("src.model.class_constructors.textbook.book_consolidator.HtmlConsolidator.generate_unique_id") as mock_generate_unique_id:
-            mock_generate_unique_id.side_effect = Exception("Simulated Error")
-            consolidator.consolidate_html(file_paths, output_path, UUID)
-            mock_logger.error.assert_called()
+def mock_generate_unique_id(*args, **kwargs):
+    raise SQLAlchemyError("Mocked rollback exception")
