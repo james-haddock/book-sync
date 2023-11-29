@@ -1,4 +1,4 @@
-ABreader/src/static/** linguist-vendored
-ABreader/src/node_modules/** linguist-vendored
-ABreader/src/tests/src/model/class_constructors/textbook/test_data/** linguist-vendored
-ABreader/src/book/** linguist-vendored
+src/static/** linguist-vendored
+src/node_modules/** linguist-vendored
+/src/tests/src/model/class_constructors/textbook/test_data/** linguist-vendored
+src/book/** linguist-vendored
