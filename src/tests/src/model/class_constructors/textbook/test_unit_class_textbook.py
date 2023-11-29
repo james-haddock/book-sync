@@ -32,6 +32,3 @@ def test_textbook_initialization(mock_textbook_initialiser):
     assert textbook.book_content == mock_initialiser_instance.html_manager.get_consolidated_html_path
     assert textbook.book_base == os.path.dirname(mock_initialiser_instance.html_manager.get_consolidated_html_path)
     mock_textbook_initialiser.assert_called_once_with(test_uuid)
-
-
-src/tests/src/model/class_constructors/textbook/test_data
