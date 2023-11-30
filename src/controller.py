@@ -106,7 +106,8 @@ def upload():
     if request.method == 'POST':
         if request.files:
             uploaded_file = request.files['file']
-            if uploaded_file and '.' in uploaded_file.filename and uploaded_file.filename.rsplit('.', 1)[1].lower() == 'epub':
+            if uploaded_file and '.' in uploaded_file.filename and uploaded_file.filename.rsplit('.', 1)[1].lower() == 'epub' and epub_validator(uploaded_file):
+                
                 try:
                     UUID = str(uuid.uuid4())
                     extraction_directory = f'src/book/{UUID}'
@@ -122,7 +123,7 @@ def upload():
                     flash('error', 'Failed to upload the book. Please try again.')
                     return render_template('/templates/upload.html'), 500
             else:
-                flash('error', 'Invalid file type. Only EPUB files are allowed.')
+                flash('error', 'Invalid file. Only valid EPUB files are allowed.')
                 return redirect(url_for('upload'))
         else:
             flash('error', 'No file selected.')
