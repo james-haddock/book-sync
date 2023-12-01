@@ -12,6 +12,7 @@ minikube-darwin-arm64
 abreader_venv/**
 .vscode/**
 compose.yaml
+.htmlcov/**
 
 # C extensionsbrew install helm
 *.so

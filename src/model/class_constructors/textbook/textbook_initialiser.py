@@ -1,11 +1,8 @@
-from src.model.class_constructors.textbook.xml_parser import XmlParser
 import os
+from src.model.class_constructors.textbook.xml_parser import XmlParser
 from src.model.class_constructors.textbook.opf_extractor import OpfExtractor
 from src.model.class_constructors.textbook.book_metadata_extractor import BookMetadataExtractor
-from src.model.class_constructors.class_book import Book
 from src.model.class_constructors.textbook.html_consolidation_manager import HtmlConsolidationManager
-from src.model.db.crud.s3_crud import s3_crud
-from decouple import config
 import logging
 
 logging.basicConfig(level=logging.ERROR,
