@@ -1,17 +1,7 @@
 from src import controller
 import pytest
-from io import BytesIO
 from flask import render_template
 import pytest
-from faker import Faker
-from moto import mock_s3
-import boto3
-from src.model.db.crud.s3_crud import s3_crud
-import os
-from botocore.exceptions import BotoCoreError, ClientError
-from botocore.stub import Stubber
-from boto3.exceptions import S3UploadFailedError
-from decouple import config
 
 @pytest.fixture
 def client():
