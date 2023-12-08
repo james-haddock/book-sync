@@ -15,6 +15,7 @@ from src.tests.src.model.db.crud.crud_factories import DBBookFactory
 
 fake = Faker()
 
+@pytest.mark.integration
 def test_create_book_in_db(db_url):
     with pytest.MonkeyPatch.context() as m:
         m.setenv("DATABASE_URL", db_url)

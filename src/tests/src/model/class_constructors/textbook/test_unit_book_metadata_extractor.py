@@ -8,47 +8,6 @@ faker = Faker()
 OPF_NAMESPACE = '{http://www.idpf.org/2007/opf}'
 DC_NAMESPACE = '{http://purl.org/dc/elements/1.1/}'
 
-def test_get_title(fake_opf_root_with_cover):
-    extractor = BookMetadataExtractor(fake_opf_root_with_cover, '')
-    title = extractor.get_title()
-    assert title is not None
-    assert isinstance(title, str)
-
-def test_get_cover_with_valid_cover(fake_opf_root_with_cover, fake_opf_folder_location):
-    extractor = BookMetadataExtractor(fake_opf_root_with_cover, fake_opf_folder_location)
-    cover = extractor.get_cover()
-    assert cover is not None
-    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg', '.tiff', '.webp'])
-
-
-def test_get_cover_with_no_cover(fake_opf_root_without_cover, fake_opf_folder_location):
-    extractor = BookMetadataExtractor(fake_opf_root_without_cover, fake_opf_folder_location)
-    cover = extractor.get_cover()
-    assert cover == 'static/Book-icon.png'
-
-def test_get_title_with_missing_title(fake_opf_root_without_title):
-    extractor = BookMetadataExtractor(fake_opf_root_without_title, '')
-    title = extractor.get_title()
-    assert title is None
-
-def test_get_metadata_with_no_metadata_section(fake_opf_root_without_metadata):
-    extractor = BookMetadataExtractor(fake_opf_root_without_metadata, '')
-    title = extractor.get_title()
-    cover = extractor.get_cover()
-    assert title is None
-    assert cover == 'static/Book-icon.png' 
-
-def test_get_cover_with_no_manifest_section(fake_opf_root_without_manifest):
-    extractor = BookMetadataExtractor(fake_opf_root_without_manifest, '')
-    cover = extractor.get_cover()
-    assert cover == 'static/Book-icon.png'
-    
-def test_get_cover_with_meta_element(fake_opf_root_with_meta_cover, fake_opf_folder_location):
-    extractor = BookMetadataExtractor(fake_opf_root_with_meta_cover, fake_opf_folder_location)
-    cover = extractor.get_cover()
-    assert cover is not None
-    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg', '.tiff', '.webp'])
-
 @pytest.fixture
 def fake_opf_root_with_meta_cover():
     root = Element(f'{OPF_NAMESPACE}package')
@@ -113,6 +72,54 @@ def fake_opf_root_that_raises_exception():
 
     return FakeRoot()
 
+@pytest.mark.unit
+def test_get_title(fake_opf_root_with_cover):
+    extractor = BookMetadataExtractor(fake_opf_root_with_cover, '')
+    title = extractor.get_title()
+    assert title is not None
+    assert isinstance(title, str)
+
+@pytest.mark.unit
+def test_get_cover_with_valid_cover(fake_opf_root_with_cover, fake_opf_folder_location):
+    extractor = BookMetadataExtractor(fake_opf_root_with_cover, fake_opf_folder_location)
+    cover = extractor.get_cover()
+    assert cover is not None
+    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg', '.tiff', '.webp'])
+
+@pytest.mark.unit
+def test_get_cover_with_no_cover(fake_opf_root_without_cover, fake_opf_folder_location):
+    extractor = BookMetadataExtractor(fake_opf_root_without_cover, fake_opf_folder_location)
+    cover = extractor.get_cover()
+    assert cover == 'static/Book-icon.png'
+
+@pytest.mark.unit
+def test_get_title_with_missing_title(fake_opf_root_without_title):
+    extractor = BookMetadataExtractor(fake_opf_root_without_title, '')
+    title = extractor.get_title()
+    assert title is None
+    
+@pytest.mark.unit
+def test_get_metadata_with_no_metadata_section(fake_opf_root_without_metadata):
+    extractor = BookMetadataExtractor(fake_opf_root_without_metadata, '')
+    title = extractor.get_title()
+    cover = extractor.get_cover()
+    assert title is None
+    assert cover == 'static/Book-icon.png' 
+
+@pytest.mark.unit
+def test_get_cover_with_no_manifest_section(fake_opf_root_without_manifest):
+    extractor = BookMetadataExtractor(fake_opf_root_without_manifest, '')
+    cover = extractor.get_cover()
+    assert cover == 'static/Book-icon.png'
+    
+@pytest.mark.unit
+def test_get_cover_with_meta_element(fake_opf_root_with_meta_cover, fake_opf_folder_location):
+    extractor = BookMetadataExtractor(fake_opf_root_with_meta_cover, fake_opf_folder_location)
+    cover = extractor.get_cover()
+    assert cover is not None
+    assert any(cover.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg', '.tiff', '.webp'])
+
+@pytest.mark.unit
 def test_get_cover_exception_handling(fake_opf_root_that_raises_exception, fake_opf_folder_location, caplog):
     extractor = BookMetadataExtractor(fake_opf_root_that_raises_exception, fake_opf_folder_location)
     cover = extractor.get_cover()

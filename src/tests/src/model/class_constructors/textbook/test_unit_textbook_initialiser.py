@@ -60,6 +60,7 @@ def mock_xml_parser(mocker):
     mocker.patch('src.model.class_constructors.textbook.textbook_initialiser.XmlParser', return_value=mock_parser)
     return mock_parser, mock_root
 
+@pytest.mark.unit
 def test_textbook_initialiser(mock_uuid, mock_xml_parser, textbook_initialiser_get_opf_location,
                               os_path_dirname, opf_extractor, book_metadata_extractor,
                               html_consolidation_manager):
@@ -77,7 +78,7 @@ def test_textbook_initialiser(mock_uuid, mock_xml_parser, textbook_initialiser_g
     assert textbook_initialiser.href == ["path1.xhtml", "path2.xhtml", "path3.xhtml"]
     assert textbook_initialiser.title == book_metadata_extractor.get_title()
 
-
+@pytest.mark.unit
 def test_get_opf_location_attribute_error(mock_uuid, mock_xml_parser, caplog):
     mock_parser, mock_root = mock_xml_parser
     mock_root.find.side_effect = AttributeError()
@@ -85,8 +86,7 @@ def test_get_opf_location_attribute_error(mock_uuid, mock_xml_parser, caplog):
     assert textbook_initialiser.opf is None
     assert "Error: Could not find the attribute 'full-path' in XML." in caplog.text
 
-
-
+@pytest.mark.unit
 def test_get_opf_location_exception(mock_uuid, mock_xml_parser):
     mock_parser, mock_root = mock_xml_parser
     mock_root.find.side_effect = Exception("General error")

@@ -13,6 +13,7 @@ def instance_variables():
     mock_uuid = str(uuid.uuid4())
     return mock_opf_folder_location, mock_href, mock_uuid
 
+@pytest.mark.unit
 def test_HtmlConsolidationManager_initialisation(instance_variables):
     mock_opf_folder_location, mock_href, mock_uuid = instance_variables
     test_HtmlConsolidationManager = HtmlConsolidationManager(mock_opf_folder_location, mock_href, mock_uuid)
@@ -20,6 +21,7 @@ def test_HtmlConsolidationManager_initialisation(instance_variables):
     assert mock_href == test_HtmlConsolidationManager.href
     assert mock_uuid == test_HtmlConsolidationManager.UUID
     
+@pytest.mark.unit
 def test_get_href_relative_path(instance_variables):
     mock_opf_folder_location, mock_href, mock_uuid = instance_variables
     test_HtmlConsolidationManager = HtmlConsolidationManager(mock_opf_folder_location, mock_href, mock_uuid)
