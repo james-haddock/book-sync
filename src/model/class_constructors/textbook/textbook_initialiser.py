@@ -3,12 +3,7 @@ from src.model.class_constructors.textbook.xml_parser import XmlParser
 from src.model.class_constructors.textbook.opf_extractor import OpfExtractor
 from src.model.class_constructors.textbook.book_metadata_extractor import BookMetadataExtractor
 from src.model.class_constructors.textbook.html_consolidation_manager import HtmlConsolidationManager
-import logging
-
-logging.basicConfig(level=logging.ERROR,
-                    format='[%(asctime)s] %(levelname)s: %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-logger = logging.getLogger(__name__)
+from src.logger import logger
 
 class TextbookInitialiser:
     def __init__(self, UUID):

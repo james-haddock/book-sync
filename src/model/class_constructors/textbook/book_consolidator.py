@@ -52,7 +52,7 @@ class HtmlConsolidator:
 
                     if tag.name == 'a' and tag.has_attr('href'):
                         href = tag['href']
-                        tag['href'] = self.adjust_path(file_paths[index], output_path, href)
+                        tag['href'] = self.adjust_path(file_paths[index], output_path, href) 
 
                         for path in file_paths:
                             if path.split("/")[-1] in href:

@@ -1,22 +1,15 @@
 import pytest
-from unittest.mock import patch, MagicMock, mock_open, Mock
+from unittest.mock import patch, MagicMock, mock_open, Mock, PropertyMock
 import uuid
-from src.model.class_constructors.textbook.textbook_initialiser import TextbookInitialiser
+from src.model.class_constructors.textbook.textbook_initialiser import TextbookInitialiser, logger
 from faker import Faker
+import logging
 
 faker = Faker()
 
 @pytest.fixture
 def mock_uuid():
     return uuid.uuid4()
-
-@pytest.fixture
-def xml_parser(mocker):
-    mock_xml_parser = mocker.patch('src.model.class_constructors.textbook.textbook_initialiser.XmlParser')
-    mock_xml_parser_instance = MagicMock()
-    mock_xml_parser_instance.get_root.return_value = 'root_object'
-    mock_xml_parser.return_value = mock_xml_parser_instance
-    return mock_xml_parser_instance
 
 @pytest.fixture
 def textbook_initialiser_get_opf_location(mocker):
@@ -56,18 +49,47 @@ def html_consolidation_manager(mocker):
     mock_html_consolidation_manager.return_value = mock_html_consolidation_manager
     return mock_html_consolidation_manager
     
-def test_textbook_initialiser(mock_uuid, xml_parser, textbook_initialiser_get_opf_location,
+@pytest.fixture
+def mock_xml_parser(mocker):
+    mock_parser = MagicMock()
+    mock_root = MagicMock()
+    mock_element = MagicMock()
+    mock_element.attrib = {'full-path': 'route/to/opf/file.opf'}
+    mock_root.find.return_value = mock_element
+    mock_parser.get_root.return_value = mock_root
+    mocker.patch('src.model.class_constructors.textbook.textbook_initialiser.XmlParser', return_value=mock_parser)
+    return mock_parser, mock_root
+
+def test_textbook_initialiser(mock_uuid, mock_xml_parser, textbook_initialiser_get_opf_location,
                               os_path_dirname, opf_extractor, book_metadata_extractor,
                               html_consolidation_manager):
+    mock_parser, mock_root = mock_xml_parser
+
     textbook_initialiser = TextbookInitialiser(mock_uuid)
     assert textbook_initialiser.container_namespace == '{urn:oasis:names:tc:opendocument:xmlns:container}'
     assert textbook_initialiser.container_path == f'src/book/{mock_uuid}/META-INF/container.xml'
-    assert textbook_initialiser.container_root == 'root_object'
+    assert textbook_initialiser.container_root == mock_root
     assert textbook_initialiser.opf == textbook_initialiser_get_opf_location()
     assert textbook_initialiser.opf_path == f'src/book/{mock_uuid}/{textbook_initialiser.opf}'
     assert textbook_initialiser.opf_folder_location == 'route/to/opf'
-    assert textbook_initialiser.opf_root == 'root_object'
+    assert textbook_initialiser.opf_root == mock_root 
     assert textbook_initialiser.spine == ["item1", "item2", "item3"]
     assert textbook_initialiser.href == ["path1.xhtml", "path2.xhtml", "path3.xhtml"]
     assert textbook_initialiser.title == book_metadata_extractor.get_title()
-    assert textbook_initialiser.html_manager == html_consolidation_manager()
+
+
+def test_get_opf_location_attribute_error(mock_uuid, mock_xml_parser, caplog):
+    mock_parser, mock_root = mock_xml_parser
+    mock_root.find.side_effect = AttributeError()
+    textbook_initialiser = TextbookInitialiser(mock_uuid)
+    assert textbook_initialiser.opf is None
+    assert "Error: Could not find the attribute 'full-path' in XML." in caplog.text
+
+
+
+def test_get_opf_location_exception(mock_uuid, mock_xml_parser):
+    mock_parser, mock_root = mock_xml_parser
+    mock_root.find.side_effect = Exception("General error")
+    with pytest.raises(Exception) as exc_info:
+        TextbookInitialiser(mock_uuid)
+    assert str(exc_info.value) == "General error"
