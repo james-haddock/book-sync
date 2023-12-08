@@ -52,27 +52,31 @@ def css_test_directory(tmp_path):
     css_file.write_text("body { background-color: blue; }")
     return directory
 
+@pytest.mark.integration
 def test_upload_to_s3_success(s3, test_directory, bucket_name, target_directory):
     s3_crud.upload_to_s3(bucket_name, str(test_directory), target_directory, s3)
 
+@pytest.mark.integration
 def test_upload_to_nonexistent_bucket(s3, test_directory, target_directory):
     bucket_name = 'non-existent-bucket'
     with pytest.raises(S3UploadFailedError):
         s3_crud.upload_to_s3(bucket_name, str(test_directory), target_directory, s3)
 
+@pytest.mark.integration
 def test_upload_raises_botocore_error(s3, test_directory, bucket_name, target_directory):
     with Stubber(s3) as stubber:
         stubber.add_client_error('upload_file', service_error_code='500')
         with pytest.raises(BotoCoreError):
             s3_crud.upload_to_s3(bucket_name, str(test_directory), target_directory, s3)
 
+@pytest.mark.integration
 def test_upload_raises_generic_exception(s3, test_directory, bucket_name, target_directory):
     with patch.object(S3Transfer, 'upload_file', side_effect=Exception("Unexpected error")), \
             pytest.raises(Exception) as exc_info:
         s3_crud.upload_to_s3(bucket_name, str(test_directory), target_directory, s3)
     assert str(exc_info.value) == "Unexpected error"
 
-
+@pytest.mark.integration
 def test_upload_css_file_content_type(s3, css_test_directory, bucket_name, target_directory):
     s3_crud.upload_to_s3(bucket_name, str(css_test_directory), target_directory, s3)
     response = s3.head_object(Bucket=bucket_name, Key=f'{target_directory}/style.css')

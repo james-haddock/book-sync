@@ -4,6 +4,7 @@ import shutil
 from tempfile import TemporaryDirectory
 from src.model.class_constructors.textbook.extract_book import extractbook
 
+@pytest.mark.unit
 def test_extractbook():
     with TemporaryDirectory() as tempdir:
         test_epub_path = os.path.join(os.path.dirname(__file__), "test_data", "Clean Architecture A Craftsman’s Guide to Software Structure and Design (Martin, R.C.).epub")
@@ -18,6 +19,7 @@ def test_extractbook():
         result = extractbook(temp_epub_path, extraction_path)
         assert isinstance(result, FileExistsError), "Should return FileExistsError if directory already exists"
         
+@pytest.mark.unit
 def directories_match(dir1, dir2):
     for subdir, _, filenames in os.walk(dir1):
         filenames = [f for f in filenames if f != '.DS_Store']
@@ -45,6 +47,7 @@ def directories_match(dir1, dir2):
             raise AssertionError(f"Extra directory {subdir} found in {dir2} that's not in {dir1}")
     return True
     
+@pytest.mark.unit
 def test_extractbook_contents_match():
     with TemporaryDirectory() as tempdir:
         test_epub_path = os.path.join(os.path.dirname(__file__), "test_data", "Clean Architecture A Craftsman’s Guide to Software Structure and Design (Martin, R.C.).epub")

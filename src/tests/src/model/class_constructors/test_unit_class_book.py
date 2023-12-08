@@ -1,6 +1,8 @@
 from src.model.class_constructors.class_book import Book
 import uuid
+import pytest
 
+@pytest.mark.unit
 def test_book():
     test_uuid = str(uuid.uuid4())
     book = Book(uuid)

@@ -20,6 +20,7 @@ def mock_textbook_initialiser():
     with patch('src.model.class_constructors.textbook.textbook_initialiser.TextbookInitialiser', new_callable=TextbookInitialiserFactory) as mock:
         yield mock
 
+@pytest.mark.unit
 def test_textbook_initialization(mock_textbook_initialiser):
     test_uuid = str(uuid.uuid4())
     textbook = Textbook(test_uuid)
