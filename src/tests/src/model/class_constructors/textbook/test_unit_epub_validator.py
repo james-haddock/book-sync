@@ -26,3 +26,4 @@ def test_epubcheck_runtime_exception(mock_epubcheck):
             validate_book(book)
         assert str(exc_info.value) == 'simulated runtime error'
         mock_logger.exception.assert_called_once()
+ 

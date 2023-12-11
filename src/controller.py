@@ -104,10 +104,15 @@ def library():
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
-        if request.files:
-            uploaded_file = request.files['file']
-            if uploaded_file and '.' in uploaded_file.filename and uploaded_file.filename.rsplit('.', 1)[1].lower() == 'epub' and epub_validator(uploaded_file):
-                
+        if 'file' not in request.files:
+            flash('No file selected')
+            return render_template('/templates/upload.html'), 400
+        uploaded_file = request.files['file']
+        if uploaded_file.filename == '':
+            flash('No file selected')
+            return render_template('/templates/upload.html'), 400
+        if uploaded_file and '.' in uploaded_file.filename and uploaded_file.filename.rsplit('.', 1)[1].lower() == 'epub':
+            if epub_validator(uploaded_file):
                 try:
                     UUID = str(uuid.uuid4())
                     extraction_directory = f'src/book/{UUID}'
@@ -116,17 +121,18 @@ def upload():
                     book = crud_book.create_book_in_db(textbook)
                     crud_textbook.create_textbook_in_db(textbook, book)
                     s3_crud.upload_to_s3(aws_bucket, extraction_directory, f"{extraction_directory}/", s3)
-                    flash('success', f'{book.title} uploaded successfully!')
-                    return redirect(url_for('library'))
+                    flash('Book uploaded successfully!')
+                    return render_template('/templates/library.html'), 200
                 except Exception as e:
                     app.logger.error(f'Upload Error: {e}')
-                    flash('error', 'Failed to upload the book. Please try again.')
+                    flash('Failed to upload the book. Please try again.')
                     return render_template('/templates/upload.html'), 500
             else:
-                flash('error', 'Invalid file. Only valid EPUB files are allowed.')
-                return redirect(url_for('upload'))
+                flash('Invalid file. Only valid EPUB files are allowed.')
+                return render_template('/templates/upload.html'), 400
         else:
-            flash('error', 'No file selected.')
+            flash('Invalid file. Only valid EPUB files are allowed.')
+            return render_template('/templates/upload.html'), 400
     return render_template('/templates/upload.html')
 
 @app.errorhandler(Exception)
