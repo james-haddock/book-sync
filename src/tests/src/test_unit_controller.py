@@ -1,9 +1,9 @@
 import pytest
-
 from flask import Flask, request, session
 from unittest.mock import patch, MagicMock
 from werkzeug.datastructures import FileStorage
 from src.controller import upload, app
+from src.model.db.db_schema.db_schema import DBTextbook
 
 @pytest.fixture
 def client():
@@ -51,3 +51,22 @@ def test_upload_post_no_file(client):
     assert response.status_code == 400
     with client.session_transaction() as session:
         assert ('message', 'No file selected') in session['_flashes']
+        
+
+
+@patch('src.controller.crud_book.get_all_books_with_details')
+@patch('src.controller.change_urls_to_presigned.generate_presigned_url')
+def test_library(mock_generate_presigned_url, mock_get_all_books_with_details, client):
+    mock_book = {
+        'DBTextbook': DBTextbook(cover='cover_url'),
+        'other_details': 'details'
+    }
+    mock_get_all_books_with_details.return_value = [mock_book]
+    mock_generate_presigned_url.return_value = 'presigned_url'
+
+    response = client.get('/library')
+
+    assert response.status_code == 200
+    assert b'presigned_url' in response.data
+    mock_get_all_books_with_details.assert_called_once()
+    mock_generate_presigned_url.assert_called_once_with(aws_bucket, 'cover_url', s3)
