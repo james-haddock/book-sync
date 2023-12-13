@@ -6,10 +6,6 @@
   <title>{{ book_title }}</title>
 
   <style>
-    html{
-      max-width: 100dvw;
-      max-height: 100dvh;
-    }
     .container {
       display: none; 
       position: fixed; 
@@ -195,13 +191,8 @@
     }
     #book_content {
       max-height: 100dvh;
-      max-width: 100%;
       overflow-x:hidden;
       height: auto;
-    }
-    body {
-      max-height: 100dvh;
-      max-width: 100dvw;
     }
     #libraryButton {
       background: linear-gradient(to right, blue, red);
@@ -210,11 +201,10 @@
     }
   </style>
 </head>
-<body>
+<body id='book_content'>
   <div class="container">
     <div class="loader"></div>
   </div>
-<div id='book_content'></div>
   <div id="navTrigger"></div> 
   <div id="navButtons">
     <a href='{{ url_for("library") }}' id="libraryButtonContainer">
@@ -287,7 +277,7 @@
           });
     
           var bookContent = document.getElementById('book_content');
-          bookContent.innerHTML = tempContainer.innerHTML; 
+          bookContent.insertAdjacentHTML('afterbegin', tempContainer.innerHTML);
           
           var images = bookContent.getElementsByTagName('img');
           for (var i = 0; i < images.length; i++) {
@@ -389,7 +379,8 @@
         resetInactivityTimeout();
       });
       });
-
+      var navTrigger = document.getElementById('navTrigger');
+      navTrigger.parentNode.insertBefore(tempContainer.querySelector('#book_content'), navTrigger);
   
   </script>
 </body>
