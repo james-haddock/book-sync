@@ -6,9 +6,6 @@
   <title>{{ book_title }}</title>
 
   <style>
-    html{
-      overflow-x:hidden;
-    }
     .container {
       display: none; 
       position: fixed; 
@@ -20,7 +17,7 @@
       justify-content: center;
       align-items: center;
       z-index: 25; 
-      max-width: 100dvw;
+      max-width: 100vw;
       height: 100dvh;
     }
     .loader {
@@ -65,7 +62,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      max-width: 100dvw;
+      max-width: 100vw;
       max-height: 100dvh;
       backdrop-filter: backdrop-blur-md;
       background-color: rgba(255, 255, 255, 0.9); 
@@ -85,7 +82,7 @@
       right: 0;
       height:60px;
       z-index: 49;
-      max-width: 100dvw;
+      max-width: 100vw;
       max-height: 100dvh;
     }
     #libraryButtonContainer {
@@ -202,6 +199,11 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    html , body{
+ overflow-x:hidden;
+ height: auto;
+    }
+
   </style>
 </head>
 <body id='book_content'>
@@ -303,7 +305,7 @@
         loaderContainer.style.display = 'none';
     });
     
-    window.addEventListener('scroll', saveTopElement, { passive: true });
+    document.body.addEventListener('scroll', saveTopElement, { passive: true });
     window.addEventListener('resize', saveTopElement, { passive: true });
 
     document.documentElement.style.transition = 'opacity 0.5s';
@@ -382,7 +384,8 @@
         resetInactivityTimeout();
       });
       });
-
+      var navTrigger = document.getElementById('navTrigger');
+      navTrigger.parentNode.insertBefore(tempContainer.querySelector('#book_content'), navTrigger);
   
   </script>
 </body>
