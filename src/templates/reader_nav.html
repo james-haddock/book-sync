@@ -199,11 +199,9 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    html , body{
- overflow-x:hidden;
- height: auto;
+    html * {
+      overflow-x:hidden;
     }
-
   </style>
 </head>
 <body id='book_content'>
@@ -305,7 +303,7 @@
         loaderContainer.style.display = 'none';
     });
     
-    document.body.addEventListener('scroll', saveTopElement, { passive: true });
+    window.addEventListener('scroll', saveTopElement, { passive: true });
     window.addEventListener('resize', saveTopElement, { passive: true });
 
     document.documentElement.style.transition = 'opacity 0.5s';
