@@ -1,5 +1,5 @@
 import pytest
-from flask import Flask, request, session
+from flask import Flask, request, session, url_for
 from unittest.mock import patch, MagicMock
 from werkzeug.datastructures import FileStorage
 from src.controller import upload, app
@@ -52,8 +52,6 @@ def test_upload_post_no_file(client):
     with client.session_transaction() as session:
         assert ('message', 'No file selected') in session['_flashes']
         
-
-
 @patch('src.controller.crud_book.get_all_books_with_details')
 @patch('src.controller.change_urls_to_presigned.generate_presigned_url')
 def test_library(mock_generate_presigned_url, mock_get_all_books_with_details, client):
@@ -70,3 +68,36 @@ def test_library(mock_generate_presigned_url, mock_get_all_books_with_details, c
     assert b'presigned_url' in response.data
     mock_get_all_books_with_details.assert_called_once()
     mock_generate_presigned_url.assert_called_once_with(aws_bucket, 'cover_url', s3)
+
+def test_book_route_success():
+    with patch('controller.crud_book.get_book_with_details') as mock_get_book_with_details, \
+         patch('controller.get_s3_object_content') as mock_get_s3_object_content, \
+         patch('controller.save_book_session_js') as mock_save_book_session_js:
+        
+        mock_get_book_with_details.return_value = {
+            'DBTextbook': MagicMock(book_content='content'),
+            'DBBook': MagicMock(title='title')
+        }
+        mock_get_s3_object_content.return_value = 'html_content'
+        mock_save_book_session_js.return_value = 'save_book_session_js'
+
+        with app.test_client() as client:
+            response = client.get(url_for('book', UUID='123'))
+            assert response.status_code == 200
+            assert b'title' in response.data
+            assert b'123' in response.data
+            assert b'save_book_session_js' in response.data
+
+def test_book_route_failure():
+    with patch('controller.crud_book.get_book_with_details') as mock_get_book_with_details, \
+         patch('controller.get_s3_object_content') as mock_get_s3_object_content:
+        
+        mock_get_book_with_details.return_value = {
+            'DBTextbook': MagicMock(book_content='content'),
+            'DBBook': MagicMock(title='title')
+        }
+        mock_get_s3_object_content.return_value = None
+
+        with app.test_client() as client:
+            response = client.get(url_for('book', UUID='123'))
+            assert response.status_code == 500
