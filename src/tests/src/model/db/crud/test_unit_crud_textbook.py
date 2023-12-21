@@ -42,3 +42,35 @@ def test_create_textbook_in_db_failure():
         CrudTextbook.create_textbook_in_db(textbook, DBBook)
 
         mock_logger.error.assert_called_once()
+        
+def test_get_textbook_by_book_UUID_success():
+    UUID = 'test-uuid'
+    textbook = MagicMock()
+    with patch('src.model.db.crud.crud_textbook.DBTextbook') as mock_DBTextbook, \
+         patch('src.model.db.crud.crud_textbook.Association') as mock_Association, \
+         patch('src.model.db.crud.crud_textbook.DBBook') as mock_DBBook, \
+         patch('src.model.db.crud.crud_textbook.DatabaseManager') as mock_DatabaseManager:
+
+        mock_session = mock_DatabaseManager.return_value.__enter__.return_value
+        mock_session.query.return_value.join.return_value.join.return_value.filter.return_value.first.return_value = textbook
+
+        result = CrudTextbook.get_textbook_by_book_UUID(UUID)
+
+        mock_session.query.assert_called_once_with(mock_DBTextbook)
+        assert result == textbook
+
+def test_get_textbook_by_book_UUID_failure():
+    UUID = 'test-uuid'
+    with patch('src.model.db.crud.crud_textbook.DBTextbook') as mock_DBTextbook, \
+         patch('src.model.db.crud.crud_textbook.Association') as mock_Association, \
+         patch('src.model.db.crud.crud_textbook.DBBook') as mock_DBBook, \
+         patch('src.model.db.crud.crud_textbook.DatabaseManager') as mock_DatabaseManager, \
+         patch('src.model.db.crud.crud_textbook.logger') as mock_logger:
+
+        mock_session = mock_DatabaseManager.return_value.__enter__.return_value
+        mock_session.query.side_effect = SQLAlchemyError
+
+        result = CrudTextbook.get_textbook_by_book_UUID(UUID)
+
+        mock_logger.error.assert_called_once()
+        assert result is None
